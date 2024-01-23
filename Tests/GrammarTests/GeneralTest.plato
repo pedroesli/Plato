@@ -1,0 +1,12 @@
+if 1 > 2 { 
+    ddasd
+} else if 2 == 2 { 
+    sdad
+}
+
+a = 2
+a + 2
+
+(a + 3)
+
+c = 2

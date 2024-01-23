@@ -1,0 +1,21 @@
+func hello() { 
+    print("Hello, World!")
+}
+
+func sum(a, b) { 
+    a + b
+}
+
+func mul(a, b) { 
+    return a*b
+}
+
+func printName() { 
+    name = "Pedro"
+    print(name)
+}
+
+func calculate(a) { 
+    b = a * 2
+    return b
+}
