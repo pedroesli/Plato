@@ -1,1 +1,2 @@
-let hasWarning :String = ""
+import ParserCore
+let hasWarning :String = hello
