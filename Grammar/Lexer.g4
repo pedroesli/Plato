@@ -1,4 +1,8 @@
-lexer grammar PlatoLexer;
+lexer grammar Lexer;
+
+options {
+    language = Swift;
+}
 
 // Arithmetic Operators
 EXP     : '^';

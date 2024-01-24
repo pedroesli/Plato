@@ -1,2 +1,2 @@
-import ParserCore
-let hasWarning :String = hello
+import PlatoParserCore
+let hasWarning :String = ""
