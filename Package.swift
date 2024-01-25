@@ -20,10 +20,10 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Plato",
-            dependencies: ["PlatoParserCore"]
+            dependencies: ["PlatoCore"]
         ),
         .target(
-            name: "PlatoParserCore",
+            name: "PlatoCore",
             dependencies: [
                 .product(name: "Antlr4", package: "antlr4")
             ]
