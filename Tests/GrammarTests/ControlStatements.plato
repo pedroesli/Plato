@@ -1,6 +1,14 @@
+while true { }
+
 i = 0
 
 while i < 10 {
     print(i+1)
     i += 1
+}
+
+for j in [1, 2, 3, 4] { 
+    if j == 3 { 
+        break
+    }
 }

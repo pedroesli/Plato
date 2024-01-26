@@ -7,7 +7,17 @@
 
 import Antlr4
 
-open class PlatoMainVisitor: PlatoBaseVisitor<String> {
+open class PlatoMainVisitor: PlatoBaseVisitor<Value> {
+    public var platoError: PlatoError?
     
+    private let globalMemory: [String : Value] = [:]
+    private let scopes: Stack<[String : Value]> = Stack<[String : Value]>()
+    private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
+    
+    open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
+        scopes.push(globalMemory)
+        guard let statements = ctx.statements() else { return Value.void }
+        return visit(statements)
+    }
 }
 

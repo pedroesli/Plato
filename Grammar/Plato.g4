@@ -19,6 +19,16 @@ statement
     | controlFlowStatement
     | functionDeclaration
     | expression
+    | breakStatement
+    | continueStatement
+    ;
+
+breakStatement
+    : BREAK
+    ;
+
+continueStatement
+    : CONTINUE
     ;
 
 assignmentStatement
@@ -44,15 +54,11 @@ controlFlowStatement
     ;
 
 functionDeclaration
-    : 'func' ID '(' functionArguments? ')' '{' functionStatements '}'
+    : 'func' ID '(' functionArguments? ')' '{' statements '}'
     ;
 
 functionArguments
     : ID (',' ID)*
-    ;
-
-functionStatements
-    : statements 'return'? expression? NEWLINE*
     ;
 
 expression
@@ -68,6 +74,7 @@ expression
     | expression OR expression                                                     #orExpresion
     | functionCall                                                                 #functionCallExpresion
     | '(' expression ')'                                                           #parenthesesExpresion
+    | RETURN expression                                                            #returnExpresion
     | element                                                                      #typeExpresion
     ;
 

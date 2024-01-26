@@ -1,4 +1,4 @@
-// Generated from Plato.g4 by ANTLR 4.13.1
+// Generated from Grammar/Plato.g4 by ANTLR 4.13.1
 import Antlr4
 
 /**
@@ -36,6 +36,26 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitStatement(_ ctx: PlatoParser.StatementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by {@link PlatoParser#breakStatement}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by {@link PlatoParser#continueStatement}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitContinueStatement(_ ctx: PlatoParser.ContinueStatementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
@@ -133,16 +153,6 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by {@link PlatoParser#functionStatements}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitFunctionStatements(_ ctx: PlatoParser.FunctionStatementsContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
 	 * Visit a parse tree produced by the {@code parenthesesExpresion}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
@@ -172,6 +182,17 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitOrExpresion(_ ctx: PlatoParser.OrExpresionContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code returnExpresion}
+	 * labeled alternative in {@link PlatoParser#expression}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitReturnExpresion(_ ctx: PlatoParser.ReturnExpresionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

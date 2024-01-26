@@ -28,12 +28,17 @@ TRUE    : 'TRUE';
 FALSE   : 'FALSE';
 
 // Assignment Operators
-ASSIGN     : '=';
-MUL_ASSIGN : '*=';
-DIV_ASSIGN : '/=';
-MOD_ASSIGN : '%=';
-ADD_ASSIGN : '+=';
-SUB_ASSIGN : '-=';
+ASSIGN      : '=';
+MUL_ASSIGN  : '*=';
+DIV_ASSIGN  : '/=';
+MOD_ASSIGN  : '%=';
+ADD_ASSIGN  : '+=';
+SUB_ASSIGN  : '-=';
+
+// Control Operators
+RETURN      : 'return';
+BREAK       : 'break';
+CONTINUE    : 'continue';
 
 // Types
 ID      : '_'? LETTER (LETTER | DIGIT)*;

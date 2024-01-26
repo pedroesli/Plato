@@ -1,12 +1,16 @@
-if 1 > 2 { 
-    ddasd
-} else if 2 == 2 { 
-    sdad
+func empty() {}
+
+func spaces() { 
+
+
+
+
 }
 
-a = 2
-a + 2
+func oneLine(a, b) { 
+    a + b
+}
 
-(a + 3)
-
-c = 2
+func withReturn() { 
+    return 1 + 2
+}
