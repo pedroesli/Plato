@@ -27,6 +27,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return Value.void
     }
     
+    // MARK: Expressions
+    
+    
     // MARK: Elements
     open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
         return Value(int: Int(ctx.INT()!.getText())!)
@@ -45,7 +48,21 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitStringElement(_ ctx: PlatoParser.StringElementContext) -> Value? {
-        return Value(string: ctx.STRING()!.getText())
+        return Value(string: ctx.STRING()!.getText().replacingOccurrences(of: "\"", with: ""))
+    }
+    
+    open override func visitArrayElement(_ ctx: PlatoParser.ArrayElementContext) -> Value? {
+        return visit(ctx.array()!)
+    }
+    
+    open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
+        var values: [Value] = []
+        if let expressions = ctx.parameterList()?.expression() {
+            for expression in expressions {
+                values.append(visit(expression)!)
+            }
+        }
+        return Value(array: values)
     }
 }
 

@@ -5,7 +5,9 @@ import Foundation
 final class PlatoTests: XCTestCase {
     func testGeneral() throws {
         let code = """
-        21 + 2
+        [1,23]
+        2
+        3
         """
         try Plato.run(code)
     }
