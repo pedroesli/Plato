@@ -21,6 +21,7 @@ statement
     | expression
     | breakStatement
     | continueStatement
+    | returnStatement
     ;
 
 breakStatement
@@ -29,6 +30,10 @@ breakStatement
 
 continueStatement
     : CONTINUE
+    ;
+
+returnStatement
+    : RETURN expression
     ;
 
 assignmentStatement
@@ -74,7 +79,6 @@ expression
     | expression OR expression                                                     #orExpresion
     | functionCall                                                                 #functionCallExpresion
     | '(' expression ')'                                                           #parenthesesExpresion
-    | RETURN expression                                                            #returnExpresion
     | element                                                                      #typeExpresion
     ;
 

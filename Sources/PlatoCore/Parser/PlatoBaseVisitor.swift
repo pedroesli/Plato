@@ -51,6 +51,13 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	open func visitReturnStatement(_ ctx: PlatoParser.ReturnStatementContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	open func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
@@ -129,13 +136,6 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	open func visitOrExpresion(_ ctx: PlatoParser.OrExpresionContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitReturnExpresion(_ ctx: PlatoParser.ReturnExpresionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,16 +1,1 @@
-func empty() {}
-
-func spaces() { 
-
-
-
-
-}
-
-func oneLine(a, b) { 
-    a + b
-}
-
-func withReturn() { 
-    return 1 + 2
-}
+return 2 + 2 - 2

@@ -8,7 +8,7 @@
 import Antlr4
 
 open class PlatoMainVisitor: PlatoBaseVisitor<Value> {
-    public var platoError: PlatoError?
+    public var error: PlatoError?
     
     private let globalMemory: [String : Value] = [:]
     private let scopes: Stack<[String : Value]> = Stack<[String : Value]>()
