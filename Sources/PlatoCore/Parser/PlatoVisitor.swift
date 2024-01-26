@@ -40,6 +40,16 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by {@link PlatoParser#expressionStatement}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by {@link PlatoParser#breakStatement}.
 	- Parameters:
 	  - ctx: the parse tree
@@ -326,12 +336,79 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by {@link PlatoParser#element}.
+	 * Visit a parse tree produced by the {@code idElement}
+	 * labeled alternative in {@link PlatoParser#element}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitElement(_ ctx: PlatoParser.ElementContext) -> T {
+	open func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code intElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code floatElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitFloatElement(_ ctx: PlatoParser.FloatElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code stringElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitStringElement(_ ctx: PlatoParser.StringElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code trueElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitTrueElement(_ ctx: PlatoParser.TrueElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code falseElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitFalseElement(_ ctx: PlatoParser.FalseElementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code arrayElement}
+	 * labeled alternative in {@link PlatoParser#element}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitArrayElement(_ ctx: PlatoParser.ArrayElementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

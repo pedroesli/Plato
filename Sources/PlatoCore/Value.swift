@@ -5,28 +5,33 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 
-public class Value {
+public final class Value {
     public let type: ValueType
     private var value: Any
     
-    public init(value: Int) {
+    public init(int: Int) {
         self.type = .integer
-        self.value = value
+        self.value = int
     }
     
-    public init(value: Float) {
+    public init(float: Float) {
         self.type = .float
-        self.value = value
+        self.value = float
     }
     
-    public init(value: Bool) {
+    public init(bool: Bool) {
         self.type = .boolean
-        self.value = value
+        self.value = bool
     }
     
-    public init(value: String) {
+    public init(string: String) {
         self.type = .string
-        self.value = value
+        self.value = string
+    }
+    
+    public init(array: [Value]) {
+        self.type = .array
+        self.value = array
     }
     
     private init(type: ValueType, value: Any) {
@@ -57,7 +62,11 @@ public class Value {
     }
     
     public var asString: String {
-        return value as! String
+        return String(describing: value)
+    }
+    
+    public var asArray: [Value] {
+        return value as! [Value]
     }
 }
 
@@ -67,6 +76,6 @@ extension Value {
 
 extension Value: CustomStringConvertible {
     public var description: String {
-        "Type: \(type), Value: \(value)"
+        self.asString
     }
 }

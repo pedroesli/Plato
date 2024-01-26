@@ -18,10 +18,15 @@ statement
     | selectionStatement
     | controlFlowStatement
     | functionDeclaration
-    | expression
+    | expressionStatement
     | breakStatement
     | continueStatement
     | returnStatement
+    ;
+
+// Print statement line that only has an expression
+expressionStatement
+    : expression
     ;
 
 breakStatement
@@ -102,13 +107,13 @@ parameterList
 //         ;
 
 element
-    : ID
-    | INT
-    | FLOAT
-    | STRING
-    | TRUE
-    | FALSE
-    | array
+    : ID            #idElement
+    | INT           #intElement
+    | FLOAT         #floatElement
+    | STRING        #stringElement
+    | TRUE          #trueElement
+    | FALSE         #falseElement
+    | array         #arrayElement
     ;
 
 array

@@ -10,5 +10,6 @@ public enum ValueType {
     case float
     case boolean
     case string
+    case array
     case void
 }
