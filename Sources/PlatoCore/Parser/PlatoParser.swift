@@ -1615,7 +1615,7 @@ open class PlatoParser: Parser {
 		let _parentState: Int = getState()
 		var _localctx: ExpressionContext
 		_localctx = ExpressionContext(_ctx, _parentState)
-		var _prevctx: ExpressionContext = _localctx
+//		var _prevctx: ExpressionContext = _localctx
 		let _startState: Int = 28
 		try enterRecursionRule(_localctx, 28, PlatoParser.RULE_expression, _p)
 		var _la: Int = 0
@@ -1631,7 +1631,7 @@ open class PlatoParser: Parser {
 			case 1:
 				_localctx = SubscriptExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 
 				setState(153)
 				try _errHandler.sync(self)
@@ -1682,7 +1682,7 @@ open class PlatoParser: Parser {
 			case 2:
 				_localctx = UnaryExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 				setState(167)
 				_localctx.castdown(UnaryExpresionContext.self).op = try _input.LT(1)
 				_la = try _input.LA(1)
@@ -1700,7 +1700,7 @@ open class PlatoParser: Parser {
 			case 3:
 				_localctx = NotExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 				setState(169)
 				try match(PlatoParser.Tokens.NOT.rawValue)
 				setState(170)
@@ -1710,7 +1710,7 @@ open class PlatoParser: Parser {
 			case 4:
 				_localctx = FunctionCallExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 				setState(171)
 				try functionCall()
 
@@ -1718,7 +1718,7 @@ open class PlatoParser: Parser {
 			case 5:
 				_localctx = ParenthesesExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 				setState(172)
 				try match(PlatoParser.Tokens.T__12.rawValue)
 				setState(173)
@@ -1730,7 +1730,7 @@ open class PlatoParser: Parser {
 			case 6:
 				_localctx = TypeExpresionContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
+//				_prevctx = _localctx
 				setState(176)
 				try element()
 
@@ -1746,7 +1746,7 @@ open class PlatoParser: Parser {
 					if _parseListeners != nil {
 					   try triggerExitRuleEvent()
 					}
-					_prevctx = _localctx
+//					_prevctx = _localctx
 					setState(200)
 					try _errHandler.sync(self)
 					switch(try getInterpreter().adaptivePredict(_input,12, _ctx)) {

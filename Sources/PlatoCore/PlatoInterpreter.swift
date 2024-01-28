@@ -16,19 +16,51 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         scopes.push(globalMemory)
-        guard let statements = ctx.statements() else { return Value.void }
+        guard let statements = ctx.statements() else { return nil }
         return visit(statements)
+    }
+    
+    // MARK: Statements
+    open override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
+        for statement in ctx.statement() {
+            guard error == nil else { return nil }
+            return visit(statement)
+        }
+        return nil
     }
     
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
         if let expression = ctx.expression(), let result = visit(expression) {
             print(result)
         }
-        return Value.void
+        return nil
     }
     
     // MARK: Expressions
-    
+    open override func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> Value? {
+        guard let leftExp = ctx.expression(0),
+              let rightExp = ctx.expression(1),
+              let left = visit(leftExp),
+              let right = visit(rightExp) else { return nil }
+        
+        guard left.type.isCompatible(with: right.type) else {
+            error = RuntimeError("Runtime Error in \(ctx.getText()): \(left.type) and \(right.type) is not of the same type or numerical.")
+            return nil
+        }
+        
+        switch ctx.op.getType() {
+        case PlatoParser.Tokens.PLUS.rawValue:
+            return addValues(left, right)
+        case PlatoParser.Tokens.MINUS.rawValue:
+            guard left.type.rawValue <= ValueType.float.rawValue else {
+                error = RuntimeError("Runtime Error in \(ctx.getText()): Binary operator '-' cannot be applied to two '\(left.type)' operands")
+                return nil
+            }
+            return subtractValues(left, right)
+        default:
+            return nil
+        }
+    }
     
     // MARK: Elements
     open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
@@ -48,7 +80,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitStringElement(_ ctx: PlatoParser.StringElementContext) -> Value? {
-        return Value(string: ctx.STRING()!.getText().replacingOccurrences(of: "\"", with: ""))
+        return Value(string: String(ctx.STRING()!.getText().dropFirst().dropLast()))
     }
     
     open override func visitArrayElement(_ ctx: PlatoParser.ArrayElementContext) -> Value? {
@@ -63,6 +95,44 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         }
         return Value(array: values)
+    }
+}
+
+// MARK: Helper Methods
+extension PlatoInterpreter {
+    private func addValues(_ left: Value, _ right: Value) -> Value? {
+        switch higherOrderType(left, right) {
+        case .boolean:
+            return Value(int: left.asInteger + right.asInteger)
+        case .integer:
+            return Value(int: left.asInteger + right.asInteger)
+        case .float:
+            return Value(float: left.asFloat + right.asFloat)
+        case .string:
+            return Value(string: left.asString + right.asString)
+        case .array:
+            return Value(array: left.asArray + right.asArray)
+        default:
+            return nil
+        }
+    }
+    
+    private func subtractValues(_ left: Value, _ right: Value) -> Value? {
+        switch higherOrderType(left, right) {
+        case .boolean:
+            return Value(int: left.asInteger - right.asInteger)
+        case .integer:
+            return Value(int: left.asInteger - right.asInteger)
+        case .float:
+            return Value(float: left.asFloat - right.asFloat)
+        default:
+            return nil
+        }
+    }
+    
+    /// which one has the highest order
+    private func higherOrderType(_ left: Value, _ right: Value) -> ValueType {
+        return left.type.rawValue > right.type.rawValue ? left.type : right.type
     }
 }
 
