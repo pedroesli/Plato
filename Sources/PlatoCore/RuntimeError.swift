@@ -6,9 +6,13 @@
 //
 
 public struct RuntimeError: Error, CustomStringConvertible {
-    public var description: String
+    public let description: String
+    public let line: Int
+    public let column: Int
     
-    public init(_ description: String) {
-        self.description = description
+    public init(_ message: String, line: Int, column: Int) {
+        self.description = message
+        self.line = line
+        self.column = column
     }
 }

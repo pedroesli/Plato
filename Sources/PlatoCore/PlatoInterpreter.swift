@@ -21,14 +21,6 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Statements
-    open override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
-        for statement in ctx.statement() {
-            guard error == nil else { return nil }
-            return visit(statement)
-        }
-        return nil
-    }
-    
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
         if let expression = ctx.expression(), let result = visit(expression) {
             print(result)
@@ -37,15 +29,58 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Expressions
-    open override func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> Value? {
-        guard let leftExp = ctx.expression(0),
-              let rightExp = ctx.expression(1),
-              let left = visit(leftExp),
-              let right = visit(rightExp) else { return nil }
+    open override func visitUnaryExpresion(_ ctx: PlatoParser.UnaryExpresionContext) -> Value? {
+        guard let expression = ctx.expression(),
+              let value = visit(expression) else { return nil }
+        
+        guard value.type.rawValue <= ValueType.float.rawValue else {
+            return error("Unary operator '\(ctx.op.getText()!)' to an operand of type '\(value.type)'", at: ctx)
+        }
+        
+        switch ctx.op.getType() {
+        case PlatoParser.Tokens.PLUS.rawValue:
+            return value
+        case PlatoParser.Tokens.MINUS.rawValue:
+            return minusUnaryValue(value)
+        default:
+            return unexpectedError(at: ctx)
+        }
+    }
+    
+    open override func visitMulExpresion(_ ctx: PlatoParser.MulExpresionContext) -> Value? {
+        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
         
         guard left.type.isCompatible(with: right.type) else {
-            error = RuntimeError("Runtime Error in \(ctx.getText()): \(left.type) and \(right.type) is not of the same type or numerical.")
-            return nil
+            return error("'\(left.type)' and '\(right.type)' is not of the same type or numerical.", at: ctx)
+        }
+        
+        guard left.type.rawValue <= ValueType.float.rawValue else {
+            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
+        }
+        
+        switch ctx.op.getType() {
+        case PlatoParser.Tokens.MUL.rawValue:
+            return multiplyValues(left, right)
+        case PlatoParser.Tokens.DIV.rawValue:
+            guard right.asFloat != 0 else {
+                return error("Division by zero", at: ctx)
+            }
+            return divideValues(left, right)
+        case PlatoParser.Tokens.MOD.rawValue:
+            guard right.asFloat != 0 else {
+                return error("Division by zero", at: ctx)
+            }
+            return moduloValues(left, right)
+        default:
+            return unexpectedError(at: ctx)
+        }
+    }
+    
+    open override func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> Value? {
+        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        
+        guard left.type.isCompatible(with: right.type) else {
+            return error("'\(left.type)' and '\(right.type) is not of the same type or numerical.", at: ctx)
         }
         
         switch ctx.op.getType() {
@@ -53,12 +88,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return addValues(left, right)
         case PlatoParser.Tokens.MINUS.rawValue:
             guard left.type.rawValue <= ValueType.float.rawValue else {
-                error = RuntimeError("Runtime Error in \(ctx.getText()): Binary operator '-' cannot be applied to two '\(left.type)' operands")
-                return nil
+                return error("Binary operator '-' cannot be applied to two '\(left.type)' operands", at: ctx)
             }
             return subtractValues(left, right)
         default:
-            return nil
+            return unexpectedError(at: ctx)
         }
     }
     
@@ -100,11 +134,54 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
 
 // MARK: Helper Methods
 extension PlatoInterpreter {
+    
+    private func minusUnaryValue(_ value: Value) -> Value? {
+        switch value.type {
+        case .boolean, .integer:
+            return Value(int: -value.asInteger)
+        case .float:
+            return Value(float: -value.asFloat)
+        default:
+            return nil
+        }
+    }
+    
+    private func multiplyValues(_ left: Value, _ right: Value) -> Value? {
+        switch higherOrderType(left, right) {
+        case .boolean, .integer:
+            return Value(int: left.asInteger * right.asInteger)
+        case .float:
+            return Value(float: left.asFloat * right.asFloat)
+        default:
+            return nil
+        }
+    }
+    
+    private func divideValues(_ left: Value, _ right: Value) -> Value? {
+        switch higherOrderType(left, right) {
+        case .boolean, .integer:
+            return Value(int: left.asInteger / right.asInteger)
+        case .float:
+            return Value(float: left.asFloat / right.asFloat)
+        default:
+            return nil
+        }
+    }
+    
+    private func moduloValues(_ left: Value, _ right: Value) -> Value? {
+        switch higherOrderType(left, right) {
+        case .boolean, .integer:
+            return Value(int: left.asInteger % right.asInteger)
+        case .float:
+            return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
+        default:
+            return nil
+        }
+    }
+    
     private func addValues(_ left: Value, _ right: Value) -> Value? {
         switch higherOrderType(left, right) {
-        case .boolean:
-            return Value(int: left.asInteger + right.asInteger)
-        case .integer:
+        case .boolean, .integer:
             return Value(int: left.asInteger + right.asInteger)
         case .float:
             return Value(float: left.asFloat + right.asFloat)
@@ -119,9 +196,7 @@ extension PlatoInterpreter {
     
     private func subtractValues(_ left: Value, _ right: Value) -> Value? {
         switch higherOrderType(left, right) {
-        case .boolean:
-            return Value(int: left.asInteger - right.asInteger)
-        case .integer:
+        case .boolean, .integer:
             return Value(int: left.asInteger - right.asInteger)
         case .float:
             return Value(float: left.asFloat - right.asFloat)
@@ -130,9 +205,29 @@ extension PlatoInterpreter {
         }
     }
     
-    /// which one has the highest order
+    /// Which value has the highest order
     private func higherOrderType(_ left: Value, _ right: Value) -> ValueType {
         return left.type.rawValue > right.type.rawValue ? left.type : right.type
+    }
+    
+    /// Get the left and right expression
+    private func getArithmeticValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
+        guard let leftExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 0),
+              let rightExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 1),
+              let left = visit(leftExp),
+              let right = visit(rightExp) else { return nil }
+        return (left, right)
+    }
+    
+    private func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
+        let line = ctx.getStart()?.getLine() ?? 0
+        let column = ctx.getStart()?.getCharPositionInLine() ?? 0
+        error = RuntimeError("Runtime Error in \(ctx.getText()): " + description, line: line, column: column)
+        return nil
+    }
+    
+    private func unexpectedError(at ctx: ParserRuleContext) -> Value? {
+        return error("Unexpected error!", at: ctx)
     }
 }
 

@@ -1,11 +1,12 @@
 import XCTest
 import Foundation
 @testable import Plato
+@testable import PlatoCore
 
 final class PlatoTests: XCTestCase {
     func testGeneral() {
         let code = """
-        [1,23]
+        6
         2
         "321pedro"
         """
@@ -14,7 +15,7 @@ final class PlatoTests: XCTestCase {
     
     func testAddition() {
         let code = """
-        1+2
+        1+2+5
         44+55.5
         TRUE + FALSE
         3 + TRUE
@@ -23,6 +24,7 @@ final class PlatoTests: XCTestCase {
         1 - 3
         3.5 - 6
         4 - TRUE
+        5+10-2
         """
         XCTAssertNoThrow(try Plato.run(code))
         
@@ -31,5 +33,16 @@ final class PlatoTests: XCTestCase {
         [1, 3, 4] - [4, 5]
         """
         XCTAssertThrowsError(try Plato.run(errorCode))
+    }
+    
+    func testMultiplication() {
+        let code = """
+        2*5
+        25/5
+        2 + 3 * 5
+        10%2
+        8.625%0.75 #0.375
+        """
+        XCTAssertNoThrow(try Plato.run(code))
     }
 }
