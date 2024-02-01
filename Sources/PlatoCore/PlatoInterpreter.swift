@@ -220,7 +220,7 @@ extension PlatoInterpreter {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
         error = RuntimeError(
-            reason: description,
+            message: description,
             badCode: ctx.getText(),
             line: line,
             column: column

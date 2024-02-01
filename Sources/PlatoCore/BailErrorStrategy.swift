@@ -44,7 +44,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
         let message = e.message ?? "Bail Error"
         let line = e.getOffendingToken().getStartIndex()
         let column = e.getOffendingToken().getCharPositionInLine()
-        throw RuntimeError(message, line: line, column: column)
+        throw RuntimeError(message: message, line: line, column: column)
     }
     
     // Make sure we don't attempt to recover inline; if the parser
@@ -53,7 +53,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
         let message = "Inline recover fail"
         let line = try recognizer.getCurrentToken().getLine()
         let column = try recognizer.getCurrentToken().getCharPositionInLine()
-        throw RuntimeError(message, line: line, column: column)
+        throw RuntimeError(message: message, line: line, column: column)
     }
     
     // Make sure we don't attempt to recover from problems in subrules.

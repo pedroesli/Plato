@@ -6,13 +6,20 @@
 //
 
 public struct RuntimeError: Error, CustomStringConvertible {
-    public let reason: String
+    public let message: String
     public let badCode: String?
     public let line: Int
     public let column: Int
     
+    init(message: String, badCode: String? = nil, line: Int, column: Int) {
+        self.message = message
+        self.badCode = badCode
+        self.line = line
+        self.column = column
+    }
+    
     /// Get the full description of the error
     public var description: String {
-        return "Runtime Error in line \(line):\(column) \(badCode ?? ""): \(reason)"
+        return "Runtime Error in line \(line):\(column) \(badCode ?? ""): \(message)"
     }
 }
