@@ -72,19 +72,19 @@ functionArguments
     ;
 
 expression
-    : (ID | functionCall | array) '[' expression ']' ('[' expression ']')*         #subscriptExpresion
-    |<assoc=right> expression EXP expression                                       #exponentExpresion
-    | op=(PLUS | MINUS) expression                                                 #unaryExpresion
-    | NOT expression                                                               #notExpresion
-    | expression op=(MUL | DIV | MOD) expression                                   #mulExpresion
-    | expression op=(PLUS | MINUS) expression                                      #addExpresion
-    | expression op=(LT | LTE | GT | GTE | EQUAL | DIF) expression                 #compareExpresion
-    | expression op=(EQUAL | DIF) expression                                       #equalityExpresion
-    | expression AND expression                                                    #andExpresion
-    | expression OR expression                                                     #orExpresion
-    | functionCall                                                                 #functionCallExpresion
-    | '(' expression ')'                                                           #parenthesesExpresion
-    | element                                                                      #typeExpresion
+    : (ID | functionCall | array) '[' expression ']' ('[' expression ']')*         #subscriptExpression
+    |<assoc=right> expression EXP expression                                       #exponentExpression
+    | op=(PLUS | MINUS) expression                                                 #unaryExpression
+    | NOT expression                                                               #notExpression
+    | expression op=(MUL | DIV | MOD) expression                                   #mulExpression
+    | expression op=(PLUS | MINUS) expression                                      #addExpression
+    | expression op=(LT | LTE | GT | GTE | EQUAL | DIF) expression                 #compareExpression
+    | expression op=(EQUAL | DIF) expression                                       #equalityExpression
+    | expression AND expression                                                    #andExpression
+    | expression OR expression                                                     #orExpression
+    | functionCall                                                                 #functionCallExpression
+    | '(' expression ')'                                                           #parenthesesExpression
+    | element                                                                      #typeExpression
     ;
 
 functionCall

@@ -128,91 +128,91 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitParenthesesExpresion(_ ctx: PlatoParser.ParenthesesExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitAndExpresion(_ ctx: PlatoParser.AndExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitOrExpresion(_ ctx: PlatoParser.OrExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitNotExpression(_ ctx: PlatoParser.NotExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitMulExpresion(_ ctx: PlatoParser.MulExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitCompareExpression(_ ctx: PlatoParser.CompareExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitTypeExpresion(_ ctx: PlatoParser.TypeExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitFunctionCallExpresion(_ ctx: PlatoParser.FunctionCallExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitEqualityExpresion(_ ctx: PlatoParser.EqualityExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitSubscriptExpresion(_ ctx: PlatoParser.SubscriptExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitCompareExpresion(_ ctx: PlatoParser.CompareExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitExponentExpresion(_ ctx: PlatoParser.ExponentExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitUnaryExpresion(_ ctx: PlatoParser.UnaryExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitTypeExpression(_ ctx: PlatoParser.TypeExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitNotExpresion(_ ctx: PlatoParser.NotExpresionContext) -> T? { return visitChildren(ctx) }
+	open func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

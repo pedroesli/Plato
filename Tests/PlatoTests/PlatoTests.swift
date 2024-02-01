@@ -11,6 +11,11 @@ final class PlatoTests: XCTestCase {
         "321pedro"
         """
         XCTAssertNoThrow(try Plato.run(code))
+        
+        let errorCode = """
+        [
+        """
+        XCTAssertThrowsError(try Plato.run(errorCode))
     }
     
     func testAddition() {
@@ -35,7 +40,7 @@ final class PlatoTests: XCTestCase {
         XCTAssertThrowsError(try Plato.run(errorCode))
     }
     
-    func testMultiplication() {
+    func testMultiplication() throws {
         let code = """
         2*5
         25/5
@@ -43,6 +48,6 @@ final class PlatoTests: XCTestCase {
         10%2
         8.625%0.75 #0.375
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        try Plato.run(code)
     }
 }

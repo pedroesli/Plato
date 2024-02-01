@@ -173,145 +173,145 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code parenthesesExpresion}
+	 * Visit a parse tree produced by the {@code exponentExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitParenthesesExpresion(_ ctx: PlatoParser.ParenthesesExpresionContext) -> T {
+	open func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code andExpresion}
+	 * Visit a parse tree produced by the {@code subscriptExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitAndExpresion(_ ctx: PlatoParser.AndExpresionContext) -> T {
+	open func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code orExpresion}
+	 * Visit a parse tree produced by the {@code notExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitOrExpresion(_ ctx: PlatoParser.OrExpresionContext) -> T {
+	open func visitNotExpression(_ ctx: PlatoParser.NotExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code mulExpresion}
+	 * Visit a parse tree produced by the {@code compareExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitMulExpresion(_ ctx: PlatoParser.MulExpresionContext) -> T {
+	open func visitCompareExpression(_ ctx: PlatoParser.CompareExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code typeExpresion}
+	 * Visit a parse tree produced by the {@code orExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitTypeExpresion(_ ctx: PlatoParser.TypeExpresionContext) -> T {
+	open func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code functionCallExpresion}
+	 * Visit a parse tree produced by the {@code parenthesesExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitFunctionCallExpresion(_ ctx: PlatoParser.FunctionCallExpresionContext) -> T {
+	open func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code equalityExpresion}
+	 * Visit a parse tree produced by the {@code andExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitEqualityExpresion(_ ctx: PlatoParser.EqualityExpresionContext) -> T {
+	open func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code subscriptExpresion}
+	 * Visit a parse tree produced by the {@code addExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitSubscriptExpresion(_ ctx: PlatoParser.SubscriptExpresionContext) -> T {
+	open func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code compareExpresion}
+	 * Visit a parse tree produced by the {@code equalityExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitCompareExpresion(_ ctx: PlatoParser.CompareExpresionContext) -> T {
+	open func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code exponentExpresion}
+	 * Visit a parse tree produced by the {@code functionCallExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitExponentExpresion(_ ctx: PlatoParser.ExponentExpresionContext) -> T {
+	open func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code unaryExpresion}
+	 * Visit a parse tree produced by the {@code unaryExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitUnaryExpresion(_ ctx: PlatoParser.UnaryExpresionContext) -> T {
+	open func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code addExpresion}
+	 * Visit a parse tree produced by the {@code typeExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> T {
+	open func visitTypeExpression(_ ctx: PlatoParser.TypeExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code notExpresion}
+	 * Visit a parse tree produced by the {@code mulExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitNotExpresion(_ ctx: PlatoParser.NotExpresionContext) -> T {
+	open func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

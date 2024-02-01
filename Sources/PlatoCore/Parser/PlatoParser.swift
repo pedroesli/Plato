@@ -1168,31 +1168,7 @@ open class PlatoParser: Parser {
 			return PlatoParser.RULE_expression
 		}
 	}
-	public class ParenthesesExpresionContext: ExpressionContext {
-			open
-			func expression() -> ExpressionContext? {
-				return getRuleContext(ExpressionContext.self, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitParenthesesExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitParenthesesExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class AndExpresionContext: ExpressionContext {
+	public class ExponentExpressionContext: ExpressionContext {
 			open
 			func expression() -> [ExpressionContext] {
 				return getRuleContexts(ExpressionContext.self)
@@ -1202,8 +1178,8 @@ open class PlatoParser: Parser {
 				return getRuleContext(ExpressionContext.self, i)
 			}
 			open
-			func AND() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.AND.rawValue, 0)
+			func EXP() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.EXP.rawValue, 0)
 			}
 
 		public
@@ -1214,175 +1190,17 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitAndExpresion(self)
+			    return visitor.visitExponentExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitAndExpresion(self)
+			    return visitor.visitExponentExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class OrExpresionContext: ExpressionContext {
-			open
-			func expression() -> [ExpressionContext] {
-				return getRuleContexts(ExpressionContext.self)
-			}
-			open
-			func expression(_ i: Int) -> ExpressionContext? {
-				return getRuleContext(ExpressionContext.self, i)
-			}
-			open
-			func OR() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.OR.rawValue, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitOrExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitOrExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class MulExpresionContext: ExpressionContext {
-		public var op: Token!
-			open
-			func expression() -> [ExpressionContext] {
-				return getRuleContexts(ExpressionContext.self)
-			}
-			open
-			func expression(_ i: Int) -> ExpressionContext? {
-				return getRuleContext(ExpressionContext.self, i)
-			}
-			open
-			func MUL() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.MUL.rawValue, 0)
-			}
-			open
-			func DIV() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.DIV.rawValue, 0)
-			}
-			open
-			func MOD() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.MOD.rawValue, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitMulExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitMulExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class TypeExpresionContext: ExpressionContext {
-			open
-			func element() -> ElementContext? {
-				return getRuleContext(ElementContext.self, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitTypeExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitTypeExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class FunctionCallExpresionContext: ExpressionContext {
-			open
-			func functionCall() -> FunctionCallContext? {
-				return getRuleContext(FunctionCallContext.self, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitFunctionCallExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitFunctionCallExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class EqualityExpresionContext: ExpressionContext {
-		public var op: Token!
-			open
-			func expression() -> [ExpressionContext] {
-				return getRuleContexts(ExpressionContext.self)
-			}
-			open
-			func expression(_ i: Int) -> ExpressionContext? {
-				return getRuleContext(ExpressionContext.self, i)
-			}
-			open
-			func EQUAL() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.EQUAL.rawValue, 0)
-			}
-			open
-			func DIF() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.DIF.rawValue, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitEqualityExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitEqualityExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class SubscriptExpresionContext: ExpressionContext {
+	public class SubscriptExpressionContext: ExpressionContext {
 			open
 			func expression() -> [ExpressionContext] {
 				return getRuleContexts(ExpressionContext.self)
@@ -1412,17 +1230,45 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitSubscriptExpresion(self)
+			    return visitor.visitSubscriptExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitSubscriptExpresion(self)
+			    return visitor.visitSubscriptExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class CompareExpresionContext: ExpressionContext {
+	public class NotExpressionContext: ExpressionContext {
+			open
+			func NOT() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.NOT.rawValue, 0)
+			}
+			open
+			func expression() -> ExpressionContext? {
+				return getRuleContext(ExpressionContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitNotExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitNotExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class CompareExpressionContext: ExpressionContext {
 		public var op: Token!
 			open
 			func expression() -> [ExpressionContext] {
@@ -1465,17 +1311,17 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitCompareExpresion(self)
+			    return visitor.visitCompareExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitCompareExpresion(self)
+			    return visitor.visitCompareExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class ExponentExpresionContext: ExpressionContext {
+	public class OrExpressionContext: ExpressionContext {
 			open
 			func expression() -> [ExpressionContext] {
 				return getRuleContexts(ExpressionContext.self)
@@ -1485,8 +1331,8 @@ open class PlatoParser: Parser {
 				return getRuleContext(ExpressionContext.self, i)
 			}
 			open
-			func EXP() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.EXP.rawValue, 0)
+			func OR() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.OR.rawValue, 0)
 			}
 
 		public
@@ -1497,17 +1343,171 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitExponentExpresion(self)
+			    return visitor.visitOrExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitExponentExpresion(self)
+			    return visitor.visitOrExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class UnaryExpresionContext: ExpressionContext {
+	public class ParenthesesExpressionContext: ExpressionContext {
+			open
+			func expression() -> ExpressionContext? {
+				return getRuleContext(ExpressionContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitParenthesesExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitParenthesesExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class AndExpressionContext: ExpressionContext {
+			open
+			func expression() -> [ExpressionContext] {
+				return getRuleContexts(ExpressionContext.self)
+			}
+			open
+			func expression(_ i: Int) -> ExpressionContext? {
+				return getRuleContext(ExpressionContext.self, i)
+			}
+			open
+			func AND() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.AND.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitAndExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitAndExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class AddExpressionContext: ExpressionContext {
+		public var op: Token!
+			open
+			func expression() -> [ExpressionContext] {
+				return getRuleContexts(ExpressionContext.self)
+			}
+			open
+			func expression(_ i: Int) -> ExpressionContext? {
+				return getRuleContext(ExpressionContext.self, i)
+			}
+			open
+			func PLUS() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.PLUS.rawValue, 0)
+			}
+			open
+			func MINUS() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.MINUS.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitAddExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitAddExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class EqualityExpressionContext: ExpressionContext {
+		public var op: Token!
+			open
+			func expression() -> [ExpressionContext] {
+				return getRuleContexts(ExpressionContext.self)
+			}
+			open
+			func expression(_ i: Int) -> ExpressionContext? {
+				return getRuleContext(ExpressionContext.self, i)
+			}
+			open
+			func EQUAL() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.EQUAL.rawValue, 0)
+			}
+			open
+			func DIF() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.DIF.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitEqualityExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitEqualityExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class FunctionCallExpressionContext: ExpressionContext {
+			open
+			func functionCall() -> FunctionCallContext? {
+				return getRuleContext(FunctionCallContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitFunctionCallExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitFunctionCallExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class UnaryExpressionContext: ExpressionContext {
 		public var op: Token!
 			open
 			func expression() -> ExpressionContext? {
@@ -1530,17 +1530,41 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitUnaryExpresion(self)
+			    return visitor.visitUnaryExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitUnaryExpresion(self)
+			    return visitor.visitUnaryExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class AddExpresionContext: ExpressionContext {
+	public class TypeExpressionContext: ExpressionContext {
+			open
+			func element() -> ElementContext? {
+				return getRuleContext(ElementContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitTypeExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitTypeExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class MulExpressionContext: ExpressionContext {
 		public var op: Token!
 			open
 			func expression() -> [ExpressionContext] {
@@ -1551,12 +1575,16 @@ open class PlatoParser: Parser {
 				return getRuleContext(ExpressionContext.self, i)
 			}
 			open
-			func PLUS() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.PLUS.rawValue, 0)
+			func MUL() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.MUL.rawValue, 0)
 			}
 			open
-			func MINUS() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.MINUS.rawValue, 0)
+			func DIV() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.DIV.rawValue, 0)
+			}
+			open
+			func MOD() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.MOD.rawValue, 0)
 			}
 
 		public
@@ -1567,38 +1595,10 @@ open class PlatoParser: Parser {
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitAddExpresion(self)
+			    return visitor.visitMulExpression(self)
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitAddExpresion(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class NotExpresionContext: ExpressionContext {
-			open
-			func NOT() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.NOT.rawValue, 0)
-			}
-			open
-			func expression() -> ExpressionContext? {
-				return getRuleContext(ExpressionContext.self, 0)
-			}
-
-		public
-		init(_ ctx: ExpressionContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitNotExpresion(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitNotExpresion(self)
+			    return visitor.visitMulExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
@@ -1629,7 +1629,7 @@ open class PlatoParser: Parser {
 			try _errHandler.sync(self)
 			switch(try getInterpreter().adaptivePredict(_input,11, _ctx)) {
 			case 1:
-				_localctx = SubscriptExpresionContext(_localctx)
+				_localctx = SubscriptExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 
@@ -1680,14 +1680,14 @@ open class PlatoParser: Parser {
 
 				break
 			case 2:
-				_localctx = UnaryExpresionContext(_localctx)
+				_localctx = UnaryExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(167)
-				_localctx.castdown(UnaryExpresionContext.self).op = try _input.LT(1)
+				_localctx.castdown(UnaryExpressionContext.self).op = try _input.LT(1)
 				_la = try _input.LA(1)
 				if (!(_la == PlatoParser.Tokens.PLUS.rawValue || _la == PlatoParser.Tokens.MINUS.rawValue)) {
-					_localctx.castdown(UnaryExpresionContext.self).op = try _errHandler.recoverInline(self) as Token
+					_localctx.castdown(UnaryExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 				}
 				else {
 					_errHandler.reportMatch(self)
@@ -1698,7 +1698,7 @@ open class PlatoParser: Parser {
 
 				break
 			case 3:
-				_localctx = NotExpresionContext(_localctx)
+				_localctx = NotExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(169)
@@ -1708,7 +1708,7 @@ open class PlatoParser: Parser {
 
 				break
 			case 4:
-				_localctx = FunctionCallExpresionContext(_localctx)
+				_localctx = FunctionCallExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(171)
@@ -1716,7 +1716,7 @@ open class PlatoParser: Parser {
 
 				break
 			case 5:
-				_localctx = ParenthesesExpresionContext(_localctx)
+				_localctx = ParenthesesExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(172)
@@ -1728,7 +1728,7 @@ open class PlatoParser: Parser {
 
 				break
 			case 6:
-				_localctx = TypeExpresionContext(_localctx)
+				_localctx = TypeExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(176)
@@ -1751,7 +1751,7 @@ open class PlatoParser: Parser {
 					try _errHandler.sync(self)
 					switch(try getInterpreter().adaptivePredict(_input,12, _ctx)) {
 					case 1:
-						_localctx = ExponentExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = ExponentExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(179)
 						if (!(precpred(_ctx, 12))) {
@@ -1764,17 +1764,17 @@ open class PlatoParser: Parser {
 
 						break
 					case 2:
-						_localctx = MulExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = MulExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(182)
 						if (!(precpred(_ctx, 9))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 9)"))
 						}
 						setState(183)
-						_localctx.castdown(MulExpresionContext.self).op = try _input.LT(1)
+						_localctx.castdown(MulExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 3670016) != 0))) {
-							_localctx.castdown(MulExpresionContext.self).op = try _errHandler.recoverInline(self) as Token
+							_localctx.castdown(MulExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 						}
 						else {
 							_errHandler.reportMatch(self)
@@ -1785,17 +1785,17 @@ open class PlatoParser: Parser {
 
 						break
 					case 3:
-						_localctx = AddExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = AddExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(185)
 						if (!(precpred(_ctx, 8))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 8)"))
 						}
 						setState(186)
-						_localctx.castdown(AddExpresionContext.self).op = try _input.LT(1)
+						_localctx.castdown(AddExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(_la == PlatoParser.Tokens.PLUS.rawValue || _la == PlatoParser.Tokens.MINUS.rawValue)) {
-							_localctx.castdown(AddExpresionContext.self).op = try _errHandler.recoverInline(self) as Token
+							_localctx.castdown(AddExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 						}
 						else {
 							_errHandler.reportMatch(self)
@@ -1806,17 +1806,17 @@ open class PlatoParser: Parser {
 
 						break
 					case 4:
-						_localctx = CompareExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = CompareExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(188)
 						if (!(precpred(_ctx, 7))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 7)"))
 						}
 						setState(189)
-						_localctx.castdown(CompareExpresionContext.self).op = try _input.LT(1)
+						_localctx.castdown(CompareExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 1056964608) != 0))) {
-							_localctx.castdown(CompareExpresionContext.self).op = try _errHandler.recoverInline(self) as Token
+							_localctx.castdown(CompareExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 						}
 						else {
 							_errHandler.reportMatch(self)
@@ -1827,17 +1827,17 @@ open class PlatoParser: Parser {
 
 						break
 					case 5:
-						_localctx = EqualityExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = EqualityExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(191)
 						if (!(precpred(_ctx, 6))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 6)"))
 						}
 						setState(192)
-						_localctx.castdown(EqualityExpresionContext.self).op = try _input.LT(1)
+						_localctx.castdown(EqualityExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(_la == PlatoParser.Tokens.EQUAL.rawValue || _la == PlatoParser.Tokens.DIF.rawValue)) {
-							_localctx.castdown(EqualityExpresionContext.self).op = try _errHandler.recoverInline(self) as Token
+							_localctx.castdown(EqualityExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 						}
 						else {
 							_errHandler.reportMatch(self)
@@ -1848,7 +1848,7 @@ open class PlatoParser: Parser {
 
 						break
 					case 6:
-						_localctx = AndExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = AndExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(194)
 						if (!(precpred(_ctx, 5))) {
@@ -1861,7 +1861,7 @@ open class PlatoParser: Parser {
 
 						break
 					case 7:
-						_localctx = OrExpresionContext(  ExpressionContext(_parentctx, _parentState))
+						_localctx = OrExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
 						setState(197)
 						if (!(precpred(_ctx, 4))) {

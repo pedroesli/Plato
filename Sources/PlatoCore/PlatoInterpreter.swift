@@ -29,7 +29,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Expressions
-    open override func visitUnaryExpresion(_ ctx: PlatoParser.UnaryExpresionContext) -> Value? {
+    open override func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> Value? {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
@@ -37,17 +37,13 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Unary operator '\(ctx.op.getText()!)' to an operand of type '\(value.type)'", at: ctx)
         }
         
-        switch ctx.op.getType() {
-        case PlatoParser.Tokens.PLUS.rawValue:
-            return value
-        case PlatoParser.Tokens.MINUS.rawValue:
+        if ctx.op.getType() == PlatoParser.Tokens.MINUS.rawValue {
             return minusUnaryValue(value)
-        default:
-            return unexpectedError(at: ctx)
         }
+        return value
     }
     
-    open override func visitMulExpresion(_ ctx: PlatoParser.MulExpresionContext) -> Value? {
+    open override func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> Value? {
         guard let (left, right) = getArithmeticValues(ctx) else { return nil }
         
         guard left.type.isCompatible(with: right.type) else {
@@ -76,24 +72,25 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitAddExpresion(_ ctx: PlatoParser.AddExpresionContext) -> Value? {
+    open override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
         guard let (left, right) = getArithmeticValues(ctx) else { return nil }
         
         guard left.type.isCompatible(with: right.type) else {
             return error("'\(left.type)' and '\(right.type) is not of the same type or numerical.", at: ctx)
         }
         
-        switch ctx.op.getType() {
-        case PlatoParser.Tokens.PLUS.rawValue:
-            return addValues(left, right)
-        case PlatoParser.Tokens.MINUS.rawValue:
+        if ctx.op.getType() == PlatoParser.Tokens.MINUS.rawValue {
             guard left.type.rawValue <= ValueType.float.rawValue else {
                 return error("Binary operator '-' cannot be applied to two '\(left.type)' operands", at: ctx)
             }
             return subtractValues(left, right)
-        default:
-            return unexpectedError(at: ctx)
         }
+        
+        return addValues(left, right)
+    }
+    
+    open override func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> Value? {
+        return visit(ctx.expression()!)
     }
     
     // MARK: Elements
@@ -222,7 +219,12 @@ extension PlatoInterpreter {
     private func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
-        error = RuntimeError("Runtime Error in \(ctx.getText()): " + description, line: line, column: column)
+        error = RuntimeError(
+            reason: description,
+            badCode: ctx.getText(),
+            line: line,
+            column: column
+        )
         return nil
     }
     

@@ -6,9 +6,11 @@ public struct Plato {
         let input = ANTLRInputStream(code)
         let lexer = PlatoLexer(input)
         let tokens = CommonTokenStream(lexer)
-        let interpreter = PlatoInterpreter()
         let parser = try PlatoParser(tokens)
+        parser.setErrorHandler(BailErrorStrategy())
         let tree = try parser.program()
+        
+        let interpreter = PlatoInterpreter()
         _ = interpreter.visit(tree)
         if let error = interpreter.error {
             throw error
