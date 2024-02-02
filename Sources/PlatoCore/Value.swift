@@ -49,16 +49,25 @@ public final class Value {
     
     public var asFloat: Float {
         // Implicit upcasting
-        if type == .integer {
-            return Float(value as! Int)
-        } else if type == .boolean {
+        switch type {
+        case .boolean:
             return (value as! Bool) ? 1.0 : 0
+        case .integer:
+            return Float(value as! Int)
+        default:
+            return value as! Float
         }
-        return value as! Float
     }
     
     public var asBool: Bool {
-        return value as! Bool
+        switch type {
+        case .integer:
+            return Bool(value as! Int != 0)
+        case .float:
+            return Bool(value as! Float != 0)
+        default:
+            return value as! Bool
+        }
     }
     
     public var asString: String {

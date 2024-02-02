@@ -34,13 +34,15 @@ final class PlatoTests: XCTestCase {
         XCTAssertNoThrow(try Plato.run(code))
         
         let errorCode = """
+        "Hey" + 3
         "Error" - "String"
         [1, 3, 4] - [4, 5]
+        "value: " + 25
         """
         XCTAssertThrowsError(try Plato.run(errorCode))
     }
     
-    func testMultiplication() throws {
+    func testMultiplication() {
         let code = """
         2*5
         25/5
@@ -48,6 +50,49 @@ final class PlatoTests: XCTestCase {
         10%2
         8.625%0.75 #0.375
         """
-        try Plato.run(code)
+        XCTAssertNoThrow(try Plato.run(code))
+        
+        let errorCode = """
+        "Error" * "String"
+        [1, 3, 4] / [4, 5]
+        1 *
+        """
+        XCTAssertThrowsError(try Plato.run(errorCode))
+    }
+    
+    func testExponent() {
+        let code = """
+        2^TRUE
+        2^FALSE
+        2^3
+        2^2^2
+        2.5^2
+        2^2.5
+        2^2^2.5
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+        
+        let errorCode = """
+        2^"Hey"
+        """
+        XCTAssertThrowsError(try Plato.run(errorCode))
+    }
+    
+    func testBoolean() {
+        let code = """
+        TRUE and TRUE
+        TRUE and FALSE
+        TRUE or TRUE
+        TRUE or FALSE
+        1 and 0
+        3 and 5
+        6 or 0
+        !TRUE
+        !FALSE
+        !1
+        !0
+        !4
+        """
+        XCTAssertNoThrow(try Plato.run(code))
     }
 }

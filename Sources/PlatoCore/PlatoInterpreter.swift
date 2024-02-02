@@ -29,6 +29,16 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Expressions
+    open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
+        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        
+        let operation = ExponentOperation(left, right)
+        guard operation.isCompatible() else {
+            return error("Binary operator '^' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        }
+        return operation.result()
+    }
+    
     open override func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> Value? {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
@@ -37,56 +47,83 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Unary operator '\(ctx.op.getText()!)' to an operand of type '\(value.type)'", at: ctx)
         }
         
-        if ctx.op.getType() == PlatoParser.Tokens.MINUS.rawValue {
+        if ctx.op.getType() == PlatoParser.Tokens.MINUS {
             return minusUnaryValue(value)
         }
         return value
     }
     
+    open override func visitNotExpression(_ ctx: PlatoParser.NotExpressionContext) -> Value? {
+        guard let expression = ctx.expression(),
+              let value = visit(expression) else { return nil }
+        
+        guard value.type.rawValue <= ValueType.float.rawValue else {
+            return error("Not operator '!' to an operand of type '\(value.type)'", at: ctx)
+        }
+        return Value(bool: !value.asBool)
+    }
+    
     open override func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> Value? {
         guard let (left, right) = getArithmeticValues(ctx) else { return nil }
         
-        guard left.type.isCompatible(with: right.type) else {
-            return error("'\(left.type)' and '\(right.type)' is not of the same type or numerical.", at: ctx)
-        }
+        let operation: ArithmeticOperation!
         
-        guard left.type.rawValue <= ValueType.float.rawValue else {
-            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
-        }
-        
-        switch ctx.op.getType() {
-        case PlatoParser.Tokens.MUL.rawValue:
-            return multiplyValues(left, right)
-        case PlatoParser.Tokens.DIV.rawValue:
+        switch PlatoParser.Tokens(rawValue: ctx.op.getType())! {
+        case PlatoParser.Tokens.MUL:
+            operation = MultiplyOperation(left, right)
+        case PlatoParser.Tokens.DIV:
             guard right.asFloat != 0 else {
                 return error("Division by zero", at: ctx)
             }
-            return divideValues(left, right)
-        case PlatoParser.Tokens.MOD.rawValue:
+            operation = DivideOperation(left, right)
+        case PlatoParser.Tokens.MOD:
             guard right.asFloat != 0 else {
                 return error("Division by zero", at: ctx)
             }
-            return moduloValues(left, right)
+            operation = ModuloOperation(left, right)
         default:
             return unexpectedError(at: ctx)
         }
+        
+        guard operation.isCompatible() else {
+            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        }
+        return operation.result()
     }
     
     open override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
         guard let (left, right) = getArithmeticValues(ctx) else { return nil }
         
-        guard left.type.isCompatible(with: right.type) else {
-            return error("'\(left.type)' and '\(right.type) is not of the same type or numerical.", at: ctx)
+        let operation: ArithmeticOperation = ctx.op.getType() == PlatoParser.Tokens.MINUS ?
+        SubtractOperation(left, right) :
+        AddOperation(left, right)
+        
+        guard operation.isCompatible() else {
+            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        }
+        return operation.result()
+    }
+    
+    open override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
+        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        let operation = AndOperation(left, right)
+        
+        guard operation.isCompatible() else {
+            return error("Boolean operator 'and' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
         }
         
-        if ctx.op.getType() == PlatoParser.Tokens.MINUS.rawValue {
-            guard left.type.rawValue <= ValueType.float.rawValue else {
-                return error("Binary operator '-' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return subtractValues(left, right)
+        return operation.result()
+    }
+    
+    open override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
+        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        let operation = OrOperation(left, right)
+        
+        guard operation.isCompatible() else {
+            return error("Boolean operator 'or' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
         }
         
-        return addValues(left, right)
+        return operation.result()
     }
     
     open override func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> Value? {
@@ -141,70 +178,6 @@ extension PlatoInterpreter {
         default:
             return nil
         }
-    }
-    
-    private func multiplyValues(_ left: Value, _ right: Value) -> Value? {
-        switch higherOrderType(left, right) {
-        case .boolean, .integer:
-            return Value(int: left.asInteger * right.asInteger)
-        case .float:
-            return Value(float: left.asFloat * right.asFloat)
-        default:
-            return nil
-        }
-    }
-    
-    private func divideValues(_ left: Value, _ right: Value) -> Value? {
-        switch higherOrderType(left, right) {
-        case .boolean, .integer:
-            return Value(int: left.asInteger / right.asInteger)
-        case .float:
-            return Value(float: left.asFloat / right.asFloat)
-        default:
-            return nil
-        }
-    }
-    
-    private func moduloValues(_ left: Value, _ right: Value) -> Value? {
-        switch higherOrderType(left, right) {
-        case .boolean, .integer:
-            return Value(int: left.asInteger % right.asInteger)
-        case .float:
-            return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
-        default:
-            return nil
-        }
-    }
-    
-    private func addValues(_ left: Value, _ right: Value) -> Value? {
-        switch higherOrderType(left, right) {
-        case .boolean, .integer:
-            return Value(int: left.asInteger + right.asInteger)
-        case .float:
-            return Value(float: left.asFloat + right.asFloat)
-        case .string:
-            return Value(string: left.asString + right.asString)
-        case .array:
-            return Value(array: left.asArray + right.asArray)
-        default:
-            return nil
-        }
-    }
-    
-    private func subtractValues(_ left: Value, _ right: Value) -> Value? {
-        switch higherOrderType(left, right) {
-        case .boolean, .integer:
-            return Value(int: left.asInteger - right.asInteger)
-        case .float:
-            return Value(float: left.asFloat - right.asFloat)
-        default:
-            return nil
-        }
-    }
-    
-    /// Which value has the highest order
-    private func higherOrderType(_ left: Value, _ right: Value) -> ValueType {
-        return left.type.rawValue > right.type.rawValue ? left.type : right.type
     }
     
     /// Get the left and right expression
