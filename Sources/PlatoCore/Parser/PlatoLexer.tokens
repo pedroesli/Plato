@@ -81,8 +81,8 @@ COMMENT_LONG=51
 'and'=30
 'or'=31
 '!'=32
-'TRUE'=33
-'FALSE'=34
+'true'=33
+'false'=34
 '='=35
 '*='=36
 '/='=37

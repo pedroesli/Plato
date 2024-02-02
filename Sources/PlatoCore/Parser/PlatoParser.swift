@@ -49,7 +49,7 @@ open class PlatoParser: Parser {
 		nil, "';'", "'if'", "'{'", "'}'", "'else'", "'while'", "'for'", "'in'", 
 		"'from'", "'to'", "'by'", "'func'", "'('", "')'", "','", "'['", "']'", 
 		"'^'", "'*'", "'/'", "'%'", "'+'", "'-'", "'<'", "'<='", "'>'", "'>='", 
-		"'=='", "'!='", "'and'", "'or'", "'!'", "'TRUE'", "'FALSE'", "'='", "'*='", 
+		"'=='", "'!='", "'and'", "'or'", "'!'", "'true'", "'false'", "'='", "'*='", 
 		"'/='", "'%='", "'+='", "'-='", "'return'", "'break'", "'continue'"
 	]
 	private static let _SYMBOLIC_NAMES: [String?] = [
@@ -1294,14 +1294,6 @@ open class PlatoParser: Parser {
 			func GTE() -> TerminalNode? {
 				return getToken(PlatoParser.Tokens.GTE.rawValue, 0)
 			}
-			open
-			func EQUAL() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.EQUAL.rawValue, 0)
-			}
-			open
-			func DIF() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.DIF.rawValue, 0)
-			}
 
 		public
 		init(_ ctx: ExpressionContext) {
@@ -1815,7 +1807,7 @@ open class PlatoParser: Parser {
 						setState(189)
 						_localctx.castdown(CompareExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
-						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 1056964608) != 0))) {
+						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 251658240) != 0))) {
 							_localctx.castdown(CompareExpressionContext.self).op = try _errHandler.recoverInline(self) as Token
 						}
 						else {
@@ -2370,7 +2362,7 @@ open class PlatoParser: Parser {
 		15,1,15,1,16,1,16,1,16,5,16,216,8,16,10,16,12,16,219,9,16,1,17,1,17,1,
 		17,1,17,1,17,1,17,1,17,3,17,228,8,17,1,18,1,18,3,18,232,8,18,1,18,1,18,
 		1,18,0,1,28,19,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,0,6,
-		2,0,1,1,48,48,1,0,35,40,1,0,22,23,1,0,19,21,1,0,24,29,1,0,28,29,256,0,
+		2,0,1,1,48,48,1,0,35,40,1,0,22,23,1,0,19,21,1,0,24,27,1,0,28,29,256,0,
 		38,1,0,0,0,2,47,1,0,0,0,4,61,1,0,0,0,6,63,1,0,0,0,8,65,1,0,0,0,10,67,1,
 		0,0,0,12,69,1,0,0,0,14,72,1,0,0,0,16,76,1,0,0,0,18,90,1,0,0,0,20,97,1,
 		0,0,0,22,128,1,0,0,0,24,130,1,0,0,0,26,141,1,0,0,0,28,177,1,0,0,0,30,205,

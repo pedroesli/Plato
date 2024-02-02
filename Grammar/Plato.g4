@@ -78,7 +78,7 @@ expression
     | NOT expression                                                               #notExpression
     | expression op=(MUL | DIV | MOD) expression                                   #mulExpression
     | expression op=(PLUS | MINUS) expression                                      #addExpression
-    | expression op=(LT | LTE | GT | GTE | EQUAL | DIF) expression                 #compareExpression
+    | expression op=(LT | LTE | GT | GTE) expression                               #compareExpression
     | expression op=(EQUAL | DIF) expression                                       #equalityExpression
     | expression AND expression                                                    #andExpression
     | expression OR expression                                                     #orExpression

@@ -80,18 +80,37 @@ final class PlatoTests: XCTestCase {
     
     func testBoolean() {
         let code = """
-        TRUE and TRUE
-        TRUE and FALSE
-        TRUE or TRUE
-        TRUE or FALSE
+        true and true
+        true and false
+        true or true
+        true or false
         1 and 0
         3 and 5
         6 or 0
-        !TRUE
-        !FALSE
+        !true
+        !false
         !1
         !0
         !4
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
+    
+    func testEquality() {
+        let code = """
+        true == true
+        true != false
+        1 == 1
+        1 == 1.0
+        1 == 1.5
+        true == 25
+        2 == true
+        3.5 == 3.5
+        [1,2,3] == [1,2,3]
+        [1,2.5,3.1] == [1,2.5,3.1]
+        [1,2] == [1,3]
+        [1,2,3] != [4,5,6]
+        [1,2] != [1,2]
         """
         XCTAssertNoThrow(try Plato.run(code))
     }

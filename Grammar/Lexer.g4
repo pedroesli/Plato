@@ -24,8 +24,8 @@ DIF     : '!=';
 AND     : 'and';
 OR      : 'or';
 NOT     : '!';
-TRUE    : 'TRUE';
-FALSE   : 'FALSE';
+TRUE    : 'true';
+FALSE   : 'false';
 
 // Assignment Operators
 ASSIGN      : '=';

@@ -30,7 +30,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     // MARK: Expressions
     open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
-        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation = ExponentOperation(left, right)
         guard operation.isCompatible() else {
@@ -64,7 +64,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> Value? {
-        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: ArithmeticOperation!
         
@@ -92,11 +92,28 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
-        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
-        let operation: ArithmeticOperation = ctx.op.getType() == PlatoParser.Tokens.MINUS ?
-        SubtractOperation(left, right) :
-        AddOperation(left, right)
+        let operation: ArithmeticOperation = if ctx.op.getType() == PlatoParser.Tokens.MINUS {
+            SubtractOperation(left, right)
+        } else {
+            AddOperation(left, right)
+        }
+        
+        guard operation.isCompatible() else {
+            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        }
+        return operation.result()
+    }
+    
+    open override func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> Value? {
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
+        
+        let operation: BooleanOperation = if ctx.op.getType() == PlatoParser.Tokens.EQUAL {
+            EqualOperation(left, right)
+        } else {
+            DifferentOperation(left, right)
+        }
         
         guard operation.isCompatible() else {
             return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
@@ -105,7 +122,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
-        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
         let operation = AndOperation(left, right)
         
         guard operation.isCompatible() else {
@@ -116,7 +133,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
-        guard let (left, right) = getArithmeticValues(ctx) else { return nil }
+        guard let (left, right) = getExpressionValues(ctx) else { return nil }
         let operation = OrOperation(left, right)
         
         guard operation.isCompatible() else {
@@ -181,7 +198,7 @@ extension PlatoInterpreter {
     }
     
     /// Get the left and right expression
-    private func getArithmeticValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
+    private func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
         guard let leftExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 0),
               let rightExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 1),
               let left = visit(leftExp),
