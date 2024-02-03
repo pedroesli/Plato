@@ -113,5 +113,22 @@ final class PlatoTests: XCTestCase {
         [1,2] != [1,2]
         """
         XCTAssertNoThrow(try Plato.run(code))
+        
+        let errorCode = """
+        2 == "2"
+        """
+        XCTAssertThrowsError(try Plato.run(errorCode))
+    }
+    
+    func testCompare() {
+        let code = """
+        2 < 3
+        5 > 2
+        2 <= 2
+        5.5 >= 3.3
+        "hey" <= "hey"
+        "a" < "b"
+        """
+        XCTAssertNoThrow(try Plato.run(code))
     }
 }

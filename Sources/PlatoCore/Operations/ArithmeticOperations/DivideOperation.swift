@@ -1,11 +1,11 @@
 //
-//  ModuloOperation.swift
-//  
+//  DivideOperation.swift
+//
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 01/02/24.
 //
 
-struct ModuloOperation: ArithmeticOperation {
+struct DivideOperation: BaseOperation {
     let left: Value
     let right: Value
     let order: OrderType
@@ -28,9 +28,9 @@ struct ModuloOperation: ArithmeticOperation {
     func result() -> Value? {
         switch order.high {
         case .boolean, .integer:
-            return Value(int: left.asInteger % right.asInteger)
+            return Value(int: left.asInteger / right.asInteger)
         case .float:
-            return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
+            return Value(float: left.asFloat / right.asFloat)
         default:
             return nil
         }

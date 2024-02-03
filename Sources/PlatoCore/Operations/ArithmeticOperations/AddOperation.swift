@@ -1,11 +1,11 @@
 //
-//  MultiplyOperation.swift
+//  File.swift
 //  
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 01/02/24.
 //
 
-struct MultiplyOperation: ArithmeticOperation {
+struct AddOperation: BaseOperation {
     let left: Value
     let right: Value
     let order: OrderType
@@ -21,16 +21,20 @@ struct MultiplyOperation: ArithmeticOperation {
         .boolean : [.boolean],
         .integer : [.integer, .boolean],
         .float   : [.float, .integer, .boolean],
-        .string  : [],
-        .array   : [],
+        .string  : [.string],
+        .array   : [.array],
     ]
     
     func result() -> Value? {
         switch order.high {
         case .boolean, .integer:
-            return Value(int: left.asInteger * right.asInteger)
+            return Value(int: left.asInteger + right.asInteger)
         case .float:
-            return Value(float: left.asFloat * right.asFloat)
+            return Value(float: left.asFloat + right.asFloat)
+        case .string:
+            return Value(string: left.asString + right.asString)
+        case .array:
+            return Value(array: left.asArray + right.asArray)
         default:
             return nil
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ExponentOperation: ArithmeticOperation {
+struct ExponentOperation: BaseOperation {
     let left: Value
     let right: Value
     let order: OrderType

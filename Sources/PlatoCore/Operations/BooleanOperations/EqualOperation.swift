@@ -5,13 +5,14 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 02/02/24.
 //
 
-struct EqualOperation: BooleanOperation {
-    var left: Value
-    var right: Value
+struct EqualOperation: BaseOperation {
+    let left: Value
+    let right: Value
+    let order: OrderType
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.float, .integer, .boolean],
-        .integer : [.float, .integer, .boolean],
+        .boolean : [.boolean],
+        .integer : [.integer, .boolean],
         .float   : [.float, .integer, .boolean],
         .string  : [.string],
         .array   : [.array],
@@ -20,11 +21,11 @@ struct EqualOperation: BooleanOperation {
     init(_ left: Value, _ right: Value) {
         self.left = left
         self.right = right
+        order = Self.highestOrderType(left, right)
     }
     
     func result() -> Value? {
-        let highest = highestValueType(left, right)
-        switch highest {
+        switch order.high {
         case .boolean:
             return Value(bool: left.asBool == right.asBool)
         case .integer:
@@ -44,10 +45,6 @@ struct EqualOperation: BooleanOperation {
         default:
             return nil
         }
-    }
-    
-    func highestValueType(_ left: Value, _ right: Value) -> ValueType {
-        return left.type.rawValue > right.type.rawValue ? left.type : right.type
     }
     
     private func isEqual(left: Value, right: Value) -> Bool {

@@ -1,11 +1,11 @@
 //
-//  MinusOperation.swift
-//
+//  ModuloOperation.swift
+//  
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 01/02/24.
 //
 
-struct SubtractOperation: ArithmeticOperation {
+struct ModuloOperation: BaseOperation {
     let left: Value
     let right: Value
     let order: OrderType
@@ -28,9 +28,9 @@ struct SubtractOperation: ArithmeticOperation {
     func result() -> Value? {
         switch order.high {
         case .boolean, .integer:
-            return Value(int: left.asInteger - right.asInteger)
+            return Value(int: left.asInteger % right.asInteger)
         case .float:
-            return Value(float: left.asFloat - right.asFloat)
+            return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
         default:
             return nil
         }

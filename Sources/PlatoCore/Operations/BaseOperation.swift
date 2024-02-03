@@ -1,11 +1,11 @@
 //
-//  Arithmetic.swift
+//  BaseOperation.swift
 //
 //
-//  Created by Pedro Ésli Vieira do Nascimento on 01/02/24.
+//  Created by Pedro Ésli Vieira do Nascimento on 03/02/24.
 //
 
-protocol ArithmeticOperation {
+protocol BaseOperation {
     typealias OrderType = (high: ValueType, low: ValueType)
     var left: Value { get }
     var right: Value { get }
@@ -16,7 +16,7 @@ protocol ArithmeticOperation {
     func isCompatible() -> Bool
 }
 
-extension ArithmeticOperation {
+extension BaseOperation {
     
     static func highestOrderType(_ left: Value, _ right: Value) -> OrderType {
         return left.type.rawValue > right.type.rawValue ? (left.type, right.type) : (right.type, left.type)
