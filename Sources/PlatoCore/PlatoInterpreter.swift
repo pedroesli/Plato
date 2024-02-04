@@ -31,7 +31,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
-        if IDValidator.isValid(id) {
+        if !IDValidator.isValid(id) {
             return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
         }
         
@@ -216,6 +216,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Elements
+    open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
+        let id = ctx.ID()!.getText()
+        return scopes.peek().value(forKey: id) as? Value
+    }
+    
     open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
         return Value(int: Int(ctx.INT()!.getText())!)
     }
