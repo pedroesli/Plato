@@ -6,12 +6,13 @@
 //
 
 import Antlr4
+import Foundation
 
 open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public var error: RuntimeError?
     
-    private let globalMemory: [String : Value] = [:]
-    private let scopes: Stack<[String : Value]> = Stack<[String : Value]>()
+    private var globalMemory: NSMutableDictionary = [:]
+    private var scopes = Stack<NSMutableDictionary>()
     private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
@@ -28,25 +29,67 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return nil
     }
     
+    open override func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> Value? {
+        let id = ctx.ID()!.getText()
+        if IDValidator.isValid(id) {
+            return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
+        }
+        
+        guard let value = visit(ctx.expression()!) else { return nil }
+        // Normal assign
+        if ctx.op.getType() == PlatoParser.Tokens.ASSIGN {
+            scopes.peek().setValue(value, forKey: id)
+            return value
+        }
+        
+        // Arithmetic assign
+        guard let left = scopes.peek().value(forKey: id) as? Value else {
+            return error("Assignment of type '\(ctx.op.getText()!)' cannot be applied on an empty value", at: ctx)
+        }
+        
+        let operation: BaseOperation!
+        let op = PlatoParser.Tokens(rawValue: ctx.op.getType())!
+        
+        switch op {
+        case .MUL_ASSIGN:
+            operation = MultiplyOperation(left, value)
+        case .DIV_ASSIGN:
+            operation = DivideOperation(left, value)
+        case .MOD_ASSIGN:
+            operation = ModuloOperation(left, value)
+        case .ADD_ASSIGN:
+            operation = AddOperation(left, value)
+        case .SUB_ASSIGN:
+            operation = SubtractOperation(left, value)
+        default:
+            return unexpectedError(at: ctx)
+        }
+        
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
+        }
+    }
+    
     // MARK: Expressions
     open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation = ExponentOperation(left, right)
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator '^' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Binary operator '^' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        return operation.result()
     }
     
     open override func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> Value? {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
-        guard value.type.rawValue <= ValueType.float.rawValue else {
+        guard value.type <= ValueType.float else {
             return error("Unary operator '\(ctx.op.getText()!)' to an operand of type '\(value.type)'", at: ctx)
         }
         
@@ -60,7 +103,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
-        guard value.type.rawValue <= ValueType.float.rawValue else {
+        guard value.type <= ValueType.float else {
             return error("Not operator '!' to an operand of type '\(value.type)'", at: ctx)
         }
         return Value(bool: !value.asBool)
@@ -70,31 +113,24 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: BaseOperation!
+        let op = PlatoParser.Tokens(rawValue: ctx.op.getType())!
         
-        switch PlatoParser.Tokens(rawValue: ctx.op.getType())! {
+        switch op {
         case PlatoParser.Tokens.MUL:
             operation = MultiplyOperation(left, right)
         case PlatoParser.Tokens.DIV:
-            guard right.asFloat != 0 else {
-                return error("Division by zero", at: ctx)
-            }
             operation = DivideOperation(left, right)
         case PlatoParser.Tokens.MOD:
-            guard right.asFloat != 0 else {
-                return error("Division by zero", at: ctx)
-            }
             operation = ModuloOperation(left, right)
         default:
             return unexpectedError(at: ctx)
         }
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        return operation.result()
     }
     
     open override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
@@ -106,13 +142,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             AddOperation(left, right)
         }
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        return operation.result()
     }
     
     open override func visitCompareExpression(_ ctx: PlatoParser.CompareExpressionContext) -> Value? {
@@ -132,14 +166,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return unexpectedError(at: ctx)
         }
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        
-        return operation.result()
     }
     
     open override func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> Value? {
@@ -151,41 +182,33 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             DifferentOperation(left, right)
         }
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Binary operator '\(ctx.op.getText()!)' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        return operation.result()
     }
     
     open override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         let operation = AndOperation(left, right)
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator 'and' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Boolean operator 'and' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        
-        return operation.result()
     }
     
     open override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         let operation = OrOperation(left, right)
         
-        guard operation.isCompatible() else {
-            if left.type == right.type {
-                return error("Binary operator 'or' cannot be applied to two '\(left.type)' operands", at: ctx)
-            }
-            return error("Boolean operator 'or' cannot be applied to '\(left.type)' and '\(right.type)' operands", at: ctx)
+        do {
+            return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
         }
-        
-        return operation.result()
     }
     
     open override func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> Value? {

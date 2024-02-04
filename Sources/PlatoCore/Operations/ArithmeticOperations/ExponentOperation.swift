@@ -27,7 +27,8 @@ struct ExponentOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() -> Value? {
+    func result() throws -> Value? {
+        try isCompatible(op: "^")
         switch order.high {
         case .boolean, .integer:
             return Value(int: Int(pow(Float(left.asInteger), Float(right.asInteger))))

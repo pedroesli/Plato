@@ -25,7 +25,12 @@ struct DivideOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() -> Value? {
+    func result() throws -> Value? {
+        try isCompatible(op: "/")
+        if right.asFloat == 0 {
+            throw ArithmeticError.zeroDivisionError
+        }
+        
         switch order.high {
         case .boolean, .integer:
             return Value(int: left.asInteger / right.asInteger)
@@ -34,5 +39,9 @@ struct DivideOperation: BaseOperation {
         default:
             return nil
         }
+    }
+    
+    func isCompatible() -> Bool {
+        return Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil && right.asFloat != 0
     }
 }

@@ -24,7 +24,8 @@ struct GreaterThanOperation: BaseOperation {
         order = Self.highestOrderType(left, right)
     }
     
-    func result() -> Value? {
+    func result() throws -> Value? {
+        try isCompatible(op: ">")
         switch order.high {
         case .boolean, .integer:
             return Value(bool: left.asInteger > right.asInteger)

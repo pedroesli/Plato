@@ -23,4 +23,8 @@ public enum ValueType: Int8 {
         }
         return false
     }
+    
+    static func <= (_ left: ValueType, _ right: ValueType) -> Bool {
+        return left.rawValue <= right.rawValue
+    }
 }

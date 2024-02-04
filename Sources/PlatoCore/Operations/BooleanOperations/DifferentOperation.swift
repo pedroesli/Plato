@@ -24,7 +24,8 @@ struct DifferentOperation: BaseOperation {
         order = Self.highestOrderType(left, right)
     }
     
-    func result() -> Value? {
+    func result() throws -> Value? {
+        try isCompatible(op: "!=")
         switch order.high {
         case .boolean:
             return Value(bool: left.asBool != right.asBool)
@@ -37,7 +38,7 @@ struct DifferentOperation: BaseOperation {
         case .array:
             guard left.asArray.count == right.asArray.count else { return Value(bool: true) }
             return Value(
-                bool: !left.asArray.elementsEqual(
+                bool: try !left.asArray.elementsEqual(
                     right.asArray,
                     by: isNotEqual(left:right:)
                 )
@@ -47,10 +48,9 @@ struct DifferentOperation: BaseOperation {
         }
     }
     
-    private func isNotEqual(left: Value, right: Value) -> Bool {
+    private func isNotEqual(left: Value, right: Value) throws -> Bool {
         let operation = DifferentOperation(left, right)
-        guard operation.isCompatible() else { return false }
-        guard let result = operation.result() else { return false }
+        guard let result = try operation.result() else { return false }
         return !result.asBool
     }
 }

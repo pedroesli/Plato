@@ -12,8 +12,8 @@ protocol BaseOperation {
     var order: OrderType { get }
     static var compatibleMatrix: [ValueType : [ValueType]] { get }
     
-    func result() -> Value?
-    func isCompatible() -> Bool
+    func result() throws -> Value?
+    func isCompatible(op: String) throws
 }
 
 extension BaseOperation {
@@ -22,7 +22,12 @@ extension BaseOperation {
         return left.type.rawValue > right.type.rawValue ? (left.type, right.type) : (right.type, left.type)
     }
     
-    func isCompatible() -> Bool {
-        return Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil
+    func isCompatible(op: String) throws {
+        if Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil {
+            if left.type == right.type {
+                throw ArithmeticError.typeError(message: "Binary operator '\(op)' cannot be applied to two '\(left.type)' operands")
+            }
+            throw ArithmeticError.typeError(message: "Binary operator '\(op)' cannot be applied to '\(left.type)' and '\(right.type)' operands")
+        }
     }
 }

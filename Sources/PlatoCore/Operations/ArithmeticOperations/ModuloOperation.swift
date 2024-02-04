@@ -25,7 +25,12 @@ struct ModuloOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() -> Value? {
+    func result() throws -> Value? {
+        try isCompatible(op: "%")
+        if right.asFloat == 0 {
+            throw ArithmeticError.zeroDivisionError
+        }
+        
         switch order.high {
         case .boolean, .integer:
             return Value(int: left.asInteger % right.asInteger)
