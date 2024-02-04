@@ -21,8 +21,8 @@ struct ExponentOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [],
         .array   : [],
     ]
@@ -30,7 +30,7 @@ struct ExponentOperation: BaseOperation {
     func result() throws -> Value? {
         try isCompatible(op: "^")
         switch order.high {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(int: Int(pow(Float(left.asInteger), Float(right.asInteger))))
         case .float:
             return Value(float: pow(left.asFloat, right.asFloat))

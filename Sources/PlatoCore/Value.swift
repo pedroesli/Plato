@@ -5,12 +5,14 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 
+import Foundation
+
 public final class Value {
     public let type: ValueType
     private var value: Any
     
     public init(int: Int) {
-        self.type = .integer
+        self.type = .int
         self.value = int
     }
     
@@ -29,7 +31,7 @@ public final class Value {
         self.value = string
     }
     
-    public init(array: [Value]) {
+    public init(array: ArrayValue) {
         self.type = .array
         self.value = array
     }
@@ -52,7 +54,7 @@ public final class Value {
         switch type {
         case .boolean:
             return (value as! Bool) ? 1.0 : 0
-        case .integer:
+        case .int:
             return Float(value as! Int)
         default:
             return value as! Float
@@ -61,7 +63,7 @@ public final class Value {
     
     public var asBool: Bool {
         switch type {
-        case .integer:
+        case .int:
             return Bool(value as! Int != 0)
         case .float:
             return Bool(value as! Float != 0)
@@ -74,8 +76,8 @@ public final class Value {
         return String(describing: value)
     }
     
-    public var asArray: [Value] {
-        return value as! [Value]
+    public var asArray: ArrayValue {
+        return value as! ArrayValue
     }
 }
 

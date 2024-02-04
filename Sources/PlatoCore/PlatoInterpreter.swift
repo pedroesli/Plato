@@ -75,6 +75,30 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Expressions
+    
+    open override func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+        if let id = ctx.ID()?.getText() {
+            var currentValue = scopes.peek().value(forKey: id) as! Value
+            for expression in ctx.expression() {
+                guard currentValue.type == .array else {
+                    return error("Cannot use subscript on type '\(currentValue.type)'", at: ctx)
+                }
+                
+                guard let indexValue = visit(expression) else { return nil }
+                guard indexValue.type <= ValueType.int else {
+                    return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
+                }
+                let currentArray = currentValue.asArray
+                guard indexValue.asInteger >= 0 && indexValue.asInteger < currentArray.count else {
+                    return error("Index out of range", at: ctx)
+                }
+                currentValue = currentArray[indexValue.asInteger]
+            }
+            return currentValue
+        }
+        return nil
+    }
+    
     open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
@@ -254,7 +278,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 values.append(visit(expression)!)
             }
         }
-        return Value(array: values)
+        return Value(array: ArrayValue(values))
     }
 }
 
@@ -263,7 +287,7 @@ extension PlatoInterpreter {
     
     private func minusUnaryValue(_ value: Value) -> Value? {
         switch value.type {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(int: -value.asInteger)
         case .float:
             return Value(float: -value.asFloat)

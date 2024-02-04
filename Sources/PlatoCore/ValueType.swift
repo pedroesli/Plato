@@ -7,7 +7,7 @@
 
 public enum ValueType: Int8 {
     case boolean
-    case integer
+    case int
     case float
     case string
     case array

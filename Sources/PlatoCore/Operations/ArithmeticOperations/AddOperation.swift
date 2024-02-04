@@ -5,6 +5,8 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 01/02/24.
 //
 
+import Foundation
+
 struct AddOperation: BaseOperation {
     let left: Value
     let right: Value
@@ -19,8 +21,8 @@ struct AddOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [.string],
         .array   : [.array],
     ]
@@ -28,7 +30,7 @@ struct AddOperation: BaseOperation {
     func result() throws -> Value? {
         try isCompatible(op: "+")
         switch order.high {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(int: left.asInteger + right.asInteger)
         case .float:
             return Value(float: left.asFloat + right.asFloat)

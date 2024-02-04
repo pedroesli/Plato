@@ -12,8 +12,8 @@ struct EqualOperation: BaseOperation {
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [.string],
         .array   : [.array],
     ]
@@ -29,7 +29,7 @@ struct EqualOperation: BaseOperation {
         switch order.high {
         case .boolean:
             return Value(bool: left.asBool == right.asBool)
-        case .integer:
+        case .int:
             return Value(bool: left.asInteger == right.asInteger)
         case .float:
             return Value(bool: left.asFloat == right.asFloat)

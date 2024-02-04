@@ -12,8 +12,8 @@ struct LessThanOperation: BaseOperation {
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [.string],
         .array   : [],
     ]
@@ -27,7 +27,7 @@ struct LessThanOperation: BaseOperation {
     func result() throws -> Value? {
         try isCompatible(op: "<")
         switch order.high {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(bool: left.asInteger < right.asInteger)
         case .float:
             return Value(bool: left.asFloat < right.asFloat)

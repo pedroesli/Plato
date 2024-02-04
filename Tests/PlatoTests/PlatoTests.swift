@@ -146,7 +146,9 @@ final class PlatoTests: XCTestCase {
     func testArray() {
         let code = """
         a = [1, 2, 3, 4, 5]
-        a
+        a[3]
+        b = [[1,2,3]]
+        b[0][1]
         """
         XCTAssertNoThrow(try Plato.run(code))
     }

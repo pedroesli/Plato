@@ -19,8 +19,8 @@ struct SubtractOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [],
         .array   : [],
     ]
@@ -28,7 +28,7 @@ struct SubtractOperation: BaseOperation {
     func result() throws -> Value? {
         try isCompatible(op: "-")
         switch order.high {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(int: left.asInteger - right.asInteger)
         case .float:
             return Value(float: left.asFloat - right.asFloat)

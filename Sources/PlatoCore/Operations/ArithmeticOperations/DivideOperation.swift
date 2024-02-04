@@ -19,8 +19,8 @@ struct DivideOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .integer : [.integer, .boolean],
-        .float   : [.float, .integer, .boolean],
+        .int : [.int, .boolean],
+        .float   : [.float, .int, .boolean],
         .string  : [],
         .array   : [],
     ]
@@ -32,7 +32,7 @@ struct DivideOperation: BaseOperation {
         }
         
         switch order.high {
-        case .boolean, .integer:
+        case .boolean, .int:
             return Value(int: left.asInteger / right.asInteger)
         case .float:
             return Value(float: left.asFloat / right.asFloat)
