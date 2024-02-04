@@ -66,7 +66,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         do {
-            return try operation.result()
+            let result = try operation.result()
+            scopes.peek().setValue(result, forKey: id)
+            return result
         } catch {
             return self.error(error.localizedDescription, at: ctx)
         }

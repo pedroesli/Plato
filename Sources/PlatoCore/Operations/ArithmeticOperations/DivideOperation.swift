@@ -28,7 +28,7 @@ struct DivideOperation: BaseOperation {
     func result() throws -> Value? {
         try isCompatible(op: "/")
         if right.asFloat == 0 {
-            throw ArithmeticError.zeroDivisionError
+            throw OperationError.zeroDivisionError
         }
         
         switch order.high {

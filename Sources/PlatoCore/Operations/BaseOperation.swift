@@ -23,11 +23,11 @@ extension BaseOperation {
     }
     
     func isCompatible(op: String) throws {
-        if Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil {
+        guard Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil else {
             if left.type == right.type {
-                throw ArithmeticError.typeError(message: "Binary operator '\(op)' cannot be applied to two '\(left.type)' operands")
+                throw OperationError.typeError(message: "Binary operator '\(op)' cannot be applied to two '\(left.type)' operands")
             }
-            throw ArithmeticError.typeError(message: "Binary operator '\(op)' cannot be applied to '\(left.type)' and '\(right.type)' operands")
+            throw OperationError.typeError(message: "Binary operator '\(op)' cannot be applied to '\(left.type)' and '\(right.type)' operands")
         }
     }
 }

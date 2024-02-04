@@ -135,6 +135,17 @@ final class PlatoTests: XCTestCase {
     func testAssignment() {
         let code = """
         a = 2
+        a += 1 #3
+        a *= 2 #6
+        a -= 1 #5
+        a
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
+    
+    func testArray() {
+        let code = """
+        a = [1, 2, 3, 4, 5]
         a
         """
         XCTAssertNoThrow(try Plato.run(code))
