@@ -153,4 +153,16 @@ final class PlatoTests: XCTestCase {
         """
         XCTAssertNoThrow(try Plato.run(code))
     }
+    
+    func testIfStatement() {
+        let code = """
+        a = true
+        b = "Hello, world!"
+        if a {
+            b = "New scope"
+            b
+        }
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
 }

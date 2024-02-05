@@ -28,3 +28,8 @@ func calculate(a) {
     b = a * 2
     return b
 }
+
+a = 1
+func add() {
+    a += 1
+}

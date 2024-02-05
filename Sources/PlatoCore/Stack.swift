@@ -5,19 +5,19 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 
-class Stack<T> {
-    private var items: [T] = []
+class Stack<Element> {
+    private var items: [Element] = []
     
-    func peek() -> T {
+    func peek() -> Element {
         guard let topElement = items.first else { fatalError("This stack is empty.") }
         return topElement
     }
     
-    func pop() -> T {
+    @discardableResult func pop() -> Element {
         return items.removeFirst()
     }
     
-    func push(_ element: T) {
+    func push(_ element: Element) {
         items.insert(element, at: 0)
     }
 }

@@ -9,10 +9,11 @@ import Antlr4
 import Foundation
 
 open class PlatoInterpreter: PlatoBaseVisitor<Value> {
+    
     public var error: RuntimeError?
     
-    private var globalMemory: NSMutableDictionary = [:]
-    private var scopes = Stack<NSMutableDictionary>()
+    private var globalMemory = Scope<String, Value>(parent: nil)
+    private var scopes = Stack<Scope<String, Value>>()
     private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
@@ -49,12 +50,12 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard let value = visit(ctx.expression()!) else { return nil }
         // Normal assign
         if ctx.op.getType() == PlatoParser.Tokens.ASSIGN {
-            scopes.peek().setValue(value, forKey: id)
+            scopes.peek().updateValue(value, forKey: id)
             return value
         }
         
         // Arithmetic assign
-        guard let left = scopes.peek().value(forKey: id) as? Value else {
+        guard let left = scopes.peek().getValue(forKey: id) else {
             return error("Assignment of type '\(ctx.op.getText()!)' cannot be applied on an empty value", at: ctx)
         }
         
@@ -78,11 +79,25 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         do {
             let result = try operation.result()
-            scopes.peek().setValue(result, forKey: id)
+            scopes.peek().updateValue(value, forKey: id)
             return result
         } catch {
             return self.error(error.localizedDescription, at: ctx)
         }
+    }
+    
+    open override func visitSelectionStatement(_ ctx: PlatoParser.SelectionStatementContext) -> Value? {
+        guard let result = visit(ctx.expression()!) else { return nil }
+        guard result.type <= .float else {
+            return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
+        }
+        if result.asBool, let statements = ctx.statements() {
+            newScope()
+            let statementResult = visit(statements)
+            popScope()
+            return statementResult
+        }
+        return nil
     }
     
     // MARK: Expressions
@@ -92,26 +107,6 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return unexpectedError(at: ctx)
         }
         return getSubscriptValue(from: firstValue, ctx: ctx)
-    }
-    
-    func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
-        var currentValue = value
-        for index in 1..<ctx.expression().count{
-            guard currentValue.type == .array else {
-                return error("Cannot use subscript on type '\(currentValue.type)'", at: ctx)
-            }
-            guard let expression = ctx.expression(index), let indexValue = visit(expression) else { return nil }
-            guard indexValue.type <= ValueType.int else {
-                return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
-            }
-            
-            let currentArray = currentValue.asArray
-            guard indexValue.asInteger >= 0 && indexValue.asInteger < currentArray.count else {
-                return error("Index out of range", at: ctx)
-            }
-            currentValue = currentArray[indexValue.asInteger]
-        }
-        return currentValue
     }
     
     open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
@@ -130,7 +125,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
-        guard value.type <= ValueType.float else {
+        guard value.type <= .float else {
             return error("Unary operator '\(ctx.op.getText()!)' to an operand of type '\(value.type)'", at: ctx)
         }
         
@@ -144,7 +139,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
-        guard value.type <= ValueType.float else {
+        guard value.type <= .float else {
             return error("Not operator '!' to an operand of type '\(value.type)'", at: ctx)
         }
         return Value(bool: !value.asBool)
@@ -259,7 +254,10 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     // MARK: Elements
     open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
-        return scopes.peek().value(forKey: id) as? Value
+        guard let value = scopes.peek().getValue(forKey: id) else {
+            return error("Cannot find '\(id)' in scope", at: ctx)
+        }
+        return value
     }
     
     open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
@@ -287,7 +285,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
-        var values = ArrayValue()
+        let values = ArrayValue()
         if let expressions = ctx.parameterList()?.expression() {
             for expression in expressions {
                 values.append(visit(expression)!)
@@ -300,7 +298,27 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
 // MARK: Helper Methods
 extension PlatoInterpreter {
     
-    private func minusUnaryValue(_ value: Value) -> Value? {
+    func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+        var currentValue = value
+        for index in 1..<ctx.expression().count{
+            guard currentValue.type == .array else {
+                return error("Cannot use subscript on type '\(currentValue.type)'", at: ctx)
+            }
+            guard let expression = ctx.expression(index), let indexValue = visit(expression) else { return nil }
+            guard indexValue.type <= ValueType.int else {
+                return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
+            }
+            
+            let currentArray = currentValue.asArray
+            guard indexValue.asInteger >= 0 && indexValue.asInteger < currentArray.count else {
+                return error("Index out of range", at: ctx)
+            }
+            currentValue = currentArray[indexValue.asInteger]
+        }
+        return currentValue
+    }
+    
+    func minusUnaryValue(_ value: Value) -> Value? {
         switch value.type {
         case .boolean, .int:
             return Value(int: -value.asInteger)
@@ -312,7 +330,7 @@ extension PlatoInterpreter {
     }
     
     /// Get the left and right expression
-    private func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
+    func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
         guard let leftExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 0),
               let rightExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 1),
               let left = visit(leftExp),
@@ -320,7 +338,16 @@ extension PlatoInterpreter {
         return (left, right)
     }
     
-    private func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
+    func newScope() {
+        let parent = scopes.peek()
+        scopes.push(Scope(parent: parent))
+    }
+    
+    func popScope() {
+        scopes.pop()
+    }
+    
+    public func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
         error = RuntimeError(
@@ -332,7 +359,7 @@ extension PlatoInterpreter {
         return nil
     }
     
-    private func unexpectedError(at ctx: ParserRuleContext) -> Value? {
+    public func unexpectedError(at ctx: ParserRuleContext) -> Value? {
         return error("Unexpected error!", at: ctx)
     }
 }
