@@ -88,26 +88,30 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     // MARK: Expressions
     
     open override func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
-        if let id = ctx.ID()?.getText() {
-            var currentValue = scopes.peek().value(forKey: id) as! Value
-            for expression in ctx.expression() {
-                guard currentValue.type == .array else {
-                    return error("Cannot use subscript on type '\(currentValue.type)'", at: ctx)
-                }
-                
-                guard let indexValue = visit(expression) else { return nil }
-                guard indexValue.type <= ValueType.int else {
-                    return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
-                }
-                let currentArray = currentValue.asArray
-                guard indexValue.asInteger >= 0 && indexValue.asInteger < currentArray.count else {
-                    return error("Index out of range", at: ctx)
-                }
-                currentValue = currentArray[indexValue.asInteger]
-            }
-            return currentValue
+        guard let firstValue = visit(ctx.expression(0)!) else {
+            return unexpectedError(at: ctx)
         }
-        return nil
+        return getSubscriptValue(from: firstValue, ctx: ctx)
+    }
+    
+    func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+        var currentValue = value
+        for index in 1..<ctx.expression().count{
+            guard currentValue.type == .array else {
+                return error("Cannot use subscript on type '\(currentValue.type)'", at: ctx)
+            }
+            guard let expression = ctx.expression(index), let indexValue = visit(expression) else { return nil }
+            guard indexValue.type <= ValueType.int else {
+                return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
+            }
+            
+            let currentArray = currentValue.asArray
+            guard indexValue.asInteger >= 0 && indexValue.asInteger < currentArray.count else {
+                return error("Index out of range", at: ctx)
+            }
+            currentValue = currentArray[indexValue.asInteger]
+        }
+        return currentValue
     }
     
     open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
@@ -283,13 +287,13 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
-        var values: [Value] = []
+        var values = ArrayValue()
         if let expressions = ctx.parameterList()?.expression() {
             for expression in expressions {
                 values.append(visit(expression)!)
             }
         }
-        return Value(array: ArrayValue(values))
+        return Value(array: values)
     }
 }
 

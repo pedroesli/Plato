@@ -145,6 +145,7 @@ final class PlatoTests: XCTestCase {
     
     func testArray() {
         let code = """
+        ["Hello", "World"][1]
         a = [1, 2, 3, 4, 5]
         a[3]
         b = [[1,2,3]]

@@ -7,23 +7,45 @@
 
 import Foundation
 
+/// Reference type array for values
 public final class ArrayValue {
-    private var values: [Value] = []
+    private var values: [Value]
+    
+    public init() {
+        self.values = []
+    }
     
     public init(_ values: [Value]) {
         self.values = values
     }
     
-    subscript(index: Int) -> Value {
-        return values[index]
+    public subscript(index: Int) -> Value {
+        get {
+            values[index]
+        }
+        set {
+            values[index] = newValue
+        }
     }
     
-    var count: Int {
+    public var count: Int {
         return values.count
     }
     
-    func elementsEqual(_ other: ArrayValue, by areEquivalent: (Value, Value) throws -> Bool ) rethrows -> Bool {
+    public var startIndex: Int {
+        return values.startIndex
+    }
+    
+    public var endIndex: Int {
+        values.endIndex
+    }
+    
+    public func elementsEqual(_ other: ArrayValue, by areEquivalent: (Value, Value) throws -> Bool ) rethrows -> Bool {
         return try values.elementsEqual(other.values, by: areEquivalent)
+    }
+    
+    public func append(_ newValue: Value) {
+        values.append(newValue)
     }
     
     public static func + (_ left: ArrayValue, right: ArrayValue) -> ArrayValue {

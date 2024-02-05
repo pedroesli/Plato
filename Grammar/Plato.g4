@@ -72,7 +72,7 @@ functionArguments
     ;
 
 expression
-    : (ID | functionCall | array) '[' expression ']' ('[' expression ']')*         #subscriptExpression
+    : expression '[' expression ']' ('[' expression ']')*                          #subscriptExpression
     |<assoc=right> expression EXP expression                                       #exponentExpression
     | op=(PLUS | MINUS) expression                                                 #unaryExpression
     | NOT expression                                                               #notExpression
