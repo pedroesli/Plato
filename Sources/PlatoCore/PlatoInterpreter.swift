@@ -22,6 +22,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     // MARK: Statements
+    
+    open override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
+        // Stop mechanism when an error occurs
+        var result: Value?
+        for statement in ctx.statement() {
+            guard error == nil else { return nil }
+            result = visit(statement)
+        }
+        return result
+    }
+    
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
         if let expression = ctx.expression(), let result = visit(expression) {
             print(result)
