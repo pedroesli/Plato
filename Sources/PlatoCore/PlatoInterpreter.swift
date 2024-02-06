@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 // Return rule: ALWAYS return a value! Only return nil when an error occurs or
-// when visiting an expression that also returns nil (because an error occurred at that expression).
+// when visiting a context that also returns nil (because an error occurred at that context).
 
 import Antlr4
 import Foundation
@@ -80,7 +80,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         do {
-            let result = try operation.result()
+            guard let result = try operation.result() else { return unexpectedError("Assignment math operation returned nil", at: ctx) }
             scopes.peek().updateValue(value, forKey: id)
             return result
         } catch {
@@ -94,13 +94,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
         }
         if let ifResult = ifOperation(result, statements: ctx.statements()) {
-            print("If")
             return ifResult
         }
         
         for elseIfStatement in ctx.elseIfStatement() {
             if let elseIfResult = visit(elseIfStatement) {
-                print("ElseIf")
                 return elseIfResult
             }
         }
@@ -386,11 +384,11 @@ extension PlatoInterpreter {
         return nil
     }
     
-    public func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
+    public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
         error = RuntimeError(
-            message: description,
+            message: message,
             badCode: ctx.getText(),
             line: line,
             column: column
@@ -398,8 +396,8 @@ extension PlatoInterpreter {
         return nil
     }
     
-    public func unexpectedError(at ctx: ParserRuleContext) -> Value? {
-        return error("Unexpected error!", at: ctx)
+    public func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> Value? {
+        return error("Unexpected error! \(message ?? "")", at: ctx)
     }
 }
 
