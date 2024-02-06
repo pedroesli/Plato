@@ -20,6 +20,6 @@ public struct RuntimeError: Error, CustomStringConvertible {
     
     /// Get the full description of the error
     public var description: String {
-        return "Runtime Error in line \(line):\(column) \(badCode ?? ""): \(message)"
+        return "Runtime Error in line \(line):\(column): \(message)"
     }
 }

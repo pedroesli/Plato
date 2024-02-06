@@ -203,4 +203,13 @@ final class PlatoTests: XCTestCase {
         """
         XCTAssertNoThrow(try Plato.run(code))
     }
+    
+    func testForFromToByStatement() {
+        let code = """
+        for index from 0 to 10 by 1.5 {
+            index
+        }
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
 }

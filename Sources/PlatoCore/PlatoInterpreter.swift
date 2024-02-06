@@ -45,8 +45,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
-        if !IDValidator.isValid(id) {
-            return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
+        if let idError = validateId(id, at: ctx) {
+            return idError
         }
         
         guard let value = visit(ctx.expression()!) else { return nil }
@@ -152,6 +152,10 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         let id = ctx.ID()!.getText()
+        if let idError = validateId(id, at: ctx) {
+            return idError
+        }
+        
         var finalValue: Value?
         for value in values.asArray {
             newScope()
@@ -162,6 +166,52 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             popScope()
         }
         
+        return finalValue
+    }
+    
+    open override func visitForFromToByStatement(_ ctx: PlatoParser.ForFromToByStatementContext) -> Value? {
+        guard let from = visit(ctx.expression(0)!),
+              let to = visit(ctx.expression(1)!),
+              let by = visit(ctx.expression(2)!)
+        else { return nil }
+        guard from.type <= .float else {
+            return error("Cannot use type '\(from.type)' on parameter 'from'", at: ctx)
+        }
+        guard to.type <= .float else {
+            return error("Cannot use type '\(to.type)' on parameter 'to'", at: ctx)
+        }
+        guard by.type <= .float else {
+            return error("Cannot use type '\(by.type)' on parameter 'by'", at: ctx)
+        }
+        
+        let id = ctx.ID()!.getText()
+        if let idError = validateId(id, at: ctx) {
+            return idError
+        }
+        let highestType = highestValueType(from.type, highestValueType(to.type, by.type))
+        var finalValue: Value?
+        switch highestType {
+        case .boolean, .int:
+            for index in stride(from: from.asInteger, to: to.asInteger, by: by.asInteger) {
+                newScope()
+                scopes.peek().updateValue(Value(int: index), forKey: id)
+                if let statements = ctx.statements() {
+                    finalValue = visit(statements)
+                }
+                popScope()
+            }
+        case .float:
+            for index in stride(from: from.asFloat, to: to.asFloat, by: by.asFloat) {
+                newScope()
+                scopes.peek().updateValue(Value(float: index), forKey: id)
+                if let statements = ctx.statements() {
+                    finalValue = visit(statements)
+                }
+                popScope()
+            }
+        default:
+            return unexpectedError("No switch statement for \(highestType)",at: ctx)
+        }
         return finalValue
     }
     
@@ -424,6 +474,17 @@ extension PlatoInterpreter {
             return value
         }
         return nil
+    }
+    
+    func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
+        if !IDValidator.isValid(id) {
+            return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
+        }
+        return nil
+    }
+    
+    func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
+        return left.rawValue > right.rawValue ? left : right
     }
     
     public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
