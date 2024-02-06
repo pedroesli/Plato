@@ -162,6 +162,28 @@ final class PlatoTests: XCTestCase {
             "2"
         } else if 4 == 4 {
             "4"
+        } else {
+            "5"
+        }
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
+    
+    func testWhileStatement() {
+        let code = """
+        a = 0
+        while a < 10 {
+            a += 1
+            a
+        }
+        a = 0
+        while a < 5 {
+            b = 0
+            while b < 5 {
+                b += 1
+                b
+            }
+            a += 1
         }
         """
         XCTAssertNoThrow(try Plato.run(code))

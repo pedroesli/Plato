@@ -81,7 +81,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         do {
             guard let result = try operation.result() else { return unexpectedError("Assignment math operation returned nil", at: ctx) }
-            scopes.peek().updateValue(value, forKey: id)
+            scopes.peek().updateValue(result, forKey: id)
             return result
         } catch {
             return self.error(error.localizedDescription, at: ctx)
@@ -89,11 +89,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitSelectionStatement(_ ctx: PlatoParser.SelectionStatementContext) -> Value? {
-        guard let result = visit(ctx.expression()!) else { return nil }
-        guard result.type <= .float else {
-            return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
+        guard let ifCondition = visit(ctx.expression()!) else { return nil }
+        guard ifCondition.type <= .float else {
+            return error("Cannot convert value of type '\(ifCondition.type)' to expected condition type 'Bool'", at: ctx)
         }
-        if let ifResult = ifOperation(result, statements: ctx.statements()) {
+        if let ifResult = ifOperation(ifCondition, statements: ctx.statements()) {
             return ifResult
         }
         
@@ -110,16 +110,39 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
-        guard let result = visit(ctx.expression()!) else { return nil }
-        guard result.type <= .float else {
-            return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
+        guard let ifCondition = visit(ctx.expression()!) else { return nil }
+        guard ifCondition.type <= .float else {
+            return error("Cannot convert value of type '\(ifCondition.type)' to expected condition type 'Bool'", at: ctx)
         }
-        return ifOperation(result, statements: ctx.statements())
+        return ifOperation(ifCondition, statements: ctx.statements())
     }
     
     open override func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
         return visit(statements)
+    }
+    
+    open override func visitWhileStatement(_ ctx: PlatoParser.WhileStatementContext) -> Value? {
+        guard var condition = visit(ctx.expression()!) else { return nil }
+        guard condition.type <= .float else {
+            return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
+        }
+        
+        var value: Value?
+        while condition.asBool {
+            if let statements = ctx.statements() {
+                newScope()
+                value = visit(statements)
+                popScope()
+            }
+            // update the condition value
+            guard let nextCondition = visit(ctx.expression()!) else { return nil }
+            condition = nextCondition
+            guard condition.type <= .float else {
+                return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
+            }
+        }
+        return value
     }
     
     // MARK: Expressions
@@ -372,8 +395,8 @@ extension PlatoInterpreter {
         scopes.pop()
     }
     
-    func ifOperation(_ ifExpression: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
-        if ifExpression.asBool, let statements {
+    func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
+        if condition.asBool, let statements {
             let value: Value?
             newScope()
             value = visit(statements)
