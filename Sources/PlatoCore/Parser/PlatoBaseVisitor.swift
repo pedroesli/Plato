@@ -79,14 +79,14 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitSelectionElseIf(_ ctx: PlatoParser.SelectionElseIfContext) -> T? { return visitChildren(ctx) }
+	open func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitSelectionElse(_ ctx: PlatoParser.SelectionElseContext) -> T? { return visitChildren(ctx) }
+	open func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

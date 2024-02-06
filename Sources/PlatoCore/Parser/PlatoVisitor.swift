@@ -100,22 +100,22 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by {@link PlatoParser#selectionElseIf}.
+	 * Visit a parse tree produced by {@link PlatoParser#elseIfStatement}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitSelectionElseIf(_ ctx: PlatoParser.SelectionElseIfContext) -> T {
+	open func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by {@link PlatoParser#selectionElse}.
+	 * Visit a parse tree produced by {@link PlatoParser#elseStatement}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitSelectionElse(_ ctx: PlatoParser.SelectionElseContext) -> T {
+	open func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

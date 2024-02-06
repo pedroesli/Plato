@@ -91,13 +91,30 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard result.type <= .float else {
             return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
         }
-        if result.asBool, let statements = ctx.statements() {
-            newScope()
-            let statementResult = visit(statements)
-            popScope()
-            return statementResult
+        ifOperation(result, statements: ctx.statements())
+        
+        for elseIfStatement in ctx.elseIfStatement() {
+            _ = visit(elseIfStatement)
+        }
+        
+        if let elseStatement = ctx.elseStatement() {
+            _ = visit(elseStatement)
         }
         return nil
+    }
+    
+    open override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
+        guard let result = visit(ctx.expression()!) else { return nil }
+        guard result.type <= .float else {
+            return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
+        }
+        ifOperation(result, statements: ctx.statements())
+        return nil
+    }
+    
+    open override func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> Value? {
+        guard let statements = ctx.statements() else { return nil }
+        return visit(statements)
     }
     
     // MARK: Expressions
@@ -345,6 +362,14 @@ extension PlatoInterpreter {
     
     func popScope() {
         scopes.pop()
+    }
+    
+    func ifOperation(_ result: Value, statements:  PlatoParser.StatementsContext?) {
+        if result.asBool, let statements {
+            newScope()
+            _ = visit(statements)
+            popScope()
+        }
     }
     
     public func error(_ description: String, at ctx: ParserRuleContext) -> Value? {

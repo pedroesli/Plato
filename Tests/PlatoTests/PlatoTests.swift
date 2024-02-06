@@ -160,7 +160,26 @@ final class PlatoTests: XCTestCase {
         b = "Hello, world!"
         if a {
             b = "New scope"
-            b
+            if 1 == 1 {
+                b = "1"
+            }
+        }
+        b
+        
+        if false {
+            c = "hey"
+            c
+        } else {
+            c = "testing"
+            c
+        }
+        
+        if 1 == 2 {
+            "1"
+        } else if 2 == 3 {
+            "2"
+        } else if 4 == 4 {
+            "4"
         }
         """
         XCTAssertNoThrow(try Plato.run(code))

@@ -21,6 +21,13 @@ public class Scope<Key, Value> where Key: Hashable {
     }
 
     @discardableResult public func updateValue(_ value: Value, forKey key: Key) -> Value? {
+        if symbols[key] != nil {
+            return symbols.updateValue(value, forKey: key)
+        }
+        // Else check if parent has the value otherwise create in this scope
+        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
+            return parentValue
+        }
         return symbols.updateValue(value, forKey: key)
     }
     
@@ -29,5 +36,16 @@ public class Scope<Key, Value> where Key: Hashable {
             return parent?.getValue(forKey: key)
         }
         return value
+    }
+    
+    // use this to update parent value. Returns nil instead of creating a value in that scope
+    private func mayUpdateValue(_ value: Value, forKey key: Key) -> Value? {
+        if symbols[key] != nil {
+            return symbols.updateValue(value, forKey: key)
+        }
+        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
+            return parentValue
+        }
+        return nil
     }
 }

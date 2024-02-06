@@ -46,15 +46,15 @@ assignmentStatement
     ;
 
 selectionStatement
-    : 'if' expression '{' statements '}' selectionElseIf* selectionElse?
+    : 'if' expression '{' statements '}' elseIfStatement* elseStatement?
     ;
 
-selectionElseIf
-    : 'else' 'if' expression '{' statements '}'
+elseIfStatement
+    : NEWLINE* 'else' 'if' expression '{' statements '}'
     ;
 
-selectionElse
-    : 'else' '{' statements '}'
+elseStatement
+    : NEWLINE* 'else' '{' statements '}'
     ;
 
 controlFlowStatement
