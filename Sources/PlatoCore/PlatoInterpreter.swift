@@ -104,7 +104,6 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         if let elseStatement = ctx.elseStatement() {
-            print("Else")
             return visit(elseStatement)
         }
         return Value.void

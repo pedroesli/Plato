@@ -21,14 +21,14 @@ struct AddOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .int : [.int, .boolean],
+        .int     : [.int, .boolean],
         .float   : [.float, .int, .boolean],
         .string  : [.string],
         .array   : [.array],
     ]
     
     func result() throws -> Value? {
-        try isCompatible(op: "+")
+        try isCompatible(op: "+", type: .arithmetic)
         switch order.high {
         case .boolean, .int:
             return Value(int: left.asInteger + right.asInteger)

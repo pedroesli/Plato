@@ -19,14 +19,14 @@ struct DivideOperation: BaseOperation {
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.boolean],
-        .int : [.int, .boolean],
+        .int     : [.int, .boolean],
         .float   : [.float, .int, .boolean],
         .string  : [],
         .array   : [],
     ]
     
     func result() throws -> Value? {
-        try isCompatible(op: "/")
+        try isCompatible(op: "/", type: .arithmetic)
         if right.asFloat == 0 {
             throw OperationError.zeroDivisionError
         }

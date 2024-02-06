@@ -13,7 +13,7 @@ protocol BaseOperation {
     static var compatibleMatrix: [ValueType : [ValueType]] { get }
     
     func result() throws -> Value?
-    func isCompatible(op: String) throws
+    func isCompatible(op: String, type: OperationType) throws
 }
 
 extension BaseOperation {
@@ -22,12 +22,12 @@ extension BaseOperation {
         return left.type.rawValue > right.type.rawValue ? (left.type, right.type) : (right.type, left.type)
     }
     
-    func isCompatible(op: String) throws {
+    func isCompatible(op: String, type: OperationType) throws {
         guard Self.compatibleMatrix[order.high]?.first(where: { $0 == order.low }) != nil else {
             if left.type == right.type {
-                throw OperationError.typeError(message: "Binary operator '\(op)' cannot be applied to two '\(left.type)' operands")
+                throw OperationError.typeError(message: "\(type.rawValue) operator '\(op)' cannot be applied to two '\(left.type)' operands")
             }
-            throw OperationError.typeError(message: "Binary operator '\(op)' cannot be applied to '\(left.type)' and '\(right.type)' operands")
+            throw OperationError.typeError(message: "\(type.rawValue) operator '\(op)' cannot be applied to '\(left.type)' and '\(right.type)' operands")
         }
     }
 }

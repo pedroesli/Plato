@@ -12,7 +12,7 @@ struct AndOperation: BaseOperation {
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .boolean : [.float, .int, .boolean],
-        .int : [.float, .int, .boolean],
+        .int     : [.float, .int, .boolean],
         .float   : [.float, .int, .boolean],
         .string  : [],
         .array   : [],
@@ -25,7 +25,7 @@ struct AndOperation: BaseOperation {
     }
     
     func result() throws -> Value? {
-        try isCompatible(op: "and")
+        try isCompatible(op: "and", type: .boolean)
         return Value(bool: left.asBool && right.asBool)
     }
 }
