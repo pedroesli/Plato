@@ -128,11 +128,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
         }
         
-        var value: Value?
+        var finalValue: Value?
         while condition.asBool {
             if let statements = ctx.statements() {
                 newScope()
-                value = visit(statements)
+                finalValue = visit(statements)
                 popScope()
             }
             // update the condition value
@@ -142,7 +142,27 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
             }
         }
-        return value
+        return finalValue
+    }
+    
+    open override func visitForInStatement(_ ctx: PlatoParser.ForInStatementContext) -> Value? {
+        guard let values = visit(ctx.expression()!) else { return nil }
+        guard values.type == .array || values.type == .string else {
+            return error("Cannot convert value of type '\(values.type)' to expected type 'Array'", at: ctx)
+        }
+        
+        let id = ctx.ID()!.getText()
+        var finalValue: Value?
+        for value in values.asArray {
+            newScope()
+            scopes.peek().updateValue(value, forKey: id)
+            if let statements = ctx.statements() {
+                finalValue = visit(statements)
+            }
+            popScope()
+        }
+        
+        return finalValue
     }
     
     // MARK: Expressions

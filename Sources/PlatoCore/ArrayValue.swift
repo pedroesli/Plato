@@ -8,7 +8,7 @@
 import Foundation
 
 /// Reference type array for values
-public final class ArrayValue {
+public final class ArrayValue: Sequence {
     private var values: [Value]
     
     public init() {
@@ -46,6 +46,10 @@ public final class ArrayValue {
     
     public func append(_ newValue: Value) {
         values.append(newValue)
+    }
+    
+    public func makeIterator() -> IndexingIterator<[Value]> {
+        values.makeIterator()
     }
     
     public static func + (_ left: ArrayValue, right: ArrayValue) -> ArrayValue {

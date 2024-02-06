@@ -77,6 +77,13 @@ public final class Value {
     }
     
     public var asArray: ArrayValue {
+        if type == .string {
+            var stringArray: [Value] = []
+            for character in value as! String {
+                stringArray.append(Value(string: String(character)))
+            }
+            return ArrayValue(stringArray)
+        }
         return value as! ArrayValue
     }
 }

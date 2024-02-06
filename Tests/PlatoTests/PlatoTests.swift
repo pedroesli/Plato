@@ -188,4 +188,19 @@ final class PlatoTests: XCTestCase {
         """
         XCTAssertNoThrow(try Plato.run(code))
     }
+    
+    func testForInStatement() {
+        let code = """
+        numbers = [1, 2, 3, 4, 5, 6]
+        for number in numbers {
+            number
+        }
+        
+        words = "Hello, World!"
+        for word in words {
+            word
+        }
+        """
+        XCTAssertNoThrow(try Plato.run(code))
+    }
 }
