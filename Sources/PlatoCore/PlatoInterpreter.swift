@@ -90,9 +90,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitSelectionStatement(_ ctx: PlatoParser.SelectionStatementContext) -> Value? {
         guard let ifCondition = visit(ctx.expression()!) else { return nil }
+        
         guard ifCondition.type <= .float else {
             return error("Cannot convert value of type '\(ifCondition.type)' to expected condition type 'Bool'", at: ctx)
         }
+        
         if let ifResult = ifOperation(ifCondition, statements: ctx.statements()) {
             return ifResult
         }
@@ -111,9 +113,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
         guard let ifCondition = visit(ctx.expression()!) else { return nil }
+        
         guard ifCondition.type <= .float else {
             return error("Cannot convert value of type '\(ifCondition.type)' to expected condition type 'Bool'", at: ctx)
         }
+        
         return ifOperation(ifCondition, statements: ctx.statements())
     }
     
@@ -124,6 +128,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitWhileStatement(_ ctx: PlatoParser.WhileStatementContext) -> Value? {
         guard var condition = visit(ctx.expression()!) else { return nil }
+        
         guard condition.type <= .float else {
             return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
         }
@@ -147,6 +152,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitForInStatement(_ ctx: PlatoParser.ForInStatementContext) -> Value? {
         guard let values = visit(ctx.expression()!) else { return nil }
+        
         guard values.type == .array || values.type == .string else {
             return error("Cannot convert value of type '\(values.type)' to expected type 'Array'", at: ctx)
         }
@@ -174,6 +180,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
               let to = visit(ctx.expression(1)!),
               let by = visit(ctx.expression(2)!)
         else { return nil }
+        
         guard from.type <= .float else {
             return error("Cannot use type '\(from.type)' on parameter 'from'", at: ctx)
         }
@@ -188,8 +195,10 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         if let idError = validateId(id, at: ctx) {
             return idError
         }
+        
         let highestType = highestValueType(from.type, highestValueType(to.type, by.type))
         var finalValue: Value?
+        
         switch highestType {
         case .boolean, .int:
             for index in stride(from: from.asInteger, to: to.asInteger, by: by.asInteger) {
@@ -260,6 +269,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard value.type <= .float else {
             return error("Not operator '!' to an operand of type '\(value.type)'", at: ctx)
         }
+        
         return Value(bool: !value.asBool)
     }
     
@@ -345,6 +355,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
+        
         let operation = AndOperation(left, right)
         
         do {
@@ -356,6 +367,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
+        
         let operation = OrOperation(left, right)
         
         do {
@@ -372,9 +384,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     // MARK: Elements
     open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
+        
         guard let value = scopes.peek().getValue(forKey: id) else {
             return error("Cannot find '\(id)' in scope", at: ctx)
         }
+        
         return value
     }
     
