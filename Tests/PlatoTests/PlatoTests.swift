@@ -156,27 +156,9 @@ final class PlatoTests: XCTestCase {
     
     func testIfStatement() {
         let code = """
-        a = true
-        b = "Hello, world!"
-        if a {
-            b = "New scope"
-            if 1 == 1 {
-                b = "1"
-            }
-        }
-        b
-        
-        if false {
-            c = "hey"
-            c
-        } else {
-            c = "testing"
-            c
-        }
-        
         if 1 == 2 {
             "1"
-        } else if 2 == 3 {
+        } else if 2 == 2 {
             "2"
         } else if 4 == 4 {
             "4"

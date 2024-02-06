@@ -4,6 +4,8 @@
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
+// Return rule: ALWAYS return a value! Only return nil when an error occurs or
+// when visiting an expression that also returns nil (because an error occurred at that expression).
 
 import Antlr4
 import Foundation
@@ -38,7 +40,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         if let expression = ctx.expression(), let result = visit(expression) {
             print(result)
         }
-        return nil
+        return Value.void
     }
     
     open override func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> Value? {
@@ -91,16 +93,23 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard result.type <= .float else {
             return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
         }
-        ifOperation(result, statements: ctx.statements())
+        if let ifResult = ifOperation(result, statements: ctx.statements()) {
+            print("If")
+            return ifResult
+        }
         
         for elseIfStatement in ctx.elseIfStatement() {
-            _ = visit(elseIfStatement)
+            if let elseIfResult = visit(elseIfStatement) {
+                print("ElseIf")
+                return elseIfResult
+            }
         }
         
         if let elseStatement = ctx.elseStatement() {
-            _ = visit(elseStatement)
+            print("Else")
+            return visit(elseStatement)
         }
-        return nil
+        return Value.void
     }
     
     open override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
@@ -108,8 +117,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         guard result.type <= .float else {
             return error("Cannot convert value of type '\(result.type)' to expected condition type 'Bool'", at: ctx)
         }
-        ifOperation(result, statements: ctx.statements())
-        return nil
+        return ifOperation(result, statements: ctx.statements())
     }
     
     open override func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> Value? {
@@ -147,7 +155,10 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         if ctx.op.getType() == PlatoParser.Tokens.MINUS {
-            return minusUnaryValue(value)
+            guard let result = minusUnaryValue(value) else {
+                return unexpectedError(at: ctx)
+            }
+            return result
         }
         return value
     }
@@ -364,12 +375,15 @@ extension PlatoInterpreter {
         scopes.pop()
     }
     
-    func ifOperation(_ result: Value, statements:  PlatoParser.StatementsContext?) {
-        if result.asBool, let statements {
+    func ifOperation(_ ifExpression: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
+        if ifExpression.asBool, let statements {
+            let value: Value?
             newScope()
-            _ = visit(statements)
+            value = visit(statements)
             popScope()
+            return value
         }
+        return nil
     }
     
     public func error(_ description: String, at ctx: ParserRuleContext) -> Value? {
