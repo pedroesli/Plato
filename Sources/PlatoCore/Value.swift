@@ -36,6 +36,11 @@ public final class Value {
         self.value = array
     }
     
+    internal init(command: CommandType) {
+        self.type = .command
+        self.value = command
+    }
+    
     private init(type: ValueType, value: Any) {
         self.type = type
         self.value = value
@@ -85,6 +90,10 @@ public final class Value {
             return ArrayValue(stringArray)
         }
         return value as! ArrayValue
+    }
+    
+    internal var asCommand: CommandType {
+        return value as! CommandType
     }
 }
 

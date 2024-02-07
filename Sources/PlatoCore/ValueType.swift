@@ -12,6 +12,7 @@ public enum ValueType: Int8 {
     case string
     case array
     case void
+    case command
     
     public func isCompatible(with right: ValueType) -> Bool {
         guard self != .void && right != .void else { return false }

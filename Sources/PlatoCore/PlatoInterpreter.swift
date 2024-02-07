@@ -17,6 +17,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     private var globalMemory = Scope<String, Value>(parent: nil)
     private var scopes = Stack<Scope<String, Value>>()
     private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
+    private var canUseBreakContinue = false
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         scopes.push(globalMemory)
@@ -30,8 +31,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         // Stop mechanism when an error occurs
         var result: Value?
         for statement in ctx.statement() {
-            guard error == nil else { return nil }
             result = visit(statement)
+            guard error == nil else { return nil }
+            if result?.type == .command {
+                if result?.asCommand == .breakCommand || result?.asCommand == .continueCommand { break }
+            }
         }
         return result
     }
@@ -41,6 +45,20 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             print(result)
         }
         return Value.void
+    }
+    
+    open override func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> Value? {
+        guard canUseBreakContinue else {
+            return error("'break' is only allowed inside a loop", at: ctx)
+        }
+        return Value(command: .breakCommand)
+    }
+    
+    open override func visitContinueStatement(_ ctx: PlatoParser.ContinueStatementContext) -> Value? {
+        guard canUseBreakContinue else {
+            return error("'continue' is only allowed inside a loop", at: ctx)
+        }
+        return Value(command: .continueCommand)
     }
     
     open override func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> Value? {
@@ -133,12 +151,27 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
         }
         
-        var finalValue: Value?
+        defer {
+            canUseBreakContinue = false
+        }
+        
+        var result: Value?
         while condition.asBool {
             if let statements = ctx.statements() {
+                if !canUseBreakContinue {
+                    canUseBreakContinue = true
+                }
                 newScope()
-                finalValue = visit(statements)
+                result = visit(statements)
                 popScope()
+                if result?.type == .command {
+                    if result?.asCommand == .breakCommand {
+                        result = Value.void
+                        break
+                    }
+                    result = Value.void
+                    continue
+                }
             }
             // update the condition value
             guard let nextCondition = visit(ctx.expression()!) else { return nil }
@@ -147,7 +180,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 return error("Cannot convert value of type '\(condition.type)' to expected condition type 'Bool'", at: ctx)
             }
         }
-        return finalValue
+        return result
     }
     
     open override func visitForInStatement(_ ctx: PlatoParser.ForInStatementContext) -> Value? {
@@ -162,17 +195,29 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return idError
         }
         
-        var finalValue: Value?
+        var result: Value?
         for value in values.asArray {
+            if !canUseBreakContinue {
+                canUseBreakContinue = true
+            }
             newScope()
             scopes.peek().updateValue(value, forKey: id)
             if let statements = ctx.statements() {
-                finalValue = visit(statements)
+                result = visit(statements)
             }
             popScope()
+            if result?.type == .command {
+                if result?.asCommand == .breakCommand {
+                    result = Value.void
+                    break
+                }
+                result = Value.void
+                continue
+            }
         }
         
-        return finalValue
+        canUseBreakContinue = false
+        return result
     }
     
     open override func visitForFromToByStatement(_ ctx: PlatoParser.ForFromToByStatementContext) -> Value? {
@@ -197,31 +242,55 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         let highestType = highestValueType(from.type, highestValueType(to.type, by.type))
-        var finalValue: Value?
+        var result: Value?
         
         switch highestType {
         case .boolean, .int:
             for index in stride(from: from.asInteger, to: to.asInteger, by: by.asInteger) {
+                if !canUseBreakContinue {
+                    canUseBreakContinue = true
+                }
                 newScope()
                 scopes.peek().updateValue(Value(int: index), forKey: id)
                 if let statements = ctx.statements() {
-                    finalValue = visit(statements)
+                    result = visit(statements)
                 }
                 popScope()
+                if result?.type == .command {
+                    if result?.asCommand == .breakCommand {
+                        result = Value.void
+                        break
+                    }
+                    result = Value.void
+                    continue
+                }
             }
         case .float:
             for index in stride(from: from.asFloat, to: to.asFloat, by: by.asFloat) {
+                if !canUseBreakContinue {
+                    canUseBreakContinue = true
+                }
                 newScope()
                 scopes.peek().updateValue(Value(float: index), forKey: id)
                 if let statements = ctx.statements() {
-                    finalValue = visit(statements)
+                    result = visit(statements)
                 }
                 popScope()
+                if result?.type == .command {
+                    if result?.asCommand == .breakCommand {
+                        result = Value.void
+                        break
+                    }
+                    result = Value.void
+                    continue
+                }
             }
         default:
             return unexpectedError("No switch statement for \(highestType)",at: ctx)
         }
-        return finalValue
+        
+        canUseBreakContinue = false
+        return result
     }
     
     // MARK: Expressions
