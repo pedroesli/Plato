@@ -1,0 +1,6 @@
+a = 1
+b: bool = true
+c: int = 1
+d: float = 1.5
+e: number = 2.5
+f: string = "Hello"

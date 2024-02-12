@@ -80,12 +80,34 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by {@link PlatoParser#assignmentStatement}.
+	 * Visit a parse tree produced by the {@code variableAssignmentStatement}
+	 * labeled alternative in {@link PlatoParser#assignmentStatement}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitAssignmentStatement(_ ctx: PlatoParser.AssignmentStatementContext) -> T {
+	open func visitVariableAssignmentStatement(_ ctx: PlatoParser.VariableAssignmentStatementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code operationAssignmentStatement}
+	 * labeled alternative in {@link PlatoParser#assignmentStatement}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by {@link PlatoParser#idStatement}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitIdStatement(_ ctx: PlatoParser.IdStatementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
@@ -419,6 +441,16 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitArray(_ ctx: PlatoParser.ArrayContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by {@link PlatoParser#idType}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitIdType(_ ctx: PlatoParser.IdTypeContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

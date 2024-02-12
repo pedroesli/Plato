@@ -41,6 +41,14 @@ BREAK       : 'break';
 CONTINUE    : 'continue';
 
 // Types
+ANY_TYPE: 'any';
+BOOL_TYPE: 'bool';
+INT_TYPE: 'int';
+FLOAT_TYPE: 'float';
+NUMBER_TYPE: 'number';
+STRING_TYPE: 'string';
+ARRAY_TYPE: 'array';
+
 ID      : '_'? LETTER (LETTER | DIGIT)*;
 
 fragment

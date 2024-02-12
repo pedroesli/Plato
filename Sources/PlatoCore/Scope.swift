@@ -7,39 +7,59 @@
 
 import Foundation
 
-public class Scope<Key, Value> where Key: Hashable {
-    private var symbols: [Key: Value]
-    private var parent: Scope<Key, Value>?
+public class Scope {
+    private var symbols: [String: Variable]
+    private var parent: Scope?
     
-    public init(parent: Scope<Key, Value>?) {
+    public init(parent: Scope?) {
         self.symbols = [:]
         self.parent = parent
     }
     
-    public init(_ dictionary: [Key : Value], parentScope: Scope<Key, Value>) {
+    public init(_ dictionary: [String : Variable], parent: Scope) {
         self.symbols = dictionary
     }
-
-    @discardableResult public func updateValue(_ value: Value, forKey key: Key) -> Value? {
-        if symbols[key] != nil {
-            return symbols.updateValue(value, forKey: key)
+    
+//    public func updateValue(_ value: Value, forKey key: String) -> Value? {
+//        guard let variable = getVariable(forKey: key) else { return nil }
+//        variable.value = value
+//        return value
+//    }
+    
+    @discardableResult public func updateVariable(_ variable: Variable, forKey key: String) -> Variable? {
+        guard let retrievedVariable = getVariable(forKey: key) else {
+            return symbols.updateValue(variable, forKey: key)
         }
-        // Else check if parent has the value otherwise create in this scope
-        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
-            return parentValue
-        }
-        return symbols.updateValue(value, forKey: key)
+        retrievedVariable.value = variable.value
+        retrievedVariable.type = variable.type
+        return retrievedVariable
     }
     
-    public func getValue(forKey key: Key) -> Value? {
+    /// Doesn't check variables in parents scopes. Use carefully! 
+    @discardableResult public func updateVariableForCurrentScope(_ variable: Variable, forKey key: String) -> Variable? {
+        return symbols.updateValue(variable, forKey: key)
+    }
+
+//    @discardableResult public func updateValue(_ value: Variable, forKey key: String) -> Variable? {
+//        if symbols[key] != nil {
+//            return symbols.updateValue(value, forKey: key)
+//        }
+//        // Else check if parent has the value otherwise create in this scope
+//        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
+//            return parentValue
+//        }
+//        return symbols.updateValue(value, forKey: key)
+//    }
+    
+    public func getVariable(forKey key: String) -> Variable? {
         guard let value = symbols[key] else {
-            return parent?.getValue(forKey: key)
+            return parent?.getVariable(forKey: key)
         }
         return value
     }
     
     // use this to update parent value. Returns nil instead of creating a value in that scope
-    private func mayUpdateValue(_ value: Value, forKey key: Key) -> Value? {
+    private func mayUpdateValue(_ value: Variable, forKey key: String) -> Variable? {
         if symbols[key] != nil {
             return symbols.updateValue(value, forKey: key)
         }

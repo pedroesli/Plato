@@ -5,6 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 
+/// The atomic type of a value
 public enum ValueType: Int8 {
     case boolean
     case int
@@ -14,18 +15,11 @@ public enum ValueType: Int8 {
     case void
     case command
     
-    public func isCompatible(with right: ValueType) -> Bool {
-        guard self != .void && right != .void else { return false }
-        if self.rawValue == right.rawValue {
-            return true
-        }
-        if self.rawValue <= ValueType.float.rawValue && right.rawValue <= ValueType.float.rawValue {
-            return true
-        }
-        return false
+    public var isNumber: Bool {
+        isInRange(of: .float)
     }
     
-    static func <= (_ left: ValueType, _ right: ValueType) -> Bool {
-        return left.rawValue <= right.rawValue
+    public func isInRange(of type: ValueType) -> Bool {
+        self.rawValue <= type.rawValue
     }
 }

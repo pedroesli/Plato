@@ -38,11 +38,16 @@ continueStatement
     ;
 
 returnStatement
-    : RETURN expression
+    : RETURN expression?
     ;
 
 assignmentStatement
-    : ID op=(ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | ADD_ASSIGN | SUB_ASSIGN) expression
+    : idStatement ASSIGN expression                                                              #variableAssignmentStatement
+    | ID op=(MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | ADD_ASSIGN | SUB_ASSIGN) expression     #operationAssignmentStatement
+    ;
+
+idStatement
+    : ID (idType)?
     ;
 
 selectionStatement
@@ -68,7 +73,7 @@ functionDeclaration
     ;
 
 functionArguments
-    : ID (',' ID)*
+    : idStatement (',' idStatement)*
     ;
 
 expression
@@ -95,17 +100,6 @@ parameterList
     : expression (',' expression)*
     ;
 
-// function_name
-//         : 'print'
-//         | ('pow'   | 'sqrt')
-//         | ('min'   | 'max' )
-//         | ('round' | 'ceil' | 'floor' | 'trunc')
-//         | ('abs'   | 'sign' | 'signum'  )
-//         | ('sin'   | 'cos'  | 'tan'     )
-//         | ('acos'  | 'asin' | 'atan'    )
-//         | ('exp'   | 'log'  | 'log10'   )
-//         ;
-
 element
     : ID            #idElement
     | INT           #intElement
@@ -118,4 +112,8 @@ element
 
 array
     : '[' parameterList? ']'
+    ;
+
+idType
+    : ':' type=(ANY_TYPE | BOOL_TYPE | INT_TYPE | FLOAT_TYPE | NUMBER_TYPE | STRING_TYPE | ARRAY_TYPE)
     ;
