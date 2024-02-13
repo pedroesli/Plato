@@ -57,6 +57,12 @@ public final class ArrayValue: Sequence {
     }
 }
 
+extension ArrayValue: CustomStringConvertible {
+    public var description: String {
+        return String(describing: values)
+    }
+}
+
 internal extension ArrayValue {
     // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.
     static func == (lhs: ArrayValue, rhs: ArrayValue) -> Bool {
