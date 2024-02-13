@@ -41,9 +41,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
-        if let expression = ctx.expression(), let result = visit(expression) {
-            print(result)
-        }
+        guard let expression = ctx.expression(), let result = visit(expression) else { return nil }
+        print(result)
         return Value.void
     }
     

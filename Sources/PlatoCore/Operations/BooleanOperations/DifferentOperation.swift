@@ -36,7 +36,6 @@ struct DifferentOperation: BaseOperation {
         case .string:
             return Value(bool: left.asString != right.asString)
         case .array:
-            guard left.asArray.count == right.asArray.count else { return Value(bool: true) }
             return Value(
                 bool: try !left.asArray.elementsEqual(
                     right.asArray,

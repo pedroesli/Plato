@@ -56,3 +56,10 @@ public final class ArrayValue: Sequence {
         ArrayValue(left.values + right.values)
     }
 }
+
+internal extension ArrayValue {
+    // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.
+    static func == (lhs: ArrayValue, rhs: ArrayValue) -> Bool {
+        return lhs.values.elementsEqual(rhs.values, by: { $0 == $1 })
+    }
+}

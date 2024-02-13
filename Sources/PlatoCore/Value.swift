@@ -97,12 +97,41 @@ public final class Value {
     }
 }
 
-extension Value {
-    public static let void = Value(type: .void, value: ())
+public extension Value {
+    static let void = Value(type: .void, value: ())
 }
 
 extension Value: CustomStringConvertible {
     public var description: String {
         self.asString
+    }
+}
+
+internal extension Value {
+    
+    // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.
+    static func == (lhs: Value, rhs: Value) -> Bool {
+        switch lhs.type {
+        case .boolean:
+            guard rhs.type == .boolean else { return false }
+            return lhs.asBool == rhs.asBool
+        case .int:
+            guard rhs.type == .int else { return false }
+            return lhs.asInteger == rhs.asInteger
+        case .float:
+            guard rhs.type == .float else { return false }
+            return lhs.asFloat == rhs.asFloat
+        case .string:
+            guard rhs.type == .string else { return false }
+            return lhs.asString == rhs.asString
+        case .array:
+            guard rhs.type == .array else { return false }
+            return lhs.asArray == rhs.asArray
+        case .void:
+            return rhs.type == .void
+        case .command:
+            guard rhs.type == .command else { return false }
+            return lhs.asCommand == rhs.asCommand
+        }
     }
 }

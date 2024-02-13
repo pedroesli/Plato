@@ -1,0 +1,31 @@
+//
+//  File.swift
+//  
+//
+//  Created by Pedro Ésli Vieira do Nascimento on 13/02/24.
+//
+
+import PlatoCore
+import Antlr4
+
+struct TestablePlato {
+    
+    private let interpreter = TestablePlatoInterpreter()
+    
+    func run(_ code: String) throws {
+        let input = ANTLRInputStream(code)
+        let lexer = PlatoLexer(input)
+        let tokens = CommonTokenStream(lexer)
+        let parser = try PlatoParser(tokens)
+        parser.setErrorHandler(BailErrorStrategy())
+        let tree = try parser.program()
+        _ = interpreter.visit(tree)
+        if let error = interpreter.error {
+            throw error
+        }
+    }
+    
+    func addExpectedValue(_ value: Value, atLine line: Int) {
+        interpreter.expectedValues[line] = value
+    }
+}

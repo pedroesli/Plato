@@ -19,19 +19,22 @@ final class PlatoTests: XCTestCase {
     }
     
     func testAddition() {
+        let plato = TestablePlato()
         let code = """
         1+2+5
         44+55.5
-        TRUE + FALSE
-        3 + TRUE
+        true + false
+        3 + true
         "hello" + ", world!"
         [1, 2, 3] + [4, 5, 6]
         1 - 3
         3.5 - 6
-        4 - TRUE
+        4 - true
         5+10-2
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        plato.addExpectedValue(Value(int: 8), atLine: 0)
+        plato.addExpectedValue(Value(float: 99.5), atLine: 1)
+        XCTAssertNoThrow(try plato.run(code))
         
         let errorCode = """
         "Hey" + 3

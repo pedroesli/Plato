@@ -30,7 +30,12 @@ let package = Package(
         ),
         .testTarget(
             name: "PlatoTests",
-            dependencies: ["Plato"])
+            dependencies: [
+                "Plato",
+                "PlatoCore",
+                .product(name: "Antlr4", package: "antlr4")
+            ]
+        )
     ],
     swiftLanguageVersions: [.v5]
 )
