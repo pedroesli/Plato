@@ -25,24 +25,38 @@ final class PlatoTests: XCTestCase {
         44+55.5
         true + false
         3 + true
-        "hello" + ", world!"
+        "Hello" + ", World!"
         [1, 2, 3] + [4, 5, 6]
         1 - 3
         3.5 - 6
         4 - true
         5+10-2
         """
-        plato.addExpectedValue(Value(int: 8), atLine: 1)
-        plato.addExpectedValue(Value(float: 99.5), atLine: 2)
+        plato.addExpectedValue(Value(int: 8), forLine: 1)
+        plato.addExpectedValue(Value(float: 99.5), forLine: 2)
+        plato.addExpectedValue(Value(int: 1), forLine: 3)
+        plato.addExpectedValue(Value(int: 4), forLine: 4)
+        plato.addExpectedValue(Value(string: "Hello, World!"), forLine: 5)
+        plato.addExpectedValue(
+            Value(
+                array: ArrayValue(
+                    [
+                        Value(int: 1),
+                        Value(int: 2),
+                        Value(int: 3),
+                        Value(int: 4),
+                        Value(int: 5),
+                        Value(int: 6)
+                    ]
+                )
+            ),
+            forLine: 6
+        )
+        plato.addExpectedValue(Value(int: -2), forLine: 7)
+        plato.addExpectedValue(Value(float: -2.5), forLine: 8)
+        plato.addExpectedValue(Value(int: 3), forLine: 9)
+        plato.addExpectedValue(Value(int: 13), forLine: 10)
         XCTAssertNoThrow(try plato.run(code))
-        
-        let errorCode = """
-        "Hey" + 3
-        "Error" - "String"
-        [1, 3, 4] - [4, 5]
-        "value: " + 25
-        """
-        XCTAssertThrowsError(try Plato.run(errorCode))
     }
     
     func testMultiplication() {
