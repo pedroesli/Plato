@@ -26,17 +26,18 @@ public class Scope {
 //        return value
 //    }
     
-    @discardableResult public func updateVariable(_ variable: Variable, forKey key: String) -> Variable? {
-        guard let retrievedVariable = getVariable(forKey: key) else {
-            return symbols.updateValue(variable, forKey: key)
-        }
-        retrievedVariable.value = variable.value
-        retrievedVariable.type = variable.type
-        return retrievedVariable
-    }
+//    @discardableResult public func updateVariable(_ variable: Variable, forKey key: String) -> Variable? {
+//        guard let retrievedVariable = getVariable(forKey: key) else {
+//            return symbols.updateValue(variable, forKey: key)
+//        }
+//        retrievedVariable.value = variable.value
+//        retrievedVariable.type = variable.type
+//        return retrievedVariable
+//    }
     
-    /// Doesn't check variables in parents scopes. Use carefully! 
-    @discardableResult public func updateVariableForCurrentScope(_ variable: Variable, forKey key: String) -> Variable? {
+    /// Creates a new variable in this scope
+    /// Note: Doesn't check if there is the same variable in parents scopes. Use carefully! 
+    @discardableResult public func createVariable(_ variable: Variable, forKey key: String) -> Variable? {
         return symbols.updateValue(variable, forKey: key)
     }
 
@@ -59,13 +60,13 @@ public class Scope {
     }
     
     // use this to update parent value. Returns nil instead of creating a value in that scope
-    private func mayUpdateValue(_ value: Variable, forKey key: String) -> Variable? {
-        if symbols[key] != nil {
-            return symbols.updateValue(value, forKey: key)
-        }
-        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
-            return parentValue
-        }
-        return nil
-    }
+//    private func mayUpdateValue(_ value: Variable, forKey key: String) -> Variable? {
+//        if symbols[key] != nil {
+//            return symbols.updateValue(value, forKey: key)
+//        }
+//        if let parentValue = parent?.mayUpdateValue(value, forKey: key) {
+//            return parentValue
+//        }
+//        return nil
+//    }
 }

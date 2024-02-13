@@ -42,12 +42,13 @@ returnStatement
     ;
 
 assignmentStatement
-    : idStatement ASSIGN expression                                                              #variableAssignmentStatement
+    : ID ASSIGN expression                                                                  #variableAssignmentStatement
+    | ID idTypeStatement ASSIGN expression                                                  #variableTypeAssignmentStatement
     | ID op=(MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | ADD_ASSIGN | SUB_ASSIGN) expression     #operationAssignmentStatement
     ;
 
-idStatement
-    : ID (idType)?
+idTypeStatement
+    : ':' type=(ANY_TYPE | BOOL_TYPE | INT_TYPE | FLOAT_TYPE | NUMBER_TYPE | STRING_TYPE | ARRAY_TYPE)
     ;
 
 selectionStatement
@@ -73,7 +74,7 @@ functionDeclaration
     ;
 
 functionArguments
-    : idStatement (',' idStatement)*
+    : ID idTypeStatement? (',' ID idTypeStatement?)*
     ;
 
 expression
@@ -112,8 +113,4 @@ element
 
 array
     : '[' parameterList? ']'
-    ;
-
-idType
-    : ':' type=(ANY_TYPE | BOOL_TYPE | INT_TYPE | FLOAT_TYPE | NUMBER_TYPE | STRING_TYPE | ARRAY_TYPE)
     ;

@@ -72,6 +72,13 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	open func visitVariableTypeAssignmentStatement(_ ctx: PlatoParser.VariableTypeAssignmentStatementContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	open func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
@@ -79,7 +86,7 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitIdStatement(_ ctx: PlatoParser.IdStatementContext) -> T? { return visitChildren(ctx) }
+	open func visitIdTypeStatement(_ ctx: PlatoParser.IdTypeStatementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -297,11 +304,4 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	open func visitArray(_ ctx: PlatoParser.ArrayContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitIdType(_ ctx: PlatoParser.IdTypeContext) -> T? { return visitChildren(ctx) }
 }

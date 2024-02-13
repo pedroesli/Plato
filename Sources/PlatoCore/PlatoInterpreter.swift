@@ -61,53 +61,54 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitVariableAssignmentStatement(_ ctx: PlatoParser.VariableAssignmentStatementContext) -> Value? {
-        let id = ctx.idStatement()!.ID()!.getText()
+        guard let value = visit(ctx.expression()!) else { return nil }
+        let id = ctx.ID()!.getText()
+
+        // Check if already exists
+        if let variable = scopes.peek().getVariable(forKey: id) {
+            guard variable.canAssign(value: value) else {
+                return error("Cannot assign value of type '\(value.type)' to type '\(variable.type)'", at: ctx)
+            }
+            variable.assign(value)
+        }
         
+        // Create new variable
         if let idError = validateId(id, at: ctx) {
             return idError
         }
         
-        guard let value = visit(ctx.expression()!) else { return nil }
+        scopes.peek().createVariable(Variable(type: .any, value: value), forKey: id)
         
-        // Check if variable already exists
-        if let variable = scopes.peek().getVariable(forKey: id) {
-            guard variable.type.isCompatible(with: value.type) else {
-                return error("Cannot assign value of type '\(value.type)' to type '\(variable.type)'", at: ctx)
-            }
-            variable.value = value
-            return value
-        }
-        
-        // Check if variable has type
-        guard let tokenType = ctx.idStatement()?.idType()?.type.getType() else {
-            scopes.peek().updateVariable(Variable(type: .any, value: value), forKey: id)
-            return value
-        }
-        
-        let type: VariableType!
-        switch PlatoParser.Tokens(rawValue: tokenType) {
-        case .ANY_TYPE:
-            type = .any
-        case .BOOL_TYPE:
-            type = .boolean
-        case .INT_TYPE:
-            type = .int
-        case .FLOAT_TYPE:
-            type = .float
-        case .NUMBER_TYPE:
-            type = .number
-        case .STRING:
-            type = .string
-        case .ARRAY_TYPE:
-            type = .array
-        default:
-            return unexpectedError("No type for \(String(describing: ctx.idStatement()?.idType()?.type.getText()))", at: ctx)
-        }
-        
-        guard type.isCompatible(with: value.type) else {
-            return error("Cannot assign value of type '\(value.type)' to type '\(String(describing: type))'", at: ctx)
-        }
-        scopes.peek().updateVariable(Variable(type: type, value: value), forKey: id)
+//        // Check if variable has type
+//        guard let tokenType = ctx.idStatement()?.idType()?.type.getType() else {
+//            scopes.peek().updateVariable(Variable(type: .any, value: value), forKey: id)
+//            return value
+//        }
+//        
+//        let type: VariableType!
+//        switch PlatoParser.Tokens(rawValue: tokenType) {
+//        case .ANY_TYPE:
+//            type = .any
+//        case .BOOL_TYPE:
+//            type = .boolean
+//        case .INT_TYPE:
+//            type = .int
+//        case .FLOAT_TYPE:
+//            type = .float
+//        case .NUMBER_TYPE:
+//            type = .number
+//        case .STRING:
+//            type = .string
+//        case .ARRAY_TYPE:
+//            type = .array
+//        default:
+//            return unexpectedError("No type for \(String(describing: ctx.idStatement()?.idType()?.type.getText()))", at: ctx)
+//        }
+//        
+//        guard type.isCompatible(with: value.type) else {
+//            return error("Cannot assign value of type '\(value.type)' to type '\(type!)'", at: ctx)
+//        }
+//        scopes.peek().updateVariable(Variable(type: type, value: value), forKey: id)
         return value
     }
     
@@ -119,7 +120,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         guard let right = visit(ctx.expression()!) else { return nil }
-        guard variable.type.isCompatible(with: right.type) else {
+        guard variable.canAssign(value: right) else {
             return error("Cannot convert value of type '\(right.type)' to specified type '\(variable.type)'", at: ctx)
         }
         let left = variable.value
@@ -144,7 +145,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         do {
             guard let result = try operation.result() else { return unexpectedError("Assignment math operation returned nil", at: ctx) }
-            variable.value = result
+            variable.assign(result)
             return result
         } catch {
             return self.error(error.localizedDescription, at: ctx)
@@ -246,7 +247,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 canUseBreakContinue = true
             }
             newScope()
-            scopes.peek().updateVariableForCurrentScope(Variable(type: .any, value: value), forKey: id)
+            scopes.peek().createVariable(Variable(type: .any, value: value), forKey: id)
             if let statements = ctx.statements() {
                 result = visit(statements)
             }
@@ -300,7 +301,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().updateVariableForCurrentScope(
+                scopes.peek().createVariable(
                     Variable(
                         type: .any,
                         value: Value(int: index)
@@ -324,7 +325,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().updateVariableForCurrentScope(
+                scopes.peek().createVariable(
                     Variable(
                         type: .any,
                         value: Value(float: index)
@@ -519,7 +520,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
-        return Value(int: Int(ctx.INT()!.getText())!)
+        return Value(int: Int(ctx.INT()!.getText().replacingOccurrences(of: "_", with: ""))!)
     }
     
     open override func visitFloatElement(_ ctx: PlatoParser.FloatElementContext) -> Value? {
