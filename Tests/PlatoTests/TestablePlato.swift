@@ -30,4 +30,24 @@ struct TestablePlato {
     func addExpectedValue(_ value: Value, forLine line: Int) {
         interpreter.expectedValues[line] = value
     }
+    
+    func addExpectedValue(bool value: Bool, forLine line: Int) {
+        interpreter.expectedValues[line] = Value(bool: value)
+    }
+    
+    func addExpectedValue(int value: Int, forLine line: Int) {
+        interpreter.expectedValues[line] = Value(int: value)
+    }
+    
+    func addExpectedValue(float value: Float, forLine line: Int) {
+        interpreter.expectedValues[line] = Value(float: value)
+    }
+    
+    func addExpectedValue(string value: String, forLine line: Int) {
+        interpreter.expectedValues[line] = Value(string: value)
+    }
+    
+    func addExpectedValue(array values: [Value], forLine line: Int) {
+        interpreter.expectedValues[line] = Value(array: ArrayValue(values))
+    }
 }
