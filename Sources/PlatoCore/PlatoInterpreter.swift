@@ -72,43 +72,49 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             variable.assign(value)
         }
         
-        // Create new variable
+        // Create new variable with type any
         if let idError = validateId(id, at: ctx) {
             return idError
         }
         
-        scopes.peek().createVariable(Variable(type: .any, value: value), forKey: id)
+        scopes.peek().createVariable(type: .any, value: value, forKey: id)
+        return value
+    }
+    
+    open override func visitVariableTypeAssignmentStatement(_ ctx: PlatoParser.VariableTypeAssignmentStatementContext) -> Value? {
+        guard let value = visit(ctx.expression()!) else { return nil }
+        let id = ctx.ID()!.getText()
         
-//        // Check if variable has type
-//        guard let tokenType = ctx.idStatement()?.idType()?.type.getType() else {
-//            scopes.peek().updateVariable(Variable(type: .any, value: value), forKey: id)
-//            return value
-//        }
-//        
-//        let type: VariableType!
-//        switch PlatoParser.Tokens(rawValue: tokenType) {
-//        case .ANY_TYPE:
-//            type = .any
-//        case .BOOL_TYPE:
-//            type = .boolean
-//        case .INT_TYPE:
-//            type = .int
-//        case .FLOAT_TYPE:
-//            type = .float
-//        case .NUMBER_TYPE:
-//            type = .number
-//        case .STRING:
-//            type = .string
-//        case .ARRAY_TYPE:
-//            type = .array
-//        default:
-//            return unexpectedError("No type for \(String(describing: ctx.idStatement()?.idType()?.type.getText()))", at: ctx)
-//        }
-//        
-//        guard type.isCompatible(with: value.type) else {
-//            return error("Cannot assign value of type '\(value.type)' to type '\(type!)'", at: ctx)
-//        }
-//        scopes.peek().updateVariable(Variable(type: type, value: value), forKey: id)
+        if let idError = validateId(id, at: ctx) {
+            return idError
+        }
+        
+        let idTypeRawValue = ctx.idTypeStatement()!.type.getType()
+        let type: VariableType!
+        switch PlatoParser.Tokens(rawValue: idTypeRawValue) {
+        case .ANY_TYPE:
+            type = .any
+        case .BOOL_TYPE:
+            type = .boolean
+        case .INT_TYPE:
+            type = .int
+        case .FLOAT_TYPE:
+            type = .float
+        case .NUMBER_TYPE:
+            type = .number
+        case .STRING:
+            type = .string
+        case .ARRAY_TYPE:
+            type = .array
+        default:
+            return unexpectedError("No type for \(String(describing: ctx.idTypeStatement()!.type.getText()))", at: ctx)
+        }
+        
+        guard type.isCompatible(with: value.type) else {
+            return error("Cannot assign value of type '\(value.type)' to type '\(type!)'", at: ctx)
+        }
+        
+        scopes.peek().createVariable(type: type, value: value, forKey: id)
         return value
     }
     
@@ -247,7 +253,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 canUseBreakContinue = true
             }
             newScope()
-            scopes.peek().createVariable(Variable(type: .any, value: value), forKey: id)
+            scopes.peek().createVariable(type: .any, value: value, forKey: id)
             if let statements = ctx.statements() {
                 result = visit(statements)
             }
@@ -301,13 +307,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().createVariable(
-                    Variable(
-                        type: .any,
-                        value: Value(int: index)
-                    ),
-                    forKey: id
-                )
+                scopes.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
                 result = visit(statements)
                 popScope()
                 if result?.type == .command {
@@ -325,13 +325,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().createVariable(
-                    Variable(
-                        type: .any,
-                        value: Value(float: index)
-                    ),
-                    forKey: id
-                )
+                scopes.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
                 result = visit(statements)
                 popScope()
                 if result?.type == .command {

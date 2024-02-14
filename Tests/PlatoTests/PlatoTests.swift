@@ -171,8 +171,11 @@ final class PlatoTests: XCTestCase {
         a *= 2
         a -= 1
         a
+        b: float = 1
+        b
         """
         plato.addExpectedValue(Value(int: 5), forLine: 5)
+        plato.addExpectedValue(Value(float: 1.0), forLine: 7)
         XCTAssertNoThrow(try plato.run(code))
     }
     

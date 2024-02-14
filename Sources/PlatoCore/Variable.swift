@@ -7,30 +7,15 @@
 
 public class Variable {
     public var type: VariableType
-    public private(set) var value: Value
+    public private(set) var value: Value = .void
     
     public init(type: VariableType, value: Value) {
         self.type = type
-        self.value = value
+        assign(value)
     }
     
     public func canAssign(value: Value) -> Bool {
-        switch type {
-        case .any:
-            value.type.isInRange(of: .array)
-        case .boolean:
-            value.type.isNumber
-        case .int:
-            value.type == .int || value.type == .boolean
-        case .float:
-            value.type.isNumber
-        case .number:
-            value.type.isNumber
-        case .string:
-            value.type == .string
-        case .array:
-            value.type == .array
-        }
+        return type.isCompatible(with: value.type)
     }
     
     /// Assigns the value to the appropriate type of the variable.

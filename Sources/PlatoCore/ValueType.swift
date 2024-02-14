@@ -6,7 +6,7 @@
 //
 
 /// The atomic type of a value
-public enum ValueType: Int8 {
+public enum ValueType: Int {
     case boolean
     case int
     case float
