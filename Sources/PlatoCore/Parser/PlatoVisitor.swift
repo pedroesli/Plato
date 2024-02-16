@@ -206,6 +206,16 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by {@link PlatoParser#functionArgument}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitFunctionArgument(_ ctx: PlatoParser.FunctionArgumentContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by the {@code exponentExpression}
 	 * labeled alternative in {@link PlatoParser#expression}.
 	- Parameters:
@@ -390,6 +400,16 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by {@link PlatoParser#parameter}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitParameter(_ ctx: PlatoParser.ParameterContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by the {@code idElement}
 	 * labeled alternative in {@link PlatoParser#element}.
 	- Parameters:
@@ -473,6 +493,16 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitArray(_ ctx: PlatoParser.ArrayContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by {@link PlatoParser#expressionList}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitExpressionList(_ ctx: PlatoParser.ExpressionListContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

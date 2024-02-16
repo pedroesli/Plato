@@ -6,5 +6,5 @@
 //
 
 public protocol NativeFunctionHandling {
-    func handle(functionName: String, parameters: [Value]) throws -> Value
+    func handle(functionName: String, parameters: [CallParameter]) throws -> Value
 }

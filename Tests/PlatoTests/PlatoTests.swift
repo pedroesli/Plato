@@ -166,9 +166,9 @@ final class PlatoTests: XCTestCase {
         a *= 2
         a -= 1
         a
-        b: float = 1
+        b: Float = 1
         b
-        c: array = [1, 2, 3]
+        c: Array = [1, 2, 3]
         c
         """
         plato.addExpectedValue(int: 5, forLine: 5)

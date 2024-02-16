@@ -9,7 +9,7 @@ import Foundation
 
 public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
     
-    public func handle(functionName: String, parameters: [Value]) throws -> Value {
+    public func handle(functionName: String, parameters: [CallParameter]) throws -> Value {
         switch functionName {
         case "bool":
             return try BoolFunc.handle(parameters: parameters)

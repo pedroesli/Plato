@@ -6,10 +6,10 @@
 //
 
 public struct IntFunc: FunctionResultHandling {
-    public static func handle(parameters: [Value]) throws -> Value {
+    public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }
         guard parameters.count == 1 else { throw NativeFunctionError.extraArgument }
-        let value = parameters[0]
+        let value = parameters[0].value
         guard value.type.isInRange(of: .string) else { throw NativeFunctionError.noMatch }
         
         if value.type == .string {

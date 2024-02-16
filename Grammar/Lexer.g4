@@ -41,22 +41,24 @@ BREAK       : 'break';
 CONTINUE    : 'continue';
 
 // Types
-ANY_TYPE: 'any';
-BOOL_TYPE: 'bool';
-INT_TYPE: 'int';
-FLOAT_TYPE: 'float';
-NUMBER_TYPE: 'number';
-STRING_TYPE: 'string';
-ARRAY_TYPE: 'array';
+ANY_TYPE    : 'Any';
+BOOL_TYPE   : 'Bool';
+INT_TYPE    : 'Int';
+FLOAT_TYPE  : 'Float';
+NUMBER_TYPE : 'Number';
+STRING_TYPE : 'String';
+ARRAY_TYPE  : 'Array';
 
-ID      : '_'? LETTER (LETTER | DIGIT)*;
+UNDERSCORE  : '_';
+
+ID      : UNDERSCORE? LETTER (LETTER | DIGIT)*;
 
 fragment
 LETTER  : [a-zA-Z];
 
 FLOAT   : INT '.' INT;
 
-INT     : DIGIT ('_'? DIGIT)*;
+INT     : DIGIT (UNDERSCORE? DIGIT)*;
 
 fragment
 DIGIT   : [0-9];

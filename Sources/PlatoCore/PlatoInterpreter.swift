@@ -502,16 +502,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     open override func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
         guard let functionCall = ctx.functionCall() else { return nil }
         let functionName = functionCall.ID()!.getText()
-        var parameterList: [Value] = []
+        var parameterList: [CallParameter] = []
         
         // Get parameters
-        if let expressions = functionCall.parameterList()?.expression() {
-            for expression in expressions {
-                guard let value = visit(expression) else { return nil }
+        if let parameters = functionCall.parameterList()?.parameter() {
+            for parameter in parameters {
+                guard let value = visit(parameter.expression()!) else { return nil }
                 guard value.type.isInRange(of: .array) else {
                     return error("Expected expression in list of expressions", at: ctx)
                 }
-                parameterList.append(value)
+                let id = parameter.ID()?.getText()
+                parameterList.append(CallParameter(id: id, value: value))
             }
         }
         
@@ -526,16 +527,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     open override func visitTypeFunctionCallExpression(_ ctx: PlatoParser.TypeFunctionCallExpressionContext) -> Value? {
         guard let typeFunctionCall = ctx.typeFunctionCall() else { return nil }
         let functionName = typeFunctionCall.type.getText()!
-        var parameterList: [Value] = []
+        var parameterList: [CallParameter] = []
         
         // Get parameters
-        if let expressions = typeFunctionCall.parameterList()?.expression() {
-            for expression in expressions {
-                guard let value = visit(expression) else { return nil }
+        if let parameters = typeFunctionCall.parameterList()?.parameter() {
+            for parameter in parameters {
+                guard let value = visit(parameter.expression()!) else { return nil }
                 guard value.type.isInRange(of: .array) else {
                     return error("Expected expression in list of expressions", at: ctx)
                 }
-                parameterList.append(value)
+                let id = parameter.ID()?.getText()
+                parameterList.append(CallParameter(id: id, value: value))
             }
         }
         
@@ -588,7 +590,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
         let values = ArrayValue()
-        guard let expressions = ctx.parameterList()?.expression() else { return Value(array: ArrayValue()) }
+        guard let expressions = ctx.expressionList()?.expression() else { return Value(array: ArrayValue()) }
         for expression in expressions {
             guard let value = visit(expression) else { return nil }
             guard value.type.isInRange(of: .array) else {

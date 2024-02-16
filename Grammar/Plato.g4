@@ -74,7 +74,11 @@ functionDeclaration
     ;
 
 functionArguments
-    : ID idTypeStatement? (',' ID idTypeStatement?)*
+    : functionArgument (',' functionArgument)*
+    ;
+
+functionArgument
+    : UNDERSCORE? ID idTypeStatement?
     ;
 
 expression
@@ -103,7 +107,11 @@ typeFunctionCall
     ;
 
 parameterList
-    : expression (',' expression)*
+    : parameter (',' parameter)*
+    ;
+
+parameter
+    : (ID ':')? expression
     ;
 
 element
@@ -117,5 +125,9 @@ element
     ;
 
 array
-    : '[' parameterList? ']'
+    : '[' expressionList? ']'
+    ;
+
+expressionList
+    : expression (',' expression)*
     ;

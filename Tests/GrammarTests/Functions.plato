@@ -33,3 +33,7 @@ a = 1
 func add() {
     a += 1
 }
+
+func sum(_ a: int, _ b: int) { 
+
+}

@@ -6,8 +6,8 @@
 //
 
 public struct ArrayFunc: FunctionResultHandling {
-    public static func handle(parameters: [Value]) throws -> Value {
+    public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "values") }
-        return Value(array: ArrayValue(parameters))
+        return Value(array: ArrayValue(parameters.map({ $0.value })))
     }
 }
