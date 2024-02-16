@@ -253,4 +253,45 @@ final class PlatoTests: XCTestCase {
         """
         XCTAssertNoThrow(try Plato.run(code))
     }
+    
+    func testTypeFuncCall() {
+        let plato = TestablePlato()
+        let code = """
+        bool(1)
+        bool("true")
+        bool("false")
+        bool("1")
+        bool("25")
+        bool("hey")
+        int("25")
+        int("hello")
+        int(1.5)
+        int(true)
+        float("25.5")
+        float("world")
+        float(true)
+        string(1)
+        string(true)
+        string(1.5)
+        string([1, 2, 3])
+        """
+        plato.addExpectedValue(bool: true, forLine: 1)
+        plato.addExpectedValue(bool: true, forLine: 2)
+        plato.addExpectedValue(bool: false, forLine: 3)
+        plato.addExpectedValue(bool: true, forLine: 4)
+        plato.addExpectedValue(bool: false, forLine: 5)
+        plato.addExpectedValue(bool: false, forLine: 6)
+        plato.addExpectedValue(int: 25, forLine: 7)
+        plato.addExpectedValue(int: 0, forLine: 8)
+        plato.addExpectedValue(int: 1, forLine: 9)
+        plato.addExpectedValue(int: 1, forLine: 10)
+        plato.addExpectedValue(float: 25.5, forLine: 11)
+        plato.addExpectedValue(float: 0, forLine: 12)
+        plato.addExpectedValue(float: 1, forLine: 13)
+        plato.addExpectedValue(string: "1", forLine: 14)
+        plato.addExpectedValue(string: "true", forLine: 15)
+        plato.addExpectedValue(string: "1.5", forLine: 16)
+        plato.addExpectedValue(string: "[1, 2, 3]", forLine: 17)
+        XCTAssertNoThrow(try plato.run(code))
+    }
 }

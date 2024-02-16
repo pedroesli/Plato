@@ -12,6 +12,7 @@ import Foundation
 
 open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
+    public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: RuntimeError?
     
     private var globalMemory = Scope(parent: nil)
@@ -493,6 +494,48 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         do {
             return try operation.result()
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
+        }
+    }
+    
+    open override func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
+        guard let functionCall = ctx.functionCall() else { return nil }
+        let functionName = functionCall.ID()!.getText()
+        var parameterList: [Value] = []
+        
+        // Get parameters
+        if let expressions = functionCall.parameterList()?.expression() {
+            for expression in expressions {
+                guard let value = visit(expression) else { return nil }
+                parameterList.append(value)
+            }
+        }
+        
+        // Return func result
+        do {
+            return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
+        }
+    }
+    
+    open override func visitTypeFunctionCallExpression(_ ctx: PlatoParser.TypeFunctionCallExpressionContext) -> Value? {
+        guard let typeFunctionCall = ctx.typeFunctionCall() else { return nil }
+        let functionName = typeFunctionCall.type.getText()!
+        var parameterList: [Value] = []
+        
+        // Get parameters
+        if let expressions = typeFunctionCall.parameterList()?.expression() {
+            for expression in expressions {
+                guard let value = visit(expression) else { return nil }
+                parameterList.append(value)
+            }
+        }
+        
+        // Return func result
+        do {
+            return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
         } catch {
             return self.error(error.localizedDescription, at: ctx)
         }

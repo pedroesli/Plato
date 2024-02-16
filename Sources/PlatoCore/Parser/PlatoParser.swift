@@ -36,8 +36,8 @@ open class PlatoParser: Parser {
             RULE_assignmentStatement = 7, RULE_idTypeStatement = 8, RULE_selectionStatement = 9, 
             RULE_elseIfStatement = 10, RULE_elseStatement = 11, RULE_controlFlowStatement = 12, 
             RULE_functionDeclaration = 13, RULE_functionArguments = 14, 
-            RULE_expression = 15, RULE_functionCall = 16, RULE_parameterList = 17, 
-            RULE_element = 18, RULE_array = 19
+            RULE_expression = 15, RULE_functionCall = 16, RULE_typeFunctionCall = 17, 
+            RULE_parameterList = 18, RULE_element = 19, RULE_array = 20
 
 	public
 	static let ruleNames: [String] = [
@@ -45,7 +45,7 @@ open class PlatoParser: Parser {
 		"continueStatement", "returnStatement", "assignmentStatement", "idTypeStatement", 
 		"selectionStatement", "elseIfStatement", "elseStatement", "controlFlowStatement", 
 		"functionDeclaration", "functionArguments", "expression", "functionCall", 
-		"parameterList", "element", "array"
+		"typeFunctionCall", "parameterList", "element", "array"
 	]
 
 	private static let _LITERAL_NAMES: [String?] = [
@@ -130,9 +130,9 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(40)
+		 	setState(42)
 		 	try statements()
-		 	setState(41)
+		 	setState(43)
 		 	try match(PlatoParser.Tokens.EOF.rawValue)
 
 		}
@@ -191,21 +191,21 @@ open class PlatoParser: Parser {
 		do {
 			var _alt:Int
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(49)
+		 	setState(51)
 		 	try _errHandler.sync(self)
 		 	_alt = try getInterpreter().adaptivePredict(_input,1,_ctx)
 		 	while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
 		 		if ( _alt==1 ) {
-		 			setState(44)
+		 			setState(46)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
-		 			if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 67584840890999176) != 0)) {
-		 				setState(43)
+		 			if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 72018071774192008) != 0)) {
+		 				setState(45)
 		 				try statement()
 
 		 			}
 
-		 			setState(46)
+		 			setState(48)
 		 			_la = try _input.LA(1)
 		 			if (!(_la == PlatoParser.Tokens.T__0.rawValue || _la == PlatoParser.Tokens.NEWLINE.rawValue)) {
 		 			try _errHandler.recoverInline(self)
@@ -217,15 +217,15 @@ open class PlatoParser: Parser {
 
 		 	 
 		 		}
-		 		setState(51)
+		 		setState(53)
 		 		try _errHandler.sync(self)
 		 		_alt = try getInterpreter().adaptivePredict(_input,1,_ctx)
 		 	}
-		 	setState(53)
+		 	setState(55)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 67584840890999176) != 0)) {
-		 		setState(52)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 72018071774192008) != 0)) {
+		 		setState(54)
 		 		try statement()
 
 		 	}
@@ -300,54 +300,54 @@ open class PlatoParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(63)
+		 	setState(65)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,3, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(55)
+		 		setState(57)
 		 		try assignmentStatement()
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(56)
+		 		setState(58)
 		 		try selectionStatement()
 
 		 		break
 		 	case 3:
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(57)
+		 		setState(59)
 		 		try controlFlowStatement()
 
 		 		break
 		 	case 4:
 		 		try enterOuterAlt(_localctx, 4)
-		 		setState(58)
+		 		setState(60)
 		 		try functionDeclaration()
 
 		 		break
 		 	case 5:
 		 		try enterOuterAlt(_localctx, 5)
-		 		setState(59)
+		 		setState(61)
 		 		try expressionStatement()
 
 		 		break
 		 	case 6:
 		 		try enterOuterAlt(_localctx, 6)
-		 		setState(60)
+		 		setState(62)
 		 		try breakStatement()
 
 		 		break
 		 	case 7:
 		 		try enterOuterAlt(_localctx, 7)
-		 		setState(61)
+		 		setState(63)
 		 		try continueStatement()
 
 		 		break
 		 	case 8:
 		 		try enterOuterAlt(_localctx, 8)
-		 		setState(62)
+		 		setState(64)
 		 		try returnStatement()
 
 		 		break
@@ -395,7 +395,7 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(65)
+		 	setState(67)
 		 	try expression(0)
 
 		}
@@ -440,7 +440,7 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(67)
+		 	setState(69)
 		 	try match(PlatoParser.Tokens.BREAK.rawValue)
 
 		}
@@ -485,7 +485,7 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(69)
+		 	setState(71)
 		 	try match(PlatoParser.Tokens.CONTINUE.rawValue)
 
 		}
@@ -535,13 +535,13 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(71)
-		 	try match(PlatoParser.Tokens.RETURN.rawValue)
 		 	setState(73)
+		 	try match(PlatoParser.Tokens.RETURN.rawValue)
+		 	setState(75)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 67554054565412864) != 0)) {
-		 		setState(72)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 71987285448605696) != 0)) {
+		 		setState(74)
 		 		try expression(0)
 
 		 	}
@@ -690,39 +690,39 @@ open class PlatoParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(86)
+		 	setState(88)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,5, _ctx)) {
 		 	case 1:
 		 		_localctx =  VariableAssignmentStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(75)
-		 		try match(PlatoParser.Tokens.ID.rawValue)
-		 		setState(76)
-		 		try match(PlatoParser.Tokens.ASSIGN.rawValue)
 		 		setState(77)
+		 		try match(PlatoParser.Tokens.ID.rawValue)
+		 		setState(78)
+		 		try match(PlatoParser.Tokens.ASSIGN.rawValue)
+		 		setState(79)
 		 		try expression(0)
 
 		 		break
 		 	case 2:
 		 		_localctx =  VariableTypeAssignmentStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(78)
-		 		try match(PlatoParser.Tokens.ID.rawValue)
-		 		setState(79)
-		 		try idTypeStatement()
 		 		setState(80)
-		 		try match(PlatoParser.Tokens.ASSIGN.rawValue)
+		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(81)
+		 		try idTypeStatement()
+		 		setState(82)
+		 		try match(PlatoParser.Tokens.ASSIGN.rawValue)
+		 		setState(83)
 		 		try expression(0)
 
 		 		break
 		 	case 3:
 		 		_localctx =  OperationAssignmentStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(83)
+		 		setState(85)
 		 		try match(PlatoParser.Tokens.ID.rawValue)
-		 		setState(84)
+		 		setState(86)
 		 		_localctx.castdown(OperationAssignmentStatementContext.self).op = try _input.LT(1)
 		 		_la = try _input.LA(1)
 		 		if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 4260607557632) != 0))) {
@@ -732,7 +732,7 @@ open class PlatoParser: Parser {
 		 			_errHandler.reportMatch(self)
 		 			try consume()
 		 		}
-		 		setState(85)
+		 		setState(87)
 		 		try expression(0)
 
 		 		break
@@ -806,9 +806,9 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(88)
+		 	setState(90)
 		 	try match(PlatoParser.Tokens.T__1.rawValue)
-		 	setState(89)
+		 	setState(91)
 		 	_localctx.castdown(IdTypeStatementContext.self).type = try _input.LT(1)
 		 	_la = try _input.LA(1)
 		 	if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 4468415255281664) != 0))) {
@@ -878,35 +878,35 @@ open class PlatoParser: Parser {
 		do {
 			var _alt:Int
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(91)
-		 	try match(PlatoParser.Tokens.T__2.rawValue)
-		 	setState(92)
-		 	try expression(0)
 		 	setState(93)
-		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	try match(PlatoParser.Tokens.T__2.rawValue)
 		 	setState(94)
-		 	try statements()
+		 	try expression(0)
 		 	setState(95)
+		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	setState(96)
+		 	try statements()
+		 	setState(97)
 		 	try match(PlatoParser.Tokens.T__4.rawValue)
-		 	setState(99)
+		 	setState(101)
 		 	try _errHandler.sync(self)
 		 	_alt = try getInterpreter().adaptivePredict(_input,6,_ctx)
 		 	while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
 		 		if ( _alt==1 ) {
-		 			setState(96)
+		 			setState(98)
 		 			try elseIfStatement()
 
 		 	 
 		 		}
-		 		setState(101)
+		 		setState(103)
 		 		try _errHandler.sync(self)
 		 		_alt = try getInterpreter().adaptivePredict(_input,6,_ctx)
 		 	}
-		 	setState(103)
+		 	setState(105)
 		 	try _errHandler.sync(self)
 		 	switch (try getInterpreter().adaptivePredict(_input,7,_ctx)) {
 		 	case 1:
-		 		setState(102)
+		 		setState(104)
 		 		try elseStatement()
 
 		 		break
@@ -968,29 +968,29 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(108)
+		 	setState(110)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (_la == PlatoParser.Tokens.NEWLINE.rawValue) {
-		 		setState(105)
+		 		setState(107)
 		 		try match(PlatoParser.Tokens.NEWLINE.rawValue)
 
 
-		 		setState(110)
+		 		setState(112)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(111)
-		 	try match(PlatoParser.Tokens.T__5.rawValue)
-		 	setState(112)
-		 	try match(PlatoParser.Tokens.T__2.rawValue)
 		 	setState(113)
-		 	try expression(0)
+		 	try match(PlatoParser.Tokens.T__5.rawValue)
 		 	setState(114)
-		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	try match(PlatoParser.Tokens.T__2.rawValue)
 		 	setState(115)
-		 	try statements()
+		 	try expression(0)
 		 	setState(116)
+		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	setState(117)
+		 	try statements()
+		 	setState(118)
 		 	try match(PlatoParser.Tokens.T__4.rawValue)
 
 		}
@@ -1044,25 +1044,25 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(121)
+		 	setState(123)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (_la == PlatoParser.Tokens.NEWLINE.rawValue) {
-		 		setState(118)
+		 		setState(120)
 		 		try match(PlatoParser.Tokens.NEWLINE.rawValue)
 
 
-		 		setState(123)
+		 		setState(125)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(124)
-		 	try match(PlatoParser.Tokens.T__5.rawValue)
-		 	setState(125)
-		 	try match(PlatoParser.Tokens.T__3.rawValue)
 		 	setState(126)
-		 	try statements()
+		 	try match(PlatoParser.Tokens.T__5.rawValue)
 		 	setState(127)
+		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	setState(128)
+		 	try statements()
+		 	setState(129)
 		 	try match(PlatoParser.Tokens.T__4.rawValue)
 
 		}
@@ -1186,67 +1186,67 @@ open class PlatoParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(155)
+		 	setState(157)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,10, _ctx)) {
 		 	case 1:
 		 		_localctx =  WhileStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(129)
-		 		try match(PlatoParser.Tokens.T__6.rawValue)
-		 		setState(130)
-		 		try expression(0)
 		 		setState(131)
-		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		try match(PlatoParser.Tokens.T__6.rawValue)
 		 		setState(132)
-		 		try statements()
+		 		try expression(0)
 		 		setState(133)
+		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		setState(134)
+		 		try statements()
+		 		setState(135)
 		 		try match(PlatoParser.Tokens.T__4.rawValue)
 
 		 		break
 		 	case 2:
 		 		_localctx =  ForInStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(135)
-		 		try match(PlatoParser.Tokens.T__7.rawValue)
-		 		setState(136)
-		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(137)
-		 		try match(PlatoParser.Tokens.T__8.rawValue)
+		 		try match(PlatoParser.Tokens.T__7.rawValue)
 		 		setState(138)
-		 		try expression(0)
+		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(139)
-		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		try match(PlatoParser.Tokens.T__8.rawValue)
 		 		setState(140)
-		 		try statements()
+		 		try expression(0)
 		 		setState(141)
+		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		setState(142)
+		 		try statements()
+		 		setState(143)
 		 		try match(PlatoParser.Tokens.T__4.rawValue)
 
 		 		break
 		 	case 3:
 		 		_localctx =  ForFromToByStatementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(143)
-		 		try match(PlatoParser.Tokens.T__7.rawValue)
-		 		setState(144)
-		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(145)
-		 		try match(PlatoParser.Tokens.T__9.rawValue)
+		 		try match(PlatoParser.Tokens.T__7.rawValue)
 		 		setState(146)
-		 		try expression(0)
+		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(147)
-		 		try match(PlatoParser.Tokens.T__10.rawValue)
+		 		try match(PlatoParser.Tokens.T__9.rawValue)
 		 		setState(148)
 		 		try expression(0)
 		 		setState(149)
-		 		try match(PlatoParser.Tokens.T__11.rawValue)
+		 		try match(PlatoParser.Tokens.T__10.rawValue)
 		 		setState(150)
 		 		try expression(0)
 		 		setState(151)
-		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		try match(PlatoParser.Tokens.T__11.rawValue)
 		 		setState(152)
-		 		try statements()
+		 		try expression(0)
 		 		setState(153)
+		 		try match(PlatoParser.Tokens.T__3.rawValue)
+		 		setState(154)
+		 		try statements()
+		 		setState(155)
 		 		try match(PlatoParser.Tokens.T__4.rawValue)
 
 		 		break
@@ -1303,28 +1303,28 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(157)
-		 	try match(PlatoParser.Tokens.T__12.rawValue)
-		 	setState(158)
-		 	try match(PlatoParser.Tokens.ID.rawValue)
 		 	setState(159)
-		 	try match(PlatoParser.Tokens.T__13.rawValue)
+		 	try match(PlatoParser.Tokens.T__12.rawValue)
+		 	setState(160)
+		 	try match(PlatoParser.Tokens.ID.rawValue)
 		 	setState(161)
+		 	try match(PlatoParser.Tokens.T__13.rawValue)
+		 	setState(163)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	if (_la == PlatoParser.Tokens.ID.rawValue) {
-		 		setState(160)
+		 		setState(162)
 		 		try functionArguments()
 
 		 	}
 
-		 	setState(163)
-		 	try match(PlatoParser.Tokens.T__14.rawValue)
-		 	setState(164)
-		 	try match(PlatoParser.Tokens.T__3.rawValue)
 		 	setState(165)
-		 	try statements()
+		 	try match(PlatoParser.Tokens.T__14.rawValue)
 		 	setState(166)
+		 	try match(PlatoParser.Tokens.T__3.rawValue)
+		 	setState(167)
+		 	try statements()
+		 	setState(168)
 		 	try match(PlatoParser.Tokens.T__4.rawValue)
 
 		}
@@ -1382,37 +1382,37 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(168)
-		 	try match(PlatoParser.Tokens.ID.rawValue)
 		 	setState(170)
+		 	try match(PlatoParser.Tokens.ID.rawValue)
+		 	setState(172)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	if (_la == PlatoParser.Tokens.T__1.rawValue) {
-		 		setState(169)
+		 		setState(171)
 		 		try idTypeStatement()
 
 		 	}
 
-		 	setState(179)
+		 	setState(181)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (_la == PlatoParser.Tokens.T__15.rawValue) {
-		 		setState(172)
+		 		setState(174)
 		 		try match(PlatoParser.Tokens.T__15.rawValue)
-		 		setState(173)
-		 		try match(PlatoParser.Tokens.ID.rawValue)
 		 		setState(175)
+		 		try match(PlatoParser.Tokens.ID.rawValue)
+		 		setState(177)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		if (_la == PlatoParser.Tokens.T__1.rawValue) {
-		 			setState(174)
+		 			setState(176)
 		 			try idTypeStatement()
 
 		 		}
 
 
 
-		 		setState(181)
+		 		setState(183)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
@@ -1488,6 +1488,30 @@ open class PlatoParser: Parser {
 			}
 			else if let visitor = visitor as? PlatoBaseVisitor {
 			    return visitor.visitSubscriptExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class TypeFunctionCallExpressionContext: ExpressionContext {
+			open
+			func typeFunctionCall() -> TypeFunctionCallContext? {
+				return getRuleContext(TypeFunctionCallContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExpressionContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitTypeFunctionCallExpression(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitTypeFunctionCallExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
@@ -1871,7 +1895,7 @@ open class PlatoParser: Parser {
 		do {
 			var _alt: Int
 			try enterOuterAlt(_localctx, 1)
-			setState(193)
+			setState(196)
 			try _errHandler.sync(self)
 			switch(try getInterpreter().adaptivePredict(_input,15, _ctx)) {
 			case 1:
@@ -1879,7 +1903,7 @@ open class PlatoParser: Parser {
 				_ctx = _localctx
 				_prevctx = _localctx
 
-				setState(183)
+				setState(185)
 				_localctx.castdown(UnaryExpressionContext.self).op = try _input.LT(1)
 				_la = try _input.LA(1)
 				if (!(_la == PlatoParser.Tokens.PLUS.rawValue || _la == PlatoParser.Tokens.MINUS.rawValue)) {
@@ -1889,52 +1913,60 @@ open class PlatoParser: Parser {
 					_errHandler.reportMatch(self)
 					try consume()
 				}
-				setState(184)
-				try expression(11)
+				setState(186)
+				try expression(12)
 
 				break
 			case 2:
 				_localctx = NotExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
-				setState(185)
+				setState(187)
 				try match(PlatoParser.Tokens.NOT.rawValue)
-				setState(186)
-				try expression(10)
+				setState(188)
+				try expression(11)
 
 				break
 			case 3:
 				_localctx = FunctionCallExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
-				setState(187)
+				setState(189)
 				try functionCall()
 
 				break
 			case 4:
-				_localctx = ParenthesesExpressionContext(_localctx)
+				_localctx = TypeFunctionCallExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
-				setState(188)
-				try match(PlatoParser.Tokens.T__13.rawValue)
-				setState(189)
-				try expression(0)
 				setState(190)
-				try match(PlatoParser.Tokens.T__14.rawValue)
+				try typeFunctionCall()
 
 				break
 			case 5:
+				_localctx = ParenthesesExpressionContext(_localctx)
+				_ctx = _localctx
+				_prevctx = _localctx
+				setState(191)
+				try match(PlatoParser.Tokens.T__13.rawValue)
+				setState(192)
+				try expression(0)
+				setState(193)
+				try match(PlatoParser.Tokens.T__14.rawValue)
+
+				break
+			case 6:
 				_localctx = TypeExpressionContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
-				setState(192)
+				setState(195)
 				try element()
 
 				break
 			default: break
 			}
 			_ctx!.stop = try _input.LT(-1)
-			setState(231)
+			setState(234)
 			try _errHandler.sync(self)
 			_alt = try getInterpreter().adaptivePredict(_input,18,_ctx)
 			while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
@@ -1943,30 +1975,30 @@ open class PlatoParser: Parser {
 					   try triggerExitRuleEvent()
 					}
 					_prevctx = _localctx
-					setState(229)
+					setState(232)
 					try _errHandler.sync(self)
 					switch(try getInterpreter().adaptivePredict(_input,17, _ctx)) {
 					case 1:
 						_localctx = ExponentExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(195)
-						if (!(precpred(_ctx, 12))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 12)"))
+						setState(198)
+						if (!(precpred(_ctx, 13))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 13)"))
 						}
-						setState(196)
+						setState(199)
 						try match(PlatoParser.Tokens.EXP.rawValue)
-						setState(197)
-						try expression(12)
+						setState(200)
+						try expression(13)
 
 						break
 					case 2:
 						_localctx = MulExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(198)
-						if (!(precpred(_ctx, 9))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 9)"))
+						setState(201)
+						if (!(precpred(_ctx, 10))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 10)"))
 						}
-						setState(199)
+						setState(202)
 						_localctx.castdown(MulExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 7340032) != 0))) {
@@ -1976,18 +2008,18 @@ open class PlatoParser: Parser {
 							_errHandler.reportMatch(self)
 							try consume()
 						}
-						setState(200)
-						try expression(10)
+						setState(203)
+						try expression(11)
 
 						break
 					case 3:
 						_localctx = AddExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(201)
-						if (!(precpred(_ctx, 8))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 8)"))
+						setState(204)
+						if (!(precpred(_ctx, 9))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 9)"))
 						}
-						setState(202)
+						setState(205)
 						_localctx.castdown(AddExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(_la == PlatoParser.Tokens.PLUS.rawValue || _la == PlatoParser.Tokens.MINUS.rawValue)) {
@@ -1997,18 +2029,18 @@ open class PlatoParser: Parser {
 							_errHandler.reportMatch(self)
 							try consume()
 						}
-						setState(203)
-						try expression(9)
+						setState(206)
+						try expression(10)
 
 						break
 					case 4:
 						_localctx = CompareExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(204)
-						if (!(precpred(_ctx, 7))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 7)"))
+						setState(207)
+						if (!(precpred(_ctx, 8))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 8)"))
 						}
-						setState(205)
+						setState(208)
 						_localctx.castdown(CompareExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 503316480) != 0))) {
@@ -2018,18 +2050,18 @@ open class PlatoParser: Parser {
 							_errHandler.reportMatch(self)
 							try consume()
 						}
-						setState(206)
-						try expression(8)
+						setState(209)
+						try expression(9)
 
 						break
 					case 5:
 						_localctx = EqualityExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(207)
-						if (!(precpred(_ctx, 6))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 6)"))
+						setState(210)
+						if (!(precpred(_ctx, 7))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 7)"))
 						}
-						setState(208)
+						setState(211)
 						_localctx.castdown(EqualityExpressionContext.self).op = try _input.LT(1)
 						_la = try _input.LA(1)
 						if (!(_la == PlatoParser.Tokens.EQUAL.rawValue || _la == PlatoParser.Tokens.DIF.rawValue)) {
@@ -2039,64 +2071,64 @@ open class PlatoParser: Parser {
 							_errHandler.reportMatch(self)
 							try consume()
 						}
-						setState(209)
-						try expression(7)
+						setState(212)
+						try expression(8)
 
 						break
 					case 6:
 						_localctx = AndExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(210)
-						if (!(precpred(_ctx, 5))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 5)"))
+						setState(213)
+						if (!(precpred(_ctx, 6))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 6)"))
 						}
-						setState(211)
+						setState(214)
 						try match(PlatoParser.Tokens.AND.rawValue)
-						setState(212)
-						try expression(6)
+						setState(215)
+						try expression(7)
 
 						break
 					case 7:
 						_localctx = OrExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(213)
-						if (!(precpred(_ctx, 4))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 4)"))
+						setState(216)
+						if (!(precpred(_ctx, 5))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 5)"))
 						}
-						setState(214)
+						setState(217)
 						try match(PlatoParser.Tokens.OR.rawValue)
-						setState(215)
-						try expression(5)
+						setState(218)
+						try expression(6)
 
 						break
 					case 8:
 						_localctx = SubscriptExpressionContext(  ExpressionContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, PlatoParser.RULE_expression)
-						setState(216)
-						if (!(precpred(_ctx, 13))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 13)"))
-						}
-						setState(217)
-						try match(PlatoParser.Tokens.T__16.rawValue)
-						setState(218)
-						try expression(0)
 						setState(219)
+						if (!(precpred(_ctx, 14))) {
+						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 14)"))
+						}
+						setState(220)
+						try match(PlatoParser.Tokens.T__16.rawValue)
+						setState(221)
+						try expression(0)
+						setState(222)
 						try match(PlatoParser.Tokens.T__17.rawValue)
-						setState(226)
+						setState(229)
 						try _errHandler.sync(self)
 						_alt = try getInterpreter().adaptivePredict(_input,16,_ctx)
 						while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
 							if ( _alt==1 ) {
-								setState(220)
+								setState(223)
 								try match(PlatoParser.Tokens.T__16.rawValue)
-								setState(221)
+								setState(224)
 								try expression(0)
-								setState(222)
+								setState(225)
 								try match(PlatoParser.Tokens.T__17.rawValue)
 
 						 
 							}
-							setState(228)
+							setState(231)
 							try _errHandler.sync(self)
 							_alt = try getInterpreter().adaptivePredict(_input,16,_ctx)
 						}
@@ -2106,7 +2138,7 @@ open class PlatoParser: Parser {
 					}
 			 
 				}
-				setState(233)
+				setState(236)
 				try _errHandler.sync(self)
 				_alt = try getInterpreter().adaptivePredict(_input,18,_ctx)
 			}
@@ -2158,20 +2190,112 @@ open class PlatoParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(234)
-		 	try match(PlatoParser.Tokens.ID.rawValue)
-		 	setState(235)
-		 	try match(PlatoParser.Tokens.T__13.rawValue)
 		 	setState(237)
+		 	try match(PlatoParser.Tokens.ID.rawValue)
+		 	setState(238)
+		 	try match(PlatoParser.Tokens.T__13.rawValue)
+		 	setState(240)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 67554054565412864) != 0)) {
-		 		setState(236)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 71987285448605696) != 0)) {
+		 		setState(239)
 		 		try parameterList()
 
 		 	}
 
-		 	setState(239)
+		 	setState(242)
+		 	try match(PlatoParser.Tokens.T__14.rawValue)
+
+		}
+		catch ANTLRException.recognition(let re) {
+			_localctx.exception = re
+			_errHandler.reportError(self, re)
+			try _errHandler.recover(self, re)
+		}
+
+		return _localctx
+	}
+
+	public class TypeFunctionCallContext: ParserRuleContext {
+		open var type: Token!
+			open
+			func BOOL_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.BOOL_TYPE.rawValue, 0)
+			}
+			open
+			func INT_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.INT_TYPE.rawValue, 0)
+			}
+			open
+			func FLOAT_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.FLOAT_TYPE.rawValue, 0)
+			}
+			open
+			func NUMBER_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.NUMBER_TYPE.rawValue, 0)
+			}
+			open
+			func STRING_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.STRING_TYPE.rawValue, 0)
+			}
+			open
+			func ARRAY_TYPE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.ARRAY_TYPE.rawValue, 0)
+			}
+			open
+			func parameterList() -> ParameterListContext? {
+				return getRuleContext(ParameterListContext.self, 0)
+			}
+		override open
+		func getRuleIndex() -> Int {
+			return PlatoParser.RULE_typeFunctionCall
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitTypeFunctionCall(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitTypeFunctionCall(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	@discardableResult
+	 open func typeFunctionCall() throws -> TypeFunctionCallContext {
+		var _localctx: TypeFunctionCallContext
+		_localctx = TypeFunctionCallContext(_ctx, getState())
+		try enterRule(_localctx, 34, PlatoParser.RULE_typeFunctionCall)
+		var _la: Int = 0
+		defer {
+	    		try! exitRule()
+	    }
+		do {
+		 	try enterOuterAlt(_localctx, 1)
+		 	setState(244)
+		 	_localctx.castdown(TypeFunctionCallContext.self).type = try _input.LT(1)
+		 	_la = try _input.LA(1)
+		 	if (!(((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 4433230883192832) != 0))) {
+		 		_localctx.castdown(TypeFunctionCallContext.self).type = try _errHandler.recoverInline(self) as Token
+		 	}
+		 	else {
+		 		_errHandler.reportMatch(self)
+		 		try consume()
+		 	}
+		 	setState(245)
+		 	try match(PlatoParser.Tokens.T__13.rawValue)
+		 	setState(247)
+		 	try _errHandler.sync(self)
+		 	_la = try _input.LA(1)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 71987285448605696) != 0)) {
+		 		setState(246)
+		 		try parameterList()
+
+		 	}
+
+		 	setState(249)
 		 	try match(PlatoParser.Tokens.T__14.rawValue)
 
 		}
@@ -2214,26 +2338,26 @@ open class PlatoParser: Parser {
 	 open func parameterList() throws -> ParameterListContext {
 		var _localctx: ParameterListContext
 		_localctx = ParameterListContext(_ctx, getState())
-		try enterRule(_localctx, 34, PlatoParser.RULE_parameterList)
+		try enterRule(_localctx, 36, PlatoParser.RULE_parameterList)
 		var _la: Int = 0
 		defer {
 	    		try! exitRule()
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(241)
+		 	setState(251)
 		 	try expression(0)
-		 	setState(246)
+		 	setState(256)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (_la == PlatoParser.Tokens.T__15.rawValue) {
-		 		setState(242)
+		 		setState(252)
 		 		try match(PlatoParser.Tokens.T__15.rawValue)
-		 		setState(243)
+		 		setState(253)
 		 		try expression(0)
 
 
-		 		setState(248)
+		 		setState(258)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
@@ -2426,18 +2550,18 @@ open class PlatoParser: Parser {
 	 open func element() throws -> ElementContext {
 		var _localctx: ElementContext
 		_localctx = ElementContext(_ctx, getState())
-		try enterRule(_localctx, 36, PlatoParser.RULE_element)
+		try enterRule(_localctx, 38, PlatoParser.RULE_element)
 		defer {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(256)
+		 	setState(266)
 		 	try _errHandler.sync(self)
 		 	switch (PlatoParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .ID:
 		 		_localctx =  IdElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(249)
+		 		setState(259)
 		 		try match(PlatoParser.Tokens.ID.rawValue)
 
 		 		break
@@ -2445,7 +2569,7 @@ open class PlatoParser: Parser {
 		 	case .INT:
 		 		_localctx =  IntElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(250)
+		 		setState(260)
 		 		try match(PlatoParser.Tokens.INT.rawValue)
 
 		 		break
@@ -2453,7 +2577,7 @@ open class PlatoParser: Parser {
 		 	case .FLOAT:
 		 		_localctx =  FloatElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(251)
+		 		setState(261)
 		 		try match(PlatoParser.Tokens.FLOAT.rawValue)
 
 		 		break
@@ -2461,7 +2585,7 @@ open class PlatoParser: Parser {
 		 	case .STRING:
 		 		_localctx =  StringElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 4)
-		 		setState(252)
+		 		setState(262)
 		 		try match(PlatoParser.Tokens.STRING.rawValue)
 
 		 		break
@@ -2469,7 +2593,7 @@ open class PlatoParser: Parser {
 		 	case .TRUE:
 		 		_localctx =  TrueElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 5)
-		 		setState(253)
+		 		setState(263)
 		 		try match(PlatoParser.Tokens.TRUE.rawValue)
 
 		 		break
@@ -2477,7 +2601,7 @@ open class PlatoParser: Parser {
 		 	case .FALSE:
 		 		_localctx =  FalseElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 6)
-		 		setState(254)
+		 		setState(264)
 		 		try match(PlatoParser.Tokens.FALSE.rawValue)
 
 		 		break
@@ -2485,7 +2609,7 @@ open class PlatoParser: Parser {
 		 	case .T__16:
 		 		_localctx =  ArrayElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 7)
-		 		setState(255)
+		 		setState(265)
 		 		try array()
 
 		 		break
@@ -2528,25 +2652,25 @@ open class PlatoParser: Parser {
 	 open func array() throws -> ArrayContext {
 		var _localctx: ArrayContext
 		_localctx = ArrayContext(_ctx, getState())
-		try enterRule(_localctx, 38, PlatoParser.RULE_array)
+		try enterRule(_localctx, 40, PlatoParser.RULE_array)
 		var _la: Int = 0
 		defer {
 	    		try! exitRule()
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(258)
+		 	setState(268)
 		 	try match(PlatoParser.Tokens.T__16.rawValue)
-		 	setState(260)
+		 	setState(270)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 67554054565412864) != 0)) {
-		 		setState(259)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 71987285448605696) != 0)) {
+		 		setState(269)
 		 		try parameterList()
 
 		 	}
 
-		 	setState(262)
+		 	setState(272)
 		 	try match(PlatoParser.Tokens.T__17.rawValue)
 
 		}
@@ -2569,107 +2693,110 @@ open class PlatoParser: Parser {
 	}
 	private func expression_sempred(_ _localctx: ExpressionContext!,  _ predIndex: Int) throws -> Bool {
 		switch (predIndex) {
-		    case 0:return precpred(_ctx, 12)
-		    case 1:return precpred(_ctx, 9)
-		    case 2:return precpred(_ctx, 8)
-		    case 3:return precpred(_ctx, 7)
-		    case 4:return precpred(_ctx, 6)
-		    case 5:return precpred(_ctx, 5)
-		    case 6:return precpred(_ctx, 4)
-		    case 7:return precpred(_ctx, 13)
+		    case 0:return precpred(_ctx, 13)
+		    case 1:return precpred(_ctx, 10)
+		    case 2:return precpred(_ctx, 9)
+		    case 3:return precpred(_ctx, 8)
+		    case 4:return precpred(_ctx, 7)
+		    case 5:return precpred(_ctx, 6)
+		    case 6:return precpred(_ctx, 5)
+		    case 7:return precpred(_ctx, 14)
 		    default: return true
 		}
 	}
 
 	static let _serializedATN:[Int] = [
-		4,1,59,265,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,59,275,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
-		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,1,0,1,0,1,1,3,1,
-		45,8,1,1,1,5,1,48,8,1,10,1,12,1,51,9,1,1,1,3,1,54,8,1,1,2,1,2,1,2,1,2,
-		1,2,1,2,1,2,1,2,3,2,64,8,2,1,3,1,3,1,4,1,4,1,5,1,5,1,6,1,6,3,6,74,8,6,
-		1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,3,7,87,8,7,1,8,1,8,1,8,1,9,
-		1,9,1,9,1,9,1,9,1,9,5,9,98,8,9,10,9,12,9,101,9,9,1,9,3,9,104,8,9,1,10,
-		5,10,107,8,10,10,10,12,10,110,9,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
-		1,11,5,11,120,8,11,10,11,12,11,123,9,11,1,11,1,11,1,11,1,11,1,11,1,12,
-		1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,
-		1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,3,12,156,8,12,1,
-		13,1,13,1,13,1,13,3,13,162,8,13,1,13,1,13,1,13,1,13,1,13,1,14,1,14,3,14,
-		171,8,14,1,14,1,14,1,14,3,14,176,8,14,5,14,178,8,14,10,14,12,14,181,9,
-		14,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,3,15,194,8,15,
+		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,1,0,1,0,1,
+		0,1,1,3,1,47,8,1,1,1,5,1,50,8,1,10,1,12,1,53,9,1,1,1,3,1,56,8,1,1,2,1,
+		2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,66,8,2,1,3,1,3,1,4,1,4,1,5,1,5,1,6,1,6,3,
+		6,76,8,6,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,3,7,89,8,7,1,8,1,
+		8,1,8,1,9,1,9,1,9,1,9,1,9,1,9,5,9,100,8,9,10,9,12,9,103,9,9,1,9,3,9,106,
+		8,9,1,10,5,10,109,8,10,10,10,12,10,112,9,10,1,10,1,10,1,10,1,10,1,10,1,
+		10,1,10,1,11,5,11,122,8,11,10,11,12,11,125,9,11,1,11,1,11,1,11,1,11,1,
+		11,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,
+		12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,3,12,158,
+		8,12,1,13,1,13,1,13,1,13,3,13,164,8,13,1,13,1,13,1,13,1,13,1,13,1,14,1,
+		14,3,14,173,8,14,1,14,1,14,1,14,3,14,178,8,14,5,14,180,8,14,10,14,12,14,
+		183,9,14,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,3,
+		15,197,8,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,
 		1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,
-		1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,
-		1,15,5,15,225,8,15,10,15,12,15,228,9,15,5,15,230,8,15,10,15,12,15,233,
-		9,15,1,16,1,16,1,16,3,16,238,8,16,1,16,1,16,1,17,1,17,1,17,5,17,245,8,
-		17,10,17,12,17,248,9,17,1,18,1,18,1,18,1,18,1,18,1,18,1,18,3,18,257,8,
-		18,1,19,1,19,3,19,261,8,19,1,19,1,19,1,19,0,1,30,20,0,2,4,6,8,10,12,14,
-		16,18,20,22,24,26,28,30,32,34,36,38,0,7,2,0,1,1,56,56,1,0,37,41,1,0,45,
-		51,1,0,23,24,1,0,20,22,1,0,25,28,1,0,29,30,289,0,40,1,0,0,0,2,49,1,0,0,
-		0,4,63,1,0,0,0,6,65,1,0,0,0,8,67,1,0,0,0,10,69,1,0,0,0,12,71,1,0,0,0,14,
-		86,1,0,0,0,16,88,1,0,0,0,18,91,1,0,0,0,20,108,1,0,0,0,22,121,1,0,0,0,24,
-		155,1,0,0,0,26,157,1,0,0,0,28,168,1,0,0,0,30,193,1,0,0,0,32,234,1,0,0,
-		0,34,241,1,0,0,0,36,256,1,0,0,0,38,258,1,0,0,0,40,41,3,2,1,0,41,42,5,0,
-		0,1,42,1,1,0,0,0,43,45,3,4,2,0,44,43,1,0,0,0,44,45,1,0,0,0,45,46,1,0,0,
-		0,46,48,7,0,0,0,47,44,1,0,0,0,48,51,1,0,0,0,49,47,1,0,0,0,49,50,1,0,0,
-		0,50,53,1,0,0,0,51,49,1,0,0,0,52,54,3,4,2,0,53,52,1,0,0,0,53,54,1,0,0,
-		0,54,3,1,0,0,0,55,64,3,14,7,0,56,64,3,18,9,0,57,64,3,24,12,0,58,64,3,26,
-		13,0,59,64,3,6,3,0,60,64,3,8,4,0,61,64,3,10,5,0,62,64,3,12,6,0,63,55,1,
-		0,0,0,63,56,1,0,0,0,63,57,1,0,0,0,63,58,1,0,0,0,63,59,1,0,0,0,63,60,1,
-		0,0,0,63,61,1,0,0,0,63,62,1,0,0,0,64,5,1,0,0,0,65,66,3,30,15,0,66,7,1,
-		0,0,0,67,68,5,43,0,0,68,9,1,0,0,0,69,70,5,44,0,0,70,11,1,0,0,0,71,73,5,
-		42,0,0,72,74,3,30,15,0,73,72,1,0,0,0,73,74,1,0,0,0,74,13,1,0,0,0,75,76,
-		5,52,0,0,76,77,5,36,0,0,77,87,3,30,15,0,78,79,5,52,0,0,79,80,3,16,8,0,
-		80,81,5,36,0,0,81,82,3,30,15,0,82,87,1,0,0,0,83,84,5,52,0,0,84,85,7,1,
-		0,0,85,87,3,30,15,0,86,75,1,0,0,0,86,78,1,0,0,0,86,83,1,0,0,0,87,15,1,
-		0,0,0,88,89,5,2,0,0,89,90,7,2,0,0,90,17,1,0,0,0,91,92,5,3,0,0,92,93,3,
-		30,15,0,93,94,5,4,0,0,94,95,3,2,1,0,95,99,5,5,0,0,96,98,3,20,10,0,97,96,
-		1,0,0,0,98,101,1,0,0,0,99,97,1,0,0,0,99,100,1,0,0,0,100,103,1,0,0,0,101,
-		99,1,0,0,0,102,104,3,22,11,0,103,102,1,0,0,0,103,104,1,0,0,0,104,19,1,
-		0,0,0,105,107,5,56,0,0,106,105,1,0,0,0,107,110,1,0,0,0,108,106,1,0,0,0,
-		108,109,1,0,0,0,109,111,1,0,0,0,110,108,1,0,0,0,111,112,5,6,0,0,112,113,
-		5,3,0,0,113,114,3,30,15,0,114,115,5,4,0,0,115,116,3,2,1,0,116,117,5,5,
-		0,0,117,21,1,0,0,0,118,120,5,56,0,0,119,118,1,0,0,0,120,123,1,0,0,0,121,
-		119,1,0,0,0,121,122,1,0,0,0,122,124,1,0,0,0,123,121,1,0,0,0,124,125,5,
-		6,0,0,125,126,5,4,0,0,126,127,3,2,1,0,127,128,5,5,0,0,128,23,1,0,0,0,129,
-		130,5,7,0,0,130,131,3,30,15,0,131,132,5,4,0,0,132,133,3,2,1,0,133,134,
-		5,5,0,0,134,156,1,0,0,0,135,136,5,8,0,0,136,137,5,52,0,0,137,138,5,9,0,
-		0,138,139,3,30,15,0,139,140,5,4,0,0,140,141,3,2,1,0,141,142,5,5,0,0,142,
-		156,1,0,0,0,143,144,5,8,0,0,144,145,5,52,0,0,145,146,5,10,0,0,146,147,
-		3,30,15,0,147,148,5,11,0,0,148,149,3,30,15,0,149,150,5,12,0,0,150,151,
-		3,30,15,0,151,152,5,4,0,0,152,153,3,2,1,0,153,154,5,5,0,0,154,156,1,0,
-		0,0,155,129,1,0,0,0,155,135,1,0,0,0,155,143,1,0,0,0,156,25,1,0,0,0,157,
-		158,5,13,0,0,158,159,5,52,0,0,159,161,5,14,0,0,160,162,3,28,14,0,161,160,
-		1,0,0,0,161,162,1,0,0,0,162,163,1,0,0,0,163,164,5,15,0,0,164,165,5,4,0,
-		0,165,166,3,2,1,0,166,167,5,5,0,0,167,27,1,0,0,0,168,170,5,52,0,0,169,
-		171,3,16,8,0,170,169,1,0,0,0,170,171,1,0,0,0,171,179,1,0,0,0,172,173,5,
-		16,0,0,173,175,5,52,0,0,174,176,3,16,8,0,175,174,1,0,0,0,175,176,1,0,0,
-		0,176,178,1,0,0,0,177,172,1,0,0,0,178,181,1,0,0,0,179,177,1,0,0,0,179,
-		180,1,0,0,0,180,29,1,0,0,0,181,179,1,0,0,0,182,183,6,15,-1,0,183,184,7,
-		3,0,0,184,194,3,30,15,11,185,186,5,33,0,0,186,194,3,30,15,10,187,194,3,
-		32,16,0,188,189,5,14,0,0,189,190,3,30,15,0,190,191,5,15,0,0,191,194,1,
-		0,0,0,192,194,3,36,18,0,193,182,1,0,0,0,193,185,1,0,0,0,193,187,1,0,0,
-		0,193,188,1,0,0,0,193,192,1,0,0,0,194,231,1,0,0,0,195,196,10,12,0,0,196,
-		197,5,19,0,0,197,230,3,30,15,12,198,199,10,9,0,0,199,200,7,4,0,0,200,230,
-		3,30,15,10,201,202,10,8,0,0,202,203,7,3,0,0,203,230,3,30,15,9,204,205,
-		10,7,0,0,205,206,7,5,0,0,206,230,3,30,15,8,207,208,10,6,0,0,208,209,7,
-		6,0,0,209,230,3,30,15,7,210,211,10,5,0,0,211,212,5,31,0,0,212,230,3,30,
-		15,6,213,214,10,4,0,0,214,215,5,32,0,0,215,230,3,30,15,5,216,217,10,13,
-		0,0,217,218,5,17,0,0,218,219,3,30,15,0,219,226,5,18,0,0,220,221,5,17,0,
-		0,221,222,3,30,15,0,222,223,5,18,0,0,223,225,1,0,0,0,224,220,1,0,0,0,225,
-		228,1,0,0,0,226,224,1,0,0,0,226,227,1,0,0,0,227,230,1,0,0,0,228,226,1,
-		0,0,0,229,195,1,0,0,0,229,198,1,0,0,0,229,201,1,0,0,0,229,204,1,0,0,0,
-		229,207,1,0,0,0,229,210,1,0,0,0,229,213,1,0,0,0,229,216,1,0,0,0,230,233,
-		1,0,0,0,231,229,1,0,0,0,231,232,1,0,0,0,232,31,1,0,0,0,233,231,1,0,0,0,
-		234,235,5,52,0,0,235,237,5,14,0,0,236,238,3,34,17,0,237,236,1,0,0,0,237,
-		238,1,0,0,0,238,239,1,0,0,0,239,240,5,15,0,0,240,33,1,0,0,0,241,246,3,
-		30,15,0,242,243,5,16,0,0,243,245,3,30,15,0,244,242,1,0,0,0,245,248,1,0,
-		0,0,246,244,1,0,0,0,246,247,1,0,0,0,247,35,1,0,0,0,248,246,1,0,0,0,249,
-		257,5,52,0,0,250,257,5,54,0,0,251,257,5,53,0,0,252,257,5,55,0,0,253,257,
-		5,34,0,0,254,257,5,35,0,0,255,257,3,38,19,0,256,249,1,0,0,0,256,250,1,
-		0,0,0,256,251,1,0,0,0,256,252,1,0,0,0,256,253,1,0,0,0,256,254,1,0,0,0,
-		256,255,1,0,0,0,257,37,1,0,0,0,258,260,5,17,0,0,259,261,3,34,17,0,260,
-		259,1,0,0,0,260,261,1,0,0,0,261,262,1,0,0,0,262,263,5,18,0,0,263,39,1,
-		0,0,0,23,44,49,53,63,73,86,99,103,108,121,155,161,170,175,179,193,226,
-		229,231,237,246,256,260
+		1,15,1,15,1,15,5,15,228,8,15,10,15,12,15,231,9,15,5,15,233,8,15,10,15,
+		12,15,236,9,15,1,16,1,16,1,16,3,16,241,8,16,1,16,1,16,1,17,1,17,1,17,3,
+		17,248,8,17,1,17,1,17,1,18,1,18,1,18,5,18,255,8,18,10,18,12,18,258,9,18,
+		1,19,1,19,1,19,1,19,1,19,1,19,1,19,3,19,267,8,19,1,20,1,20,3,20,271,8,
+		20,1,20,1,20,1,20,0,1,30,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,
+		32,34,36,38,40,0,8,2,0,1,1,56,56,1,0,37,41,1,0,45,51,1,0,23,24,1,0,20,
+		22,1,0,25,28,1,0,29,30,1,0,46,51,300,0,42,1,0,0,0,2,51,1,0,0,0,4,65,1,
+		0,0,0,6,67,1,0,0,0,8,69,1,0,0,0,10,71,1,0,0,0,12,73,1,0,0,0,14,88,1,0,
+		0,0,16,90,1,0,0,0,18,93,1,0,0,0,20,110,1,0,0,0,22,123,1,0,0,0,24,157,1,
+		0,0,0,26,159,1,0,0,0,28,170,1,0,0,0,30,196,1,0,0,0,32,237,1,0,0,0,34,244,
+		1,0,0,0,36,251,1,0,0,0,38,266,1,0,0,0,40,268,1,0,0,0,42,43,3,2,1,0,43,
+		44,5,0,0,1,44,1,1,0,0,0,45,47,3,4,2,0,46,45,1,0,0,0,46,47,1,0,0,0,47,48,
+		1,0,0,0,48,50,7,0,0,0,49,46,1,0,0,0,50,53,1,0,0,0,51,49,1,0,0,0,51,52,
+		1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,54,56,3,4,2,0,55,54,1,0,0,0,55,56,
+		1,0,0,0,56,3,1,0,0,0,57,66,3,14,7,0,58,66,3,18,9,0,59,66,3,24,12,0,60,
+		66,3,26,13,0,61,66,3,6,3,0,62,66,3,8,4,0,63,66,3,10,5,0,64,66,3,12,6,0,
+		65,57,1,0,0,0,65,58,1,0,0,0,65,59,1,0,0,0,65,60,1,0,0,0,65,61,1,0,0,0,
+		65,62,1,0,0,0,65,63,1,0,0,0,65,64,1,0,0,0,66,5,1,0,0,0,67,68,3,30,15,0,
+		68,7,1,0,0,0,69,70,5,43,0,0,70,9,1,0,0,0,71,72,5,44,0,0,72,11,1,0,0,0,
+		73,75,5,42,0,0,74,76,3,30,15,0,75,74,1,0,0,0,75,76,1,0,0,0,76,13,1,0,0,
+		0,77,78,5,52,0,0,78,79,5,36,0,0,79,89,3,30,15,0,80,81,5,52,0,0,81,82,3,
+		16,8,0,82,83,5,36,0,0,83,84,3,30,15,0,84,89,1,0,0,0,85,86,5,52,0,0,86,
+		87,7,1,0,0,87,89,3,30,15,0,88,77,1,0,0,0,88,80,1,0,0,0,88,85,1,0,0,0,89,
+		15,1,0,0,0,90,91,5,2,0,0,91,92,7,2,0,0,92,17,1,0,0,0,93,94,5,3,0,0,94,
+		95,3,30,15,0,95,96,5,4,0,0,96,97,3,2,1,0,97,101,5,5,0,0,98,100,3,20,10,
+		0,99,98,1,0,0,0,100,103,1,0,0,0,101,99,1,0,0,0,101,102,1,0,0,0,102,105,
+		1,0,0,0,103,101,1,0,0,0,104,106,3,22,11,0,105,104,1,0,0,0,105,106,1,0,
+		0,0,106,19,1,0,0,0,107,109,5,56,0,0,108,107,1,0,0,0,109,112,1,0,0,0,110,
+		108,1,0,0,0,110,111,1,0,0,0,111,113,1,0,0,0,112,110,1,0,0,0,113,114,5,
+		6,0,0,114,115,5,3,0,0,115,116,3,30,15,0,116,117,5,4,0,0,117,118,3,2,1,
+		0,118,119,5,5,0,0,119,21,1,0,0,0,120,122,5,56,0,0,121,120,1,0,0,0,122,
+		125,1,0,0,0,123,121,1,0,0,0,123,124,1,0,0,0,124,126,1,0,0,0,125,123,1,
+		0,0,0,126,127,5,6,0,0,127,128,5,4,0,0,128,129,3,2,1,0,129,130,5,5,0,0,
+		130,23,1,0,0,0,131,132,5,7,0,0,132,133,3,30,15,0,133,134,5,4,0,0,134,135,
+		3,2,1,0,135,136,5,5,0,0,136,158,1,0,0,0,137,138,5,8,0,0,138,139,5,52,0,
+		0,139,140,5,9,0,0,140,141,3,30,15,0,141,142,5,4,0,0,142,143,3,2,1,0,143,
+		144,5,5,0,0,144,158,1,0,0,0,145,146,5,8,0,0,146,147,5,52,0,0,147,148,5,
+		10,0,0,148,149,3,30,15,0,149,150,5,11,0,0,150,151,3,30,15,0,151,152,5,
+		12,0,0,152,153,3,30,15,0,153,154,5,4,0,0,154,155,3,2,1,0,155,156,5,5,0,
+		0,156,158,1,0,0,0,157,131,1,0,0,0,157,137,1,0,0,0,157,145,1,0,0,0,158,
+		25,1,0,0,0,159,160,5,13,0,0,160,161,5,52,0,0,161,163,5,14,0,0,162,164,
+		3,28,14,0,163,162,1,0,0,0,163,164,1,0,0,0,164,165,1,0,0,0,165,166,5,15,
+		0,0,166,167,5,4,0,0,167,168,3,2,1,0,168,169,5,5,0,0,169,27,1,0,0,0,170,
+		172,5,52,0,0,171,173,3,16,8,0,172,171,1,0,0,0,172,173,1,0,0,0,173,181,
+		1,0,0,0,174,175,5,16,0,0,175,177,5,52,0,0,176,178,3,16,8,0,177,176,1,0,
+		0,0,177,178,1,0,0,0,178,180,1,0,0,0,179,174,1,0,0,0,180,183,1,0,0,0,181,
+		179,1,0,0,0,181,182,1,0,0,0,182,29,1,0,0,0,183,181,1,0,0,0,184,185,6,15,
+		-1,0,185,186,7,3,0,0,186,197,3,30,15,12,187,188,5,33,0,0,188,197,3,30,
+		15,11,189,197,3,32,16,0,190,197,3,34,17,0,191,192,5,14,0,0,192,193,3,30,
+		15,0,193,194,5,15,0,0,194,197,1,0,0,0,195,197,3,38,19,0,196,184,1,0,0,
+		0,196,187,1,0,0,0,196,189,1,0,0,0,196,190,1,0,0,0,196,191,1,0,0,0,196,
+		195,1,0,0,0,197,234,1,0,0,0,198,199,10,13,0,0,199,200,5,19,0,0,200,233,
+		3,30,15,13,201,202,10,10,0,0,202,203,7,4,0,0,203,233,3,30,15,11,204,205,
+		10,9,0,0,205,206,7,3,0,0,206,233,3,30,15,10,207,208,10,8,0,0,208,209,7,
+		5,0,0,209,233,3,30,15,9,210,211,10,7,0,0,211,212,7,6,0,0,212,233,3,30,
+		15,8,213,214,10,6,0,0,214,215,5,31,0,0,215,233,3,30,15,7,216,217,10,5,
+		0,0,217,218,5,32,0,0,218,233,3,30,15,6,219,220,10,14,0,0,220,221,5,17,
+		0,0,221,222,3,30,15,0,222,229,5,18,0,0,223,224,5,17,0,0,224,225,3,30,15,
+		0,225,226,5,18,0,0,226,228,1,0,0,0,227,223,1,0,0,0,228,231,1,0,0,0,229,
+		227,1,0,0,0,229,230,1,0,0,0,230,233,1,0,0,0,231,229,1,0,0,0,232,198,1,
+		0,0,0,232,201,1,0,0,0,232,204,1,0,0,0,232,207,1,0,0,0,232,210,1,0,0,0,
+		232,213,1,0,0,0,232,216,1,0,0,0,232,219,1,0,0,0,233,236,1,0,0,0,234,232,
+		1,0,0,0,234,235,1,0,0,0,235,31,1,0,0,0,236,234,1,0,0,0,237,238,5,52,0,
+		0,238,240,5,14,0,0,239,241,3,36,18,0,240,239,1,0,0,0,240,241,1,0,0,0,241,
+		242,1,0,0,0,242,243,5,15,0,0,243,33,1,0,0,0,244,245,7,7,0,0,245,247,5,
+		14,0,0,246,248,3,36,18,0,247,246,1,0,0,0,247,248,1,0,0,0,248,249,1,0,0,
+		0,249,250,5,15,0,0,250,35,1,0,0,0,251,256,3,30,15,0,252,253,5,16,0,0,253,
+		255,3,30,15,0,254,252,1,0,0,0,255,258,1,0,0,0,256,254,1,0,0,0,256,257,
+		1,0,0,0,257,37,1,0,0,0,258,256,1,0,0,0,259,267,5,52,0,0,260,267,5,54,0,
+		0,261,267,5,53,0,0,262,267,5,55,0,0,263,267,5,34,0,0,264,267,5,35,0,0,
+		265,267,3,40,20,0,266,259,1,0,0,0,266,260,1,0,0,0,266,261,1,0,0,0,266,
+		262,1,0,0,0,266,263,1,0,0,0,266,264,1,0,0,0,266,265,1,0,0,0,267,39,1,0,
+		0,0,268,270,5,17,0,0,269,271,3,36,18,0,270,269,1,0,0,0,270,271,1,0,0,0,
+		271,272,1,0,0,0,272,273,5,18,0,0,273,41,1,0,0,0,24,46,51,55,65,75,88,101,
+		105,110,123,157,163,172,177,181,196,229,232,234,240,247,256,266,270
 	]
 
 	public
