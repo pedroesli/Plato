@@ -8,6 +8,6 @@
 public struct ArrayFunc: FunctionResultHandling {
     public static func handle(parameters: [Value]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "values") }
-        return .void
+        return Value(array: ArrayValue(parameters))
     }
 }

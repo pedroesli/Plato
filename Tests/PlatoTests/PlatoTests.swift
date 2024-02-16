@@ -274,6 +274,7 @@ final class PlatoTests: XCTestCase {
         string(true)
         string(1.5)
         string([1, 2, 3])
+        array(1, 2, 3.5, "4")
         """
         plato.addExpectedValue(bool: true, forLine: 1)
         plato.addExpectedValue(bool: true, forLine: 2)
@@ -292,6 +293,7 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(string: "true", forLine: 15)
         plato.addExpectedValue(string: "1.5", forLine: 16)
         plato.addExpectedValue(string: "[1, 2, 3]", forLine: 17)
+        plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(float: 3.5), Value(string: "4")], forLine: 18)
         XCTAssertNoThrow(try plato.run(code))
     }
 }

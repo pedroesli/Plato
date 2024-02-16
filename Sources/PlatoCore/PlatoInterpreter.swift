@@ -508,6 +508,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         if let expressions = functionCall.parameterList()?.expression() {
             for expression in expressions {
                 guard let value = visit(expression) else { return nil }
+                guard value.type.isInRange(of: .array) else {
+                    return error("Expected expression in list of expressions", at: ctx)
+                }
                 parameterList.append(value)
             }
         }
@@ -529,6 +532,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         if let expressions = typeFunctionCall.parameterList()?.expression() {
             for expression in expressions {
                 guard let value = visit(expression) else { return nil }
+                guard value.type.isInRange(of: .array) else {
+                    return error("Expected expression in list of expressions", at: ctx)
+                }
                 parameterList.append(value)
             }
         }
@@ -582,10 +588,13 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
         let values = ArrayValue()
-        if let expressions = ctx.parameterList()?.expression() {
-            for expression in expressions {
-                values.append(visit(expression)!)
+        guard let expressions = ctx.parameterList()?.expression() else { return Value(array: ArrayValue()) }
+        for expression in expressions {
+            guard let value = visit(expression) else { return nil }
+            guard value.type.isInRange(of: .array) else {
+                return error("Expected expression in container literal", at: ctx)
             }
+            values.append(value)
         }
         return Value(array: values)
     }

@@ -19,6 +19,8 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
             return try FloatFunc.handle(parameters: parameters)
         case "string":
             return try StringFunc.handle(parameters: parameters)
+        case "array":
+            return try ArrayFunc.handle(parameters: parameters)
         default:
             throw NativeFunctionError.notFound(funcName: functionName)
         }

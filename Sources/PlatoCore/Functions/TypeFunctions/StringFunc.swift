@@ -10,7 +10,6 @@ public struct StringFunc: FunctionResultHandling {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }
         guard parameters.count == 1 else { throw NativeFunctionError.extraArgument }
         let value = parameters[0]
-        guard value.type.isInRange(of: .array) else { throw NativeFunctionError.noMatch }
         
         return Value(string: value.asString)
     }
