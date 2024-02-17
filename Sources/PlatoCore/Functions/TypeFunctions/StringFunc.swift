@@ -7,7 +7,7 @@
 
 public struct StringFunc: FunctionResultHandling {
     
-    public static let name: String = "bool"
+    public static let name: String = "string"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }

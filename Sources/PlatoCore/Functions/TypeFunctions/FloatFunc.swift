@@ -7,7 +7,7 @@
 
 public struct FloatFunc: FunctionResultHandling {
     
-    public static let name: String = "bool"
+    public static let name: String = "float"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }
