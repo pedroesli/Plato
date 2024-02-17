@@ -6,6 +6,9 @@
 //
 
 public struct StringFunc: FunctionResultHandling {
+    
+    public static let name: String = "bool"
+    
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }
         guard parameters.count == 1 else { throw NativeFunctionError.extraArgument }

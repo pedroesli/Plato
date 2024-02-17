@@ -11,15 +11,15 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
     
     public func handle(functionName: String, parameters: [CallParameter]) throws -> Value {
         switch functionName {
-        case "bool":
+        case BoolFunc.name:
             return try BoolFunc.handle(parameters: parameters)
-        case "int":
+        case IntFunc.name:
             return try IntFunc.handle(parameters: parameters)
-        case "float":
+        case FloatFunc.name:
             return try FloatFunc.handle(parameters: parameters)
-        case "string":
+        case StringFunc.name:
             return try StringFunc.handle(parameters: parameters)
-        case "array":
+        case ArrayFunc.name:
             return try ArrayFunc.handle(parameters: parameters)
         default:
             throw NativeFunctionError.notFound(funcName: functionName)

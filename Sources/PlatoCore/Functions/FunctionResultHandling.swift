@@ -6,5 +6,6 @@
 //
 
 public protocol FunctionResultHandling {
+    static var name: String { get }
     static func handle(parameters: [CallParameter]) throws -> Value
 }
