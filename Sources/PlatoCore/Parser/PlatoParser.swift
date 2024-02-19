@@ -53,11 +53,11 @@ open class PlatoParser: Parser {
 	private static let _LITERAL_NAMES: [String?] = [
 		nil, "';'", "':'", "'if'", "'{'", "'}'", "'else'", "'while'", "'for'", 
 		"'in'", "'from'", "'to'", "'by'", "'func'", "'('", "')'", "','", "'['", 
-		"']'", "'^'", "'*'", "'/'", "'%'", "'+'", "'-'", "'<'", "'<='", "'>'", 
-		"'>='", "'=='", "'!='", "'and'", "'or'", "'!'", "'true'", "'false'", "'='", 
-		"'*='", "'/='", "'%='", "'+='", "'-='", "'return'", "'break'", "'continue'", 
-		"'Any'", "'Bool'", "'Int'", "'Float'", "'Number'", "'String'", "'Array'", 
-		"'_'"
+		"']'", "'**'", "'*'", "'/'", "'%'", "'+'", "'-'", "'<'", "'<='", "'>'", 
+		"'>='", "'=='", "'!='", "'and'", "'or'", "'not'", "'true'", "'false'", 
+		"'='", "'*='", "'/='", "'%='", "'+='", "'-='", "'return'", "'break'", 
+		"'continue'", "'Any'", "'Bool'", "'Int'", "'Float'", "'Number'", "'String'", 
+		"'Array'", "'_'"
 	]
 	private static let _SYMBOLIC_NAMES: [String?] = [
 		nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 

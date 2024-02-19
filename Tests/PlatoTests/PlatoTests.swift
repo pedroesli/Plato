@@ -78,13 +78,13 @@ final class PlatoTests: XCTestCase {
     func testExponent() {
         let plato = TestablePlato()
         let code = """
-        2^true
-        2^false
-        2^3
-        2^2^2
-        2.5^2
-        2^2.5
-        2^2^2.5
+        2**true
+        2**false
+        2**3
+        2**2**2
+        2.5**2
+        2**2.5
+        2**2**2.5
         """
         plato.addExpectedValue(int: 2, forLine: 1)
         plato.addExpectedValue(int: 1, forLine: 2)
@@ -106,11 +106,11 @@ final class PlatoTests: XCTestCase {
         1 and 0
         3 and 5
         6 or 0
-        !true
-        !false
-        !1
-        !0
-        !4
+        not true
+        not false
+        not 1
+        not 0
+        not 4.5
         """
         plato.addExpectedValue(bool: true , forLine: 1)
         plato.addExpectedValue(bool: false, forLine: 2)

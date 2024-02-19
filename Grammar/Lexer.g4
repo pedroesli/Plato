@@ -5,7 +5,7 @@ options {
 }
 
 // Arithmetic Operators
-EXP     : '^';
+EXP     : '**';
 MUL     : '*';
 DIV     : '/';
 MOD     : '%';
@@ -23,7 +23,7 @@ DIF     : '!=';
 // Logical Operators
 AND     : 'and';
 OR      : 'or';
-NOT     : '!';
+NOT     : 'not';
 TRUE    : 'true';
 FALSE   : 'false';
 
@@ -49,6 +49,7 @@ NUMBER_TYPE : 'Number';
 STRING_TYPE : 'String';
 ARRAY_TYPE  : 'Array';
 
+AT_SIGN     : '@';
 UNDERSCORE  : '_';
 
 ID      : UNDERSCORE? LETTER (LETTER | DIGIT)*;
@@ -72,5 +73,5 @@ NEWLINE: '\r'? '\n';
 WS      : [ \t] -> skip;
 
 // Comments
-COMMENT         : '#' ~[\r\n]* -> skip;
-COMMENT_LONG    : '##' .*? '##' -> skip;
+COMMENT             : '#' ~[\r\n]* -> skip;
+COMMENT_MULTILINE   : '##' .*? '##' -> skip;

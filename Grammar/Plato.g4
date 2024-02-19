@@ -78,7 +78,7 @@ functionArguments
     ;
 
 functionArgument
-    : UNDERSCORE? ID idTypeStatement?
+    : AT_SIGN? ID idTypeStatement?
     ;
 
 expression
