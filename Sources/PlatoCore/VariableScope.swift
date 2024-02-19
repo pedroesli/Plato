@@ -7,23 +7,22 @@
 
 import Foundation
 
-public class Scope {
+public class VariableScope {
     private var symbols: [String: Variable]
-    private var parent: Scope?
+    private var parent: VariableScope?
     
-    public init(parent: Scope?) {
+    public init(parent: VariableScope?) {
         self.symbols = [:]
         self.parent = parent
     }
     
-    public init(_ symbols: [String : Variable], parent: Scope) {
-        self.symbols = symbols
-    }
+//    public init(_ symbols: [String : Variable], parent: VariableScope) {
+//        self.symbols = symbols
+//    }
     
     /// Creates a new variable in this scope
     /// Note: Doesn't check if there is the same variable in parents scopes. Use carefully! 
     @discardableResult public func createVariable(type: VariableType, value: Value, forKey key: String) -> Variable? {
-        
         return symbols.updateValue(Variable(type: type, value: value), forKey: key)
     }
     

@@ -15,13 +15,13 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: RuntimeError?
     
-    private var globalMemory = Scope(parent: nil)
-    private var scopes = Stack<Scope>()
+    private var globalMemory = VariableScope(parent: nil)
+    private var variables = Stack<VariableScope>()
     private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
     private var canUseBreakContinue = false
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
-        scopes.push(globalMemory)
+        variables.push(globalMemory)
         guard let statements = ctx.statements() else { return nil }
         return visit(statements)
     }
@@ -66,7 +66,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         let id = ctx.ID()!.getText()
 
         // Check if already exists
-        if let variable = scopes.peek().getVariable(forKey: id) {
+        if let variable = variables.peek().getVariable(forKey: id) {
             guard variable.canAssign(value: value) else {
                 return error("Cannot assign value of type '\(value.type)' to type '\(variable.type)'", at: ctx)
             }
@@ -78,7 +78,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return idError
         }
         
-        scopes.peek().createVariable(type: .any, value: value, forKey: id)
+        variables.peek().createVariable(type: .any, value: value, forKey: id)
         return value
     }
     
@@ -115,14 +115,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Cannot assign value of type '\(value.type)' to type '\(type!)'", at: ctx)
         }
         
-        scopes.peek().createVariable(type: type, value: value, forKey: id)
+        variables.peek().createVariable(type: type, value: value, forKey: id)
         return value
     }
     
     open override func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = scopes.peek().getVariable(forKey: id) else {
+        guard let variable = variables.peek().getVariable(forKey: id) else {
             return error("Assignment of type '\(ctx.op.getText()!)' cannot be applied on an empty value", at: ctx)
         }
         
@@ -254,7 +254,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 canUseBreakContinue = true
             }
             newScope()
-            scopes.peek().createVariable(type: .any, value: value, forKey: id)
+            variables.peek().createVariable(type: .any, value: value, forKey: id)
             if let statements = ctx.statements() {
                 result = visit(statements)
             }
@@ -308,7 +308,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
+                variables.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
                 result = visit(statements)
                 popScope()
                 if result?.type == .command {
@@ -326,7 +326,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 newScope()
-                scopes.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
+                variables.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
                 result = visit(statements)
                 popScope()
                 if result?.type == .command {
@@ -557,7 +557,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = scopes.peek().getVariable(forKey: id) else {
+        guard let variable = variables.peek().getVariable(forKey: id) else {
             return error("Cannot find '\(id)' in scope", at: ctx)
         }
         
@@ -646,12 +646,11 @@ extension PlatoInterpreter {
     }
     
     func newScope() {
-        let parent = scopes.peek()
-        scopes.push(Scope(parent: parent))
+        variables.push(VariableScope(parent: variables.peek()))
     }
     
     func popScope() {
-        scopes.pop()
+        variables.pop()
     }
     
     func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
