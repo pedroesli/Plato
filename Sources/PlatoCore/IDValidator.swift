@@ -5,8 +5,8 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 03/02/24.
 //
 
-struct IDValidator {
-    enum ReservedKeywords: String, CaseIterable {
+public struct IDValidator {
+    public enum ReservedKeywords: String, CaseIterable {
         case elseKey        = "else"
         case whileKey       = "while"
         case forKey         = "for"
@@ -22,9 +22,10 @@ struct IDValidator {
         case returnKey      = "return"
         case breakKey       = "break"
         case continueKey    = "continue"
+        case atKey          = "at"
     }
     
-    static func isValid(_ id: String) -> Bool {
+    public static func isValid(_ id: String) -> Bool {
         return ReservedKeywords.allCases.first(where: { $0.rawValue == id }) == nil
     }
 }

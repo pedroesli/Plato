@@ -5,10 +5,10 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 24/01/24.
 //
 
-class Stack<Element> {
+public class Stack<Element> {
     private var items: [Element] = []
     
-    func peek() -> Element {
+    public func peek() -> Element {
         guard let topElement = items.first else { fatalError("This stack is empty.") }
         return topElement
     }
@@ -17,7 +17,7 @@ class Stack<Element> {
         return items.removeFirst()
     }
     
-    func push(_ element: Element) {
+    public func push(_ element: Element) {
         items.insert(element, at: 0)
     }
 }

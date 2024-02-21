@@ -49,11 +49,12 @@ NUMBER_TYPE : 'Number';
 STRING_TYPE : 'String';
 ARRAY_TYPE  : 'Array';
 
-AT_SIGN     : '@';
+// Other Keywords
+AT          : 'at';
 UNDERSCORE  : '_';
 
+// Elements
 ID      : UNDERSCORE? LETTER (LETTER | DIGIT)*;
-
 fragment
 LETTER  : [a-zA-Z];
 
@@ -65,12 +66,12 @@ fragment
 DIGIT   : [0-9];
 
 STRING  :  '"' ( ESC | ~[\\"] )*? '"';
-
 fragment
 ESC     : '\\' ([abtnfrv]|'"');
 
-NEWLINE: '\r'? '\n';
-WS      : [ \t] -> skip;
+// Space
+NEWLINE     : '\r'? '\n';
+WHITESPACE  : [ \t] -> skip;
 
 // Comments
 COMMENT             : '#' ~[\r\n]* -> skip;

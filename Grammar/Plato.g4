@@ -78,7 +78,7 @@ functionArguments
     ;
 
 functionArgument
-    : AT_SIGN? ID idTypeStatement?
+    : AT? ID idTypeStatement?
     ;
 
 expression

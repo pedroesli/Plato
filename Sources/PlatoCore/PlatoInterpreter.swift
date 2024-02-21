@@ -15,14 +15,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: RuntimeError?
     
-    private var globalMemory = VariableScope(parent: nil)
-    private var variables = Stack<VariableScope>()
-    private let functions: [String : PlatoParser.FunctionDeclarationContext] = [:]
+    private let globalVariables = VariableScope(parent: nil)
+    private let variables = Stack<VariableScope>()
+    private let globalFunctions = FunctionScope(parent: nil)
+    private let functions = Stack<FunctionScope>()
     private var canUseBreakContinue = false
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
-        variables.push(globalMemory)
         guard let statements = ctx.statements() else { return nil }
+        variables.push(globalVariables)
+        functions.push(globalFunctions)
+        
         return visit(statements)
     }
     
@@ -66,7 +69,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         let id = ctx.ID()!.getText()
 
         // Check if already exists
-        if let variable = variables.peek().getVariable(forKey: id) {
+        if let variable = variables.peek().retrieve(forKey: id) {
             guard variable.canAssign(value: value) else {
                 return error("Cannot assign value of type '\(value.type)' to type '\(variable.type)'", at: ctx)
             }
@@ -122,7 +125,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     open override func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = variables.peek().getVariable(forKey: id) else {
+        guard let variable = variables.peek().retrieve(forKey: id) else {
             return error("Assignment of type '\(ctx.op.getText()!)' cannot be applied on an empty value", at: ctx)
         }
         
@@ -346,6 +349,27 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return result
     }
     
+    open override func visitFunctionDeclaration(_ ctx: PlatoParser.FunctionDeclarationContext) -> Value? {
+        let name = ctx.ID()!.getText()
+        var parameters: [Parameter] = []
+        
+        if let arguments = ctx.functionArguments()?.functionArgument() {
+            for argument in arguments {
+                parameters.append(
+                    Parameter(
+                        id: argument.ID()!.getText(),
+                        isIdExplicit: argument.AT() != nil,
+                        type: functionDeclarationParameterType(argument.idTypeStatement())
+                    )
+                )
+            }
+        }
+        
+        functions.peek().createFunction(name: name, parameters: parameters, ctx: ctx)
+        
+        return Value.void
+    }
+    
     // MARK: Expressions
     
     open override func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
@@ -557,7 +581,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = variables.peek().getVariable(forKey: id) else {
+        guard let variable = variables.peek().retrieve(forKey: id) else {
             return error("Cannot find '\(id)' in scope", at: ctx)
         }
         
@@ -673,6 +697,29 @@ extension PlatoInterpreter {
     
     func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
         return left.rawValue > right.rawValue ? left : right
+    }
+    
+    func functionDeclarationParameterType(_ idTypeStatement: PlatoParser.IdTypeStatementContext?) -> VariableType {
+        guard let idTypeStatement else { return .any }
+        
+        switch PlatoParser.Tokens(rawValue: idTypeStatement.type.getType()) {
+        case .ANY_TYPE:
+            return .any
+        case .BOOL_TYPE:
+            return .boolean
+        case .INT_TYPE:
+            return .int
+        case .FLOAT_TYPE:
+            return .float
+        case .NUMBER_TYPE:
+            return .number
+        case .STRING_TYPE:
+            return .string
+        case .ARRAY_TYPE:
+            return .array
+        default:
+            return .any
+        }
     }
     
     public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
