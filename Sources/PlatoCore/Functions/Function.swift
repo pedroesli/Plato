@@ -20,13 +20,23 @@ public class Function {
         self.ctx = ctx
     }
     
-    public func compareParameters(with call: [CallParameter]) -> Bool {
-        return parameters.elementsEqual(call, by: { $0.compare(with: $1) })
+    public func compareParameters(with callParameters: [CallParameter]) -> Bool {
+        return parameters.elementsEqual(callParameters, by: { $0.compare(with: $1) })
     }
     
-//    public func handle() throws -> Value? {
-//        
-//    }
+    public func handle(callParameters: [CallParameter], interpreter: PlatoInterpreter) throws -> Value? {
+        interpreter.newScope()
+        interpreter.canUseReturn = true
+        for (index, parameter) in parameters.enumerated() {
+            interpreter.variables.peek().createVariable(type: parameter.type, value: callParameters[index].value, forKey: parameter.id)
+        }
+        if let statements = ctx.statements() {
+            _ = interpreter.visit(statements)
+        }
+        interpreter.canUseReturn = false
+        interpreter.popScope()
+        return interpreter.returnValue
+    }
 }
 
 extension Function: Hashable {

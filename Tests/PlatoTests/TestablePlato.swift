@@ -50,4 +50,8 @@ struct TestablePlato {
     func addExpectedValue(array values: [Value], forLine line: Int) {
         interpreter.expectedValues[line] = Value(array: ArrayValue(values))
     }
+    
+    private func handlePrint(line: Int, value: Value) {
+        print("line: \(line): \(value)")
+    }
 }

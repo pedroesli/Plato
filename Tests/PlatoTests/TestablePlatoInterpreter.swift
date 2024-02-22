@@ -13,15 +13,19 @@ class TestablePlatoInterpreter: PlatoInterpreter {
     var expectedValues: [Int : Value] = [:]
     
     override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
-        guard let expression = ctx.expression(), let result = visit(expression) else { return nil }
+        guard let expression = ctx.expression(),
+              let result = visit(expression),
+              let line = ctx.start?.getLine(),
+              result.type.isInRange(of: .array)
+        else { return nil }
         
-        if let line = ctx.start?.getLine(), let expectedValue = expectedValues[line] {
+        if let expectedValue = expectedValues[line] {
             guard expectedValue == result else {
                 return error("{Test Error} Expected 'Value(\(expectedValue), \(expectedValue.type))' but got 'Value(\(result), \(result.type))'", at: ctx)
             }
         }
         
-        print(result)
+        handlePrint(line: line, value: result, isFunction: false)
         
         return Value.void
     }

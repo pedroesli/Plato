@@ -12,14 +12,20 @@ import Foundation
 
 open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
+    public typealias PrintHandler = (_ printValue: PrintValue) -> Void
+    
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: RuntimeError?
     
+    internal let variables = Stack<VariableScope>()
+    internal let functions = Stack<FunctionScope>()
+    internal var returnValue: Value = .void
+    internal var canUseReturn = false
+    
     private let globalVariables = VariableScope(parent: nil)
-    private let variables = Stack<VariableScope>()
     private let globalFunctions = FunctionScope(parent: nil)
-    private let functions = Stack<FunctionScope>()
     private var canUseBreakContinue = false
+    private var printHandler: PrintHandler = PlatoInterpreter.defaultPrintHandling(printValue:)
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
@@ -38,16 +44,19 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             result = visit(statement)
             guard error == nil else { return nil }
             if result?.type == .command {
-                if result?.asCommand == .breakCommand || result?.asCommand == .continueCommand { break }
+                break
             }
         }
         return result
     }
     
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
-        guard let expression = ctx.expression(), let result = visit(expression) else { return nil }
-        print(result)
-        return Value.void
+        guard let expression = ctx.expression(),
+              let result = visit(expression),
+              result.type.isInRange(of: .array)
+        else { return nil }
+        handlePrint(line: ctx.getStart()?.getLine() ?? 0, value: result, isFunction: false)
+        return .void
     }
     
     open override func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> Value? {
@@ -62,6 +71,18 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("'continue' is only allowed inside a loop", at: ctx)
         }
         return Value(command: .continueCommand)
+    }
+    
+    open override func visitReturnStatement(_ ctx: PlatoParser.ReturnStatementContext) -> Value? {
+        guard canUseReturn else {
+            return error("'return' is only allowed inside a function", at: ctx)
+        }
+        guard let expression = ctx.expression(), let value = visit(expression) else {
+            returnValue = .void
+            return Value(command: .returnCommand)
+        }
+        returnValue = value
+        return Value(command: .returnCommand)
     }
     
     open override func visitVariableAssignmentStatement(_ ctx: PlatoParser.VariableAssignmentStatementContext) -> Value? {
@@ -221,7 +242,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 result = visit(statements)
                 popScope()
                 if result?.type == .command {
-                    if result?.asCommand == .breakCommand {
+                    if result?.asCommand == .breakCommand || result?.asCommand == .returnCommand {
                         result = Value.void
                         break
                     }
@@ -540,6 +561,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         }
         
+        do {
+            if let function = try functions.peek().retrieveFunction(name: functionName, parameters: parameterList) {
+                return try? function.handle(callParameters: parameterList, interpreter: self)
+            }
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
+        }
+        
         // Return func result
         do {
             return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
@@ -623,6 +652,43 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             values.append(value)
         }
         return Value(array: values)
+    }
+}
+
+// MARK: Error Handling
+extension PlatoInterpreter {
+    
+    public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
+        let line = ctx.getStart()?.getLine() ?? 0
+        let column = ctx.getStart()?.getCharPositionInLine() ?? 0
+        error = RuntimeError(
+            message: message,
+            badCode: ctx.getText(),
+            line: line,
+            column: column
+        )
+        return nil
+    }
+    
+    public func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> Value? {
+        return error("Unexpected error! \(message ?? "")", at: ctx)
+    }
+}
+
+// MARK: Print Handling
+extension PlatoInterpreter {
+    
+    public func setPrintHandler(_ handle: @escaping PrintHandler) {
+        self.printHandler = handle
+    }
+    
+    /// Use this method to call the print handler closure
+    func handlePrint(line: Int, value: Value, isFunction: Bool) {
+        self.printHandler(PrintValue(line: line, value: value, isFunction: isFunction))
+    }
+    
+    static private func defaultPrintHandling(printValue: PrintValue) {
+        print(printValue.value)
     }
 }
 
@@ -720,22 +786,6 @@ extension PlatoInterpreter {
         default:
             return .any
         }
-    }
-    
-    public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
-        let line = ctx.getStart()?.getLine() ?? 0
-        let column = ctx.getStart()?.getCharPositionInLine() ?? 0
-        error = RuntimeError(
-            message: message,
-            badCode: ctx.getText(),
-            line: line,
-            column: column
-        )
-        return nil
-    }
-    
-    public func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> Value? {
-        return error("Unexpected error! \(message ?? "")", at: ctx)
     }
 }
 

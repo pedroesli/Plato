@@ -298,4 +298,35 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(array: [Value(float: 2.5), Value(float: 2.5), Value(float: 2.5), Value(float: 2.5)], forLine: 19)
         XCTAssertNoThrow(try plato.run(code))
     }
+    
+    func testFunctionCall() {
+        let plato = TestablePlato()
+        let code = """
+        func printHelloWorld() {
+            "Hello, World!"
+        }
+        printHelloWorld()
+        
+        func sum(a, b) {
+            return a + b
+        }
+        sum(1,2)
+        
+        func mul(a: Int, b: Int) {
+            return a * b
+        }
+        mul(2, 4)
+        
+        func mul(a: Float, b: Float) {
+            return a * b
+        }
+        mul(1.5, 1.5)
+        mul(5, 2)
+        """
+        plato.addExpectedValue(string: "Hello, World!", forLine: 2)
+        plato.addExpectedValue(int: 3, forLine: 9)
+        plato.addExpectedValue(int: 8, forLine: 14)
+        plato.addExpectedValue(float: 2.25, forLine: 19)
+        XCTAssertNoThrow(try plato.run(code))
+    }
 }
