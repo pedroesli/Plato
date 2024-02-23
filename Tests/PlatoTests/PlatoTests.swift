@@ -322,11 +322,21 @@ final class PlatoTests: XCTestCase {
         }
         mul(1.5, 1.5)
         mul(5, 2)
+        
+        func scopeMul() {
+            func mul(a: Float, b: Float) {
+                return b * b
+            }
+            return mul(5.5, 2.5)
+        }
+        scopeMul()
         """
         plato.addExpectedValue(string: "Hello, World!", forLine: 2)
         plato.addExpectedValue(int: 3, forLine: 9)
         plato.addExpectedValue(int: 8, forLine: 14)
         plato.addExpectedValue(float: 2.25, forLine: 19)
+        plato.addExpectedValue(int: 10, forLine: 20)
+        plato.addExpectedValue(float: 6.25, forLine: 28)
         XCTAssertNoThrow(try plato.run(code))
     }
 }

@@ -15,8 +15,8 @@ public struct Parameter: Equatable, Hashable {
     public func compare(with call: CallParameter) -> Bool {
         if isIdExplicit {
             guard let callId = call.id else { return false }
-            return id == callId && type.isCompatible(with: call.value.type)
+            return id == callId && type.isStrictCompatible(with: call.value.type)
         }
-        return type.isCompatible(with: call.value.type)
+        return type.isStrictCompatible(with: call.value.type)
     }
 }

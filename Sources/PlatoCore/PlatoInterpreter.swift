@@ -549,6 +549,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         let functionName = functionCall.ID()!.getText()
         var parameterList: [CallParameter] = []
         
+        // Reset return value
+        defer {
+            returnValue = .void
+        }
+        
         // Get parameters
         if let parameters = functionCall.parameterList()?.parameter() {
             for parameter in parameters {
@@ -737,10 +742,12 @@ extension PlatoInterpreter {
     
     func newScope() {
         variables.push(VariableScope(parent: variables.peek()))
+        functions.push(FunctionScope(parent: functions.peek()))
     }
     
     func popScope() {
         variables.pop()
+        functions.pop()
     }
     
     func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
