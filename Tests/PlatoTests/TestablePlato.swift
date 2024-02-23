@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TestablePlato.swift
 //  
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 13/02/24.
@@ -11,6 +11,10 @@ import Antlr4
 struct TestablePlato {
     
     private let interpreter = TestablePlatoInterpreter()
+    
+    init() {
+        interpreter.setPrintHandler(handlePrint(printValue:))
+    }
     
     func run(_ code: String) throws {
         let input = ANTLRInputStream(code)
@@ -51,7 +55,7 @@ struct TestablePlato {
         interpreter.expectedValues[line] = Value(array: ArrayValue(values))
     }
     
-    private func handlePrint(line: Int, value: Value) {
-        print("line: \(line): \(value)")
+    private func handlePrint(printValue: PrintValue) {
+        print("line \(printValue.line)\t: \t\(printValue.value)")
     }
 }
