@@ -25,7 +25,7 @@ class TestablePlatoInterpreter: PlatoInterpreter {
             }
         }
         
-        handlePrint(line: line, value: result, isFunction: false)
+        handleExpressionStatementPrint(line: line, value: result)
         
         return Value.void
     }

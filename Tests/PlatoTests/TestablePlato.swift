@@ -56,6 +56,6 @@ struct TestablePlato {
     }
     
     private func handlePrint(printValue: PrintValue) {
-        print("line \(printValue.line)\t: \t\(printValue.value)")
+        print("line \(printValue.line)\t: \t\(printValue.formattedValue)", terminator: printValue.terminator)
     }
 }

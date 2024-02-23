@@ -25,7 +25,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     private let globalVariables = VariableScope(parent: nil)
     private let globalFunctions = FunctionScope(parent: nil)
     private var canUseBreakContinue = false
-    private var printHandler: PrintHandler = PlatoInterpreter.defaultPrintHandling(printValue:)
+    private var printHandler: PrintHandler = DefaultPrintHandler.handle(printValue:)
+    private let typeFunctionHandler = DefaultTypeFunctionHandler()
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
@@ -55,7 +56,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
               let result = visit(expression),
               result.type.isInRange(of: .array)
         else { return nil }
-        handlePrint(line: ctx.getStart()?.getLine() ?? 0, value: result, isFunction: false)
+        
+        let line = ctx.getStart()?.getLine() ?? 0
+        handleExpressionStatementPrint(line: line, value: result)
         return .void
     }
     
@@ -574,6 +577,11 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return self.error(error.localizedDescription, at: ctx)
         }
         
+        // Handle print function
+        if functionName == PrintFunc.name {
+            return printFunction(parameters: parameterList, ctx: ctx)
+        }
+        
         // Return func result
         do {
             return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
@@ -601,7 +609,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         // Return func result
         do {
-            return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
+            return try typeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
         } catch {
             return self.error(error.localizedDescription, at: ctx)
         }
@@ -688,12 +696,41 @@ extension PlatoInterpreter {
     }
     
     /// Use this method to call the print handler closure
-    func handlePrint(line: Int, value: Value, isFunction: Bool) {
-        self.printHandler(PrintValue(line: line, value: value, isFunction: isFunction))
+    public func handlePrint(_ printValue: PrintValue) {
+        self.printHandler(printValue)
     }
     
-    static private func defaultPrintHandling(printValue: PrintValue) {
-        print(printValue.value)
+    public func handleExpressionStatementPrint(line: Int, value: Value) {
+        handlePrint(
+            PrintValue(
+                line: line,
+                rawParameters: [CallParameter(value: value)],
+                formattedValue: value.asString,
+                terminator: "\n",
+                isFunction: false
+            )
+        )
+    }
+    
+    private func printFunction(parameters: [CallParameter], ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
+        do {
+            let printFunc = PrintFunc(parameters: parameters)
+            let formattedValue = try printFunc.getFormattedValue()
+            let line = ctx.getStart()?.getLine() ?? 0
+            
+            handlePrint(
+                PrintValue(
+                    line: line,
+                    rawParameters: parameters,
+                    formattedValue: formattedValue,
+                    terminator: printFunc.terminator,
+                    isFunction: true
+                )
+            )
+            return .void
+        } catch {
+            return self.error(error.localizedDescription, at: ctx)
+        }
     }
 }
 

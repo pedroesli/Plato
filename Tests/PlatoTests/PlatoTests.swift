@@ -339,4 +339,16 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(float: 6.25, forLine: 28)
         XCTAssertNoThrow(try plato.run(code))
     }
+    
+    func testPrintFunction() {
+        let plato = TestablePlato()
+        let code = """
+            print("Hello, World!")
+            a = 25
+            a += 5
+            print("Result:", a)
+            print(1, 2, 3, 4, separator: " ... ", terminator: "\n\n")
+        """
+        XCTAssertNoThrow(try plato.run(code))
+    }
 }
