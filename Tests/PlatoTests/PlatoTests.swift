@@ -168,12 +168,40 @@ final class PlatoTests: XCTestCase {
         a
         b: float = 1
         b
-        c: array = [1, 2, 3]
+        c = [1, 2, 3]
         c
         """
         plato.addExpectedValue(int: 5, forLine: 5)
         plato.addExpectedValue(float: 1.0, forLine: 7)
         plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(int: 3)], forLine: 9)
+        XCTAssertNoThrow(try plato.run(code))
+    }
+    
+    func testTypeAssignment() {
+        let plato = TestablePlato()
+        let code = """
+        a: bool = true
+        b: int = 1
+        c: float = 1.0
+        d: number = 42
+        e: string = "hey"
+        f: array = [1, 2, 3, 4]
+        g: any = "test"
+        a
+        b
+        c
+        d
+        e
+        f
+        g
+        """
+        plato.addExpectedValue(bool: true, forLine: 8)
+        plato.addExpectedValue(int: 1, forLine: 9)
+        plato.addExpectedValue(float: 1.0, forLine: 10)
+        plato.addExpectedValue(int: 42, forLine: 11)
+        plato.addExpectedValue(string: "hey", forLine: 12)
+        plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(int: 3), Value(int: 4)], forLine: 13)
+        plato.addExpectedValue(string: "test", forLine: 14)
         XCTAssertNoThrow(try plato.run(code))
     }
     

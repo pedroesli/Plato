@@ -130,7 +130,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             type = .float
         case .NUMBER_TYPE:
             type = .number
-        case .STRING:
+        case .STRING_TYPE:
             type = .string
         case .ARRAY_TYPE:
             type = .array
