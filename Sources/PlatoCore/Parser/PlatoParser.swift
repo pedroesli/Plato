@@ -57,8 +57,8 @@ open class PlatoParser: Parser {
 		"']'", "'**'", "'*'", "'/'", "'%'", "'+'", "'-'", "'<'", "'<='", "'>'", 
 		"'>='", "'=='", "'!='", "'and'", "'or'", "'not'", "'true'", "'false'", 
 		"'='", "'*='", "'/='", "'%='", "'+='", "'-='", "'return'", "'break'", 
-		"'continue'", "'Any'", "'Bool'", "'Int'", "'Float'", "'Number'", "'String'", 
-		"'Array'", "'at'", "'_'"
+		"'continue'", "'any'", "'bool'", "'int'", "'float'", "'number'", "'string'", 
+		"'array'", "'at'", "'_'"
 	]
 	private static let _SYMBOLIC_NAMES: [String?] = [
 		nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 

@@ -1,1 +1,4 @@
+a: bool = true
 bool(1)
+
+string(1)

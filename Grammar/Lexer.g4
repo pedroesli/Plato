@@ -41,13 +41,13 @@ BREAK       : 'break';
 CONTINUE    : 'continue';
 
 // Types
-ANY_TYPE    : 'Any';
-BOOL_TYPE   : 'Bool';
-INT_TYPE    : 'Int';
-FLOAT_TYPE  : 'Float';
-NUMBER_TYPE : 'Number';
-STRING_TYPE : 'String';
-ARRAY_TYPE  : 'Array';
+ANY_TYPE    : 'any';
+BOOL_TYPE   : 'bool';
+INT_TYPE    : 'int';
+FLOAT_TYPE  : 'float';
+NUMBER_TYPE : 'number';
+STRING_TYPE : 'string';
+ARRAY_TYPE  : 'array';
 
 // Other Keywords
 AT          : 'at';

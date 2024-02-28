@@ -166,9 +166,9 @@ final class PlatoTests: XCTestCase {
         a *= 2
         a -= 1
         a
-        b: Float = 1
+        b: float = 1
         b
-        c: Array = [1, 2, 3]
+        c: array = [1, 2, 3]
         c
         """
         plato.addExpectedValue(int: 5, forLine: 5)
@@ -312,19 +312,19 @@ final class PlatoTests: XCTestCase {
         }
         sum(1,2)
         
-        func mul(a: Int, b: Int) {
+        func mul(a: int, b: int) {
             return a * b
         }
         mul(2, 4)
         
-        func mul(a: Float, b: Float) {
+        func mul(a: float, b: float) {
             return a * b
         }
         mul(1.5, 1.5)
         mul(5, 2)
         
         func scopeMul() {
-            func mul(a: Float, b: Float) {
+            func mul(a: float, b: float) {
                 return b * b
             }
             return mul(5.5, 2.5)
