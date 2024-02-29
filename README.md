@@ -1,5 +1,7 @@
 # Plato
 
+![PlatoLogo](/Resources/PlatoLogoWide.png)
+
 Plato is an interpreter written in Swift and inspired by R. It is a high-level, [imperative](https://en.wikipedia.org/wiki/Imperative_programming), [structured programming](https://en.wikipedia.org/wiki/Structured_programming) and [gradually typed](https://en.wikipedia.org/wiki/Gradual_typing) language. Its goal is to make mathematical operations easier and to be able to develop iOS apps that can integrate a programming language without the need to compile it.
 
 # Basics
