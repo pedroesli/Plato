@@ -177,11 +177,11 @@ The if statement executes a set of statements if the condition is TRUE. Otherwis
 
 ```r
 if 2==3 { 
-	  print("2==3 is true")
+	print("2==3 is true")
 } else if 2<3 { 
-	  print("2<3 is true")
+	print("2<3 is true")
 } else {
-		print("no condition is true")
+	print("no condition is true")
 }
 ```
 
@@ -190,8 +190,8 @@ if 2==3 {
 ```r
 i = 0
 while i < 10 { 
-		print(i)
-		i += 1
+    print(i)
+    i += 1
 }
 ```
 
@@ -201,11 +201,11 @@ while i < 10 {
 numbers = [1, 2, 3, 4, 5, 6, 7]
 
 for number in numbers { 
-		print(number)
+	print(number)
 }
 
 for index from 0 to 10 by 1 { 
-		print(index)
+	print(index)
 }
 ```
 
