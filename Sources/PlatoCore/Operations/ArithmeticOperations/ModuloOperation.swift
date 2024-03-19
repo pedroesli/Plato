@@ -25,7 +25,7 @@ struct ModuloOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "%", type: .arithmetic)
         if right.asFloat == 0 {
             throw OperationError.zeroDivisionError
@@ -37,7 +37,7 @@ struct ModuloOperation: BaseOperation {
         case .float:
             return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
         default:
-            return nil
+            fatalError("Modulo operation failed. Reason: no operation for \(order.high) type")
         }
     }
 }

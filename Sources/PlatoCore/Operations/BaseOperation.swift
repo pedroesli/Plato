@@ -12,7 +12,7 @@ protocol BaseOperation {
     var order: OrderType { get }
     static var compatibleMatrix: [ValueType : [ValueType]] { get }
     
-    func result() throws -> Value?
+    func result() throws -> Value
     func isCompatible(op: String, type: OperationType) throws
 }
 

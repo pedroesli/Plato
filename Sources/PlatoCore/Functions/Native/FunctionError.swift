@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NativeFunctionError: Error, LocalizedError {
+public enum FunctionError: Error, LocalizedError {
     case notFound(funcName: String)
     case missingArgument(parameter: String)
     case typeError(parameterType: ValueType, expectedType: VariableType)

@@ -10,7 +10,7 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
     public func handle(functionName: String, parameters: [CallParameter]) throws -> Value {
         switch functionName {
         default:
-            throw NativeFunctionError.notFound(funcName: functionName)
+            throw FunctionError.notFound(funcName: functionName)
         }
     }
 }

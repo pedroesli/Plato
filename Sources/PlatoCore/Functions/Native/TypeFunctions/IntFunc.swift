@@ -10,10 +10,10 @@ public struct IntFunc: FunctionResultHandling {
     public static let name: String = "int"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
-        guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "value") }
-        guard parameters.count == 1 else { throw NativeFunctionError.extraArgument }
+        guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "value") }
+        guard parameters.count == 1 else { throw FunctionError.extraArgument }
         let value = parameters[0].value
-        guard value.type.isInRange(of: .string) else { throw NativeFunctionError.noMatch }
+        guard value.type.isInRange(of: .string) else { throw FunctionError.noMatch }
         
         if value.type == .string {
             return Value(int: Int(value.asString) ?? 0)

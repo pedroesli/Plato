@@ -178,7 +178,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         do {
-            guard let result = try operation.result() else { return unexpectedError("Assignment math operation returned nil", at: ctx) }
+            let result = try operation.result()
             variable.assign(result)
             return result
         } catch {

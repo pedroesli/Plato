@@ -24,7 +24,7 @@ struct AndOperation: BaseOperation {
         order = Self.highestOrderType(left, right)
     }
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "and", type: .boolean)
         return Value(bool: left.asBool && right.asBool)
     }

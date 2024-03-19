@@ -24,7 +24,7 @@ struct DifferentOperation: BaseOperation {
         order = Self.highestOrderType(left, right)
     }
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "!=", type: .boolean)
         switch order.high {
         case .boolean:
@@ -43,13 +43,13 @@ struct DifferentOperation: BaseOperation {
                 )
             )
         default:
-            return nil
+            fatalError("Different operation failed. Reason: no operation for \(order.high) type")
         }
     }
     
     private func isNotEqual(left: Value, right: Value) throws -> Bool {
         let operation = DifferentOperation(left, right)
-        guard let result = try operation.result() else { return false }
+        let result = try operation.result()
         return !result.asBool
     }
 }

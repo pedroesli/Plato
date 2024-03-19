@@ -25,7 +25,7 @@ struct SubtractOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "-", type: .arithmetic)
         switch order.high {
         case .boolean, .int:
@@ -33,7 +33,7 @@ struct SubtractOperation: BaseOperation {
         case .float:
             return Value(float: left.asFloat - right.asFloat)
         default:
-            return nil
+            fatalError("Subtract operation failed. Reason: no operation for \(order.high) type")
         }
     }
 }

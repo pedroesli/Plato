@@ -24,7 +24,7 @@ struct LessThanOperation: BaseOperation {
         order = Self.highestOrderType(left, right)
     }
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "<", type: .boolean)
         switch order.high {
         case .boolean, .int:
@@ -34,7 +34,7 @@ struct LessThanOperation: BaseOperation {
         case .string:
             return Value(bool: left.asString < right.asString)
         default:
-            return nil
+            fatalError("Less than operation failed. Reason: no operation for \(order.high) type")
         }
     }
 }

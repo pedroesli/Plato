@@ -27,15 +27,15 @@ struct ExponentOperation: BaseOperation {
         .array   : [],
     ]
     
-    func result() throws -> Value? {
-        try isCompatible(op: "^", type: .arithmetic)
+    func result() throws -> Value {
+        try isCompatible(op: "**", type: .arithmetic)
         switch order.high {
         case .boolean, .int:
             return Value(int: Int(pow(Float(left.asInteger), Float(right.asInteger))))
         case .float:
             return Value(float: pow(left.asFloat, right.asFloat))
         default:
-            return nil
+            fatalError("Divide operation failed. Reason: no operation for \(order.high) type")
         }
     }
 }

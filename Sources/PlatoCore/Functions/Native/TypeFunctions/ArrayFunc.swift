@@ -10,7 +10,7 @@ public struct ArrayFunc: FunctionResultHandling {
     public static let name: String = "array"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
-        guard !parameters.isEmpty else { throw NativeFunctionError.missingArgument(parameter: "values") }
+        guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "values") }
         if let result = try repeatingValue(parameters){
             return result
         }
@@ -24,7 +24,7 @@ public struct ArrayFunc: FunctionResultHandling {
         else { return nil }
         
         guard parameters[1].value.type.isInRange(of: .int) else {
-            throw NativeFunctionError.typeError(parameterType: parameters[1].value.type, expectedType: .int)
+            throw FunctionError.typeError(parameterType: parameters[1].value.type, expectedType: .int)
         }
         
         return Value(array: ArrayValue(Array(repeating: parameters[0].value, count: parameters[1].value.asInteger)))

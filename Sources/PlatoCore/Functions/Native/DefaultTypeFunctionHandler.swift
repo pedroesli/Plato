@@ -20,7 +20,7 @@ public struct DefaultTypeFunctionHandler: NativeFunctionHandling {
         case ArrayFunc.name:
             return try ArrayFunc.handle(parameters: parameters)
         default:
-            throw NativeFunctionError.notFound(funcName: functionName)
+            throw FunctionError.notFound(funcName: functionName)
         }
     }
 }

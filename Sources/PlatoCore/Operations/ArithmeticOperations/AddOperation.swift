@@ -27,7 +27,7 @@ struct AddOperation: BaseOperation {
         .array   : [.array],
     ]
     
-    func result() throws -> Value? {
+    func result() throws -> Value {
         try isCompatible(op: "+", type: .arithmetic)
         switch order.high {
         case .boolean, .int:
@@ -39,7 +39,7 @@ struct AddOperation: BaseOperation {
         case .array:
             return Value(array: left.asArray + right.asArray)
         default:
-            return nil
+            fatalError("Add operation failed. Reason: no operation for \(order.high) type")
         }
     }
 }
