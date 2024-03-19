@@ -1,0 +1,3 @@
+int("1")
+a = float(true)
+b = string(2.5)

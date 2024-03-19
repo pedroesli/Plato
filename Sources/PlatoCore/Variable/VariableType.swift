@@ -5,20 +5,24 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 12/02/24.
 //
 
-public enum VariableType {
+public enum VariableType: String {
     case any
-    case boolean
+    case bool
     case int
     case float
     case number
     case string
     case array
     
+    public var text: String {
+        self.rawValue
+    }
+    
     public func isCompatible(with valueType: ValueType) -> Bool {
         switch self {
         case .any:
             valueType.isInRange(of: .array)
-        case .boolean:
+        case .bool:
             valueType.isNumber
         case .int:
             valueType == .int || valueType == .boolean
@@ -38,7 +42,7 @@ public enum VariableType {
         switch self {
         case .any:
             valueType.isInRange(of: .array)
-        case .boolean:
+        case .bool:
             valueType == .boolean
         case .int:
             valueType == .int

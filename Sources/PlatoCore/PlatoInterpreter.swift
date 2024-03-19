@@ -22,11 +22,10 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     internal var returnValue: Value = .void
     internal var canUseReturn = false
     
-    private let globalVariables = VariableScope(parent: nil)
-    private let globalFunctions = FunctionScope(parent: nil)
+    private var globalVariables = VariableScope(parent: nil)
+    private var globalFunctions = FunctionScope(parent: nil)
     private var canUseBreakContinue = false
     private var printHandler: PrintHandler = DefaultPrintHandler.handle(printValue:)
-    private let typeFunctionHandler = DefaultTypeFunctionHandler()
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
@@ -117,25 +116,25 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return idError
         }
         
-        let idTypeRawValue = ctx.idTypeStatement()!.type.getType()
+        let idType = ctx.idTypeStatement()!.ID()!.getText()
         let type: VariableType!
-        switch PlatoParser.Tokens(rawValue: idTypeRawValue) {
-        case .ANY_TYPE:
+        switch idType {
+        case VariableType.any.text:
             type = .any
-        case .BOOL_TYPE:
-            type = .boolean
-        case .INT_TYPE:
+        case VariableType.bool.text:
+            type = .bool
+        case VariableType.int.text:
             type = .int
-        case .FLOAT_TYPE:
+        case VariableType.float.text:
             type = .float
-        case .NUMBER_TYPE:
+        case VariableType.number.text:
             type = .number
-        case .STRING_TYPE:
+        case VariableType.string.text:
             type = .string
-        case .ARRAY_TYPE:
+        case VariableType.array.text:
             type = .array
         default:
-            return unexpectedError("No type for \(String(describing: ctx.idTypeStatement()!.type.getText()))", at: ctx)
+            return error("The type '\(idType)'does not exit", at: ctx)
         }
         
         guard type.isCompatible(with: value.type) else {
@@ -379,11 +378,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         if let arguments = ctx.functionArguments()?.functionArgument() {
             for argument in arguments {
+                guard let parameterType = getParameterType(argument.idTypeStatement()) else {
+                    return error("The type '\(argument.idTypeStatement()!.ID()!.getText())'does not exit", at: ctx)
+                }
                 parameters.append(
                     Parameter(
                         id: argument.ID()!.getText(),
                         isIdExplicit: argument.AT() != nil,
-                        type: functionDeclarationParameterType(argument.idTypeStatement())
+                        type: parameterType
                     )
                 )
             }
@@ -569,6 +571,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         }
         
+        // Handle user defined functions
         do {
             if let function = try functions.peek().retrieveFunction(name: functionName, parameters: parameterList) {
                 return try? function.handle(callParameters: parameterList, interpreter: self)
@@ -582,34 +585,9 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return printFunction(parameters: parameterList, ctx: ctx)
         }
         
-        // Return func result
+        // Handle native functions
         do {
             return try nativeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
-        } catch {
-            return self.error(error.localizedDescription, at: ctx)
-        }
-    }
-    
-    open override func visitTypeFunctionCallExpression(_ ctx: PlatoParser.TypeFunctionCallExpressionContext) -> Value? {
-        guard let typeFunctionCall = ctx.typeFunctionCall() else { return nil }
-        let functionName = typeFunctionCall.type.getText()!
-        var parameterList: [CallParameter] = []
-        
-        // Get parameters
-        if let parameters = typeFunctionCall.parameterList()?.parameter() {
-            for parameter in parameters {
-                guard let value = visit(parameter.expression()!) else { return nil }
-                guard value.type.isInRange(of: .array) else {
-                    return error("Expected expression in list of expressions", at: ctx)
-                }
-                let id = parameter.ID()?.getText()
-                parameterList.append(CallParameter(id: id, value: value))
-            }
-        }
-        
-        // Return func result
-        do {
-            return try typeFunctionHandler.handle(functionName: functionName, parameters: parameterList)
         } catch {
             return self.error(error.localizedDescription, at: ctx)
         }
@@ -737,7 +715,7 @@ extension PlatoInterpreter {
 // MARK: Helper Methods
 extension PlatoInterpreter {
     
-    func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+    public func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
         var currentValue = value
         for index in 1..<ctx.expression().count{
             guard currentValue.type == .array else {
@@ -757,7 +735,7 @@ extension PlatoInterpreter {
         return currentValue
     }
     
-    func minusUnaryValue(_ value: Value) -> Value? {
+    public func minusUnaryValue(_ value: Value) -> Value? {
         switch value.type {
         case .boolean, .int:
             return Value(int: -value.asInteger)
@@ -769,7 +747,7 @@ extension PlatoInterpreter {
     }
     
     /// Get the left and right expression
-    func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
+    public func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
         guard let leftExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 0),
               let rightExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 1),
               let left = visit(leftExp),
@@ -777,17 +755,17 @@ extension PlatoInterpreter {
         return (left, right)
     }
     
-    func newScope() {
+    public func newScope() {
         variables.push(VariableScope(parent: variables.peek()))
         functions.push(FunctionScope(parent: functions.peek()))
     }
     
-    func popScope() {
+    public func popScope() {
         variables.pop()
         functions.pop()
     }
     
-    func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
+    public func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
         if condition.asBool, let statements {
             let value: Value?
             newScope()
@@ -798,38 +776,61 @@ extension PlatoInterpreter {
         return nil
     }
     
-    func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
+    public func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
         if !IDValidator.isValid(id) {
             return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
         }
         return nil
     }
     
-    func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
-        return left.rawValue > right.rawValue ? left : right
+    public func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
+        return left.isHigherOrder(than: right) ? left : right
     }
     
-    func functionDeclarationParameterType(_ idTypeStatement: PlatoParser.IdTypeStatementContext?) -> VariableType {
+    /// Gets the variable type from a 'IdTypeStatement'. Returns nil if the type doesn't exist
+    public func getParameterType(_ idTypeStatement: PlatoParser.IdTypeStatementContext?) -> VariableType? {
         guard let idTypeStatement else { return .any }
         
-        switch PlatoParser.Tokens(rawValue: idTypeStatement.type.getType()) {
-        case .ANY_TYPE:
+        switch idTypeStatement.ID()!.getText() {
+        case VariableType.any.text:
             return .any
-        case .BOOL_TYPE:
-            return .boolean
-        case .INT_TYPE:
+        case VariableType.bool.text:
+            return .bool
+        case VariableType.int.text:
             return .int
-        case .FLOAT_TYPE:
-            return .float
-        case .NUMBER_TYPE:
+        case VariableType.float.text:
+            return.float
+        case VariableType.number.text:
             return .number
-        case .STRING_TYPE:
+        case VariableType.string.text:
             return .string
-        case .ARRAY_TYPE:
+        case VariableType.array.text:
             return .array
         default:
-            return .any
+            return nil
         }
+    }
+    
+    /// Use this method to reset the interpreter without the need to reconfigure it. (Resets the cache and errors)
+    public func reset() {
+        error = nil
+        clearCache()
+    }
+    
+    /// Clears the interpreters cache. (Use 'reset()' method if you want to reset the interpreter)
+    public func clearCache() {
+        variables.clear()
+        functions.clear()
+        
+        globalVariables = VariableScope(parent: nil)
+        globalFunctions = FunctionScope(parent: nil)
+        
+        variables.push(globalVariables)
+        functions.push(globalFunctions)
+        
+        returnValue = .void
+        canUseReturn = false
+        canUseBreakContinue = false
     }
 }
 

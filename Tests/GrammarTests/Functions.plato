@@ -34,6 +34,10 @@ func add() {
     a += 1
 }
 
-func sum(at a: Int, at b: Int) { 
+func sum(at a: int, at b: int) { 
 
+}
+
+func great(a:) { 
+    
 }

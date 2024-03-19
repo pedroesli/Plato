@@ -9,6 +9,18 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
     
     public func handle(functionName: String, parameters: [CallParameter]) throws -> Value {
         switch functionName {
+        // Type
+        case BoolFunc.name:
+            return try BoolFunc.handle(parameters: parameters)
+        case IntFunc.name:
+            return try IntFunc.handle(parameters: parameters)
+        case FloatFunc.name:
+            return try FloatFunc.handle(parameters: parameters)
+        case StringFunc.name:
+            return try StringFunc.handle(parameters: parameters)
+        case ArrayFunc.name:
+            return try ArrayFunc.handle(parameters: parameters)
+        // Foundation
         case RandomFunc.name:
             return try RandomFunc.handle(parameters: parameters)
         // Math
@@ -20,7 +32,7 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
             return try PowFunc.handle(parameters: parameters)
         case SqrtFunc.name:
             return try SqrtFunc.handle(parameters: parameters)
-        // Sin
+            // Sin
         case SinFunc.name:
             return try SinFunc.handle(parameters: parameters)
         case SinhFunc.name:
@@ -29,7 +41,7 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
             return try AsinFunc.handle(parameters: parameters)
         case AsinhFunc.name:
             return try AsinhFunc.handle(parameters: parameters)
-        // Cos
+            // Cos
         case CosFunc.name:
             return try CosFunc.handle(parameters: parameters)
         case CoshFunc.name:
@@ -38,7 +50,7 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
             return try AcosFunc.handle(parameters: parameters)
         case AcoshFunc.name:
             return try AcoshFunc.handle(parameters: parameters)
-        // Tan
+            // Tan
         case TanFunc.name:
             return try TanFunc.handle(parameters: parameters)
         case TanhFunc.name:

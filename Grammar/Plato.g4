@@ -48,7 +48,7 @@ assignmentStatement
     ;
 
 idTypeStatement
-    : ':' type=(ANY_TYPE | BOOL_TYPE | INT_TYPE | FLOAT_TYPE | NUMBER_TYPE | STRING_TYPE | ARRAY_TYPE)
+    : ':' ID
     ;
 
 selectionStatement
@@ -93,17 +93,12 @@ expression
     | expression AND expression                                                    #andExpression
     | expression OR expression                                                     #orExpression
     | functionCall                                                                 #functionCallExpression
-    | typeFunctionCall                                                             #typeFunctionCallExpression
     | '(' expression ')'                                                           #parenthesesExpression
     | element                                                                      #typeExpression
     ;
 
 functionCall
     : ID '(' parameterList? ')'
-    ;
-    
-typeFunctionCall
-    : type=(BOOL_TYPE | INT_TYPE | FLOAT_TYPE | NUMBER_TYPE | STRING_TYPE | ARRAY_TYPE) '(' parameterList? ')'
     ;
 
 parameterList

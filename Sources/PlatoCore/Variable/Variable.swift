@@ -24,7 +24,7 @@ public class Variable {
         switch type {
         case .any, .number, .string, .array:
             self.value = value
-        case .boolean:
+        case .bool:
             guard value.type == .boolean else {
                 self.value = Value(bool: value.asBool)
                 return

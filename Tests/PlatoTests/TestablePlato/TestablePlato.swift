@@ -29,8 +29,10 @@ struct TestablePlato {
         }
     }
     
+    /// Resets the interpreter by clearing the cache and errors.
     func reset() {
         interpreter.tests = [:]
+        interpreter.reset()
     }
     
     /// Adds an expected value for a 'visitExpressionStatement' result at a line.

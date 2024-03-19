@@ -20,4 +20,9 @@ public class Stack<Element> {
     public func push(_ element: Element) {
         items.insert(element, at: 0)
     }
+    
+    /// Sets the stack to empty
+    public func clear() {
+        items = []
+    }
 }
