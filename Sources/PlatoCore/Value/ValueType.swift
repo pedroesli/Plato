@@ -22,4 +22,8 @@ public enum ValueType: Int {
     public func isInRange(of type: ValueType) -> Bool {
         self.rawValue <= type.rawValue
     }
+    
+    public func isHigherOrder(than type: ValueType) -> Bool {
+        self.rawValue > type.rawValue
+    }
 }

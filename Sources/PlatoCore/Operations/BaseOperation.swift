@@ -19,7 +19,7 @@ protocol BaseOperation {
 extension BaseOperation {
     
     static func highestOrderType(_ left: Value, _ right: Value) -> OrderType {
-        return left.type.rawValue > right.type.rawValue ? (left.type, right.type) : (right.type, left.type)
+        return left.type.isHigherOrder(than: right.type) ? (left.type, right.type) : (right.type, left.type)
     }
     
     func isCompatible(op: String, type: OperationType) throws {
