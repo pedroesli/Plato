@@ -380,9 +380,15 @@ final class PlatoTests: XCTestCase {
     
     func testRandomFunction() {
         let code = """
+            random(1, 9.5)
             random(1, 10)
+            random(-20, 20)
+            random(0.1, 0.9)
         """
-        plato.addExpectedValueInRange(1...10, forLine: 1)
+        plato.addExpectedValue(rangeFloat: 1...10, forLine: 1)
+        plato.addExpectedValue(rangeInt: 1...10, forLine: 2)
+        plato.addExpectedValue(rangeInt: -20...20, forLine: 3)
+        plato.addExpectedValue(rangeFloat: 0.1...0.9, forLine: 4)
         XCTAssertNoThrow(try plato.run(code))
     }
 }

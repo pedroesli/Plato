@@ -61,12 +61,12 @@ struct TestablePlato {
         interpreter.tests[line] = ExpectedTest(value: Value(array: ArrayValue(values)))
     }
     
-    func addExpectedValueInRange(_ range: ClosedRange<Int>, forLine line: Int) {
-        interpreter.tests[line] = IntRangeTest(range: range)
+    func addExpectedValue(rangeInt: ClosedRange<Int>, forLine line: Int) {
+        interpreter.tests[line] = IntRangeTest(range: rangeInt)
     }
     
-    func addExpectedValueInRange(_ range: ClosedRange<Float>, forLine line: Int) {
-        interpreter.tests[line] = FloatRangeTest(range: range)
+    func addExpectedValue(rangeFloat: ClosedRange<Float>, forLine line: Int) {
+        interpreter.tests[line] = FloatRangeTest(range: rangeFloat)
     }
     
     private func handlePrint(printValue: PrintValue) {
