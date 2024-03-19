@@ -272,3 +272,53 @@ func sum(a, b) {
     return a + b
 }
 ```
+
+You can also use the `at` keyword before a parameter identifier to enforce its use when calling the function. 
+
+```r
+func sum(at a, at b) {
+    return a + b
+}
+
+result = sum(a: 10, b: 10)
+```
+
+# Native Functions
+
+Here are all of the built in functions.
+
+## Foundation
+
+- **print**
+
+```r
+print("Hello, World!", 1, 2, 3)
+print(1, 2, 3, 4, separator: " ... ", terminator: "\n\n")
+```
+
+- **random**
+Returns a random number within the specified range.
+
+```r
+random(1, 10)
+random(0.1, 0.9)
+```
+
+## Math
+
+- Exponential function: `exp` (base-e exponential of x)
+- Logarithmic functions: `log` , `log2`, `log10`
+- Trigonometric functions: `cos`, `sin`, `tan`
+- Inverse trigonometric functions: `acos`, `asin`, `atan`
+- Hyperbolic functions: `cosh`, `sinh`, `tanh`
+- Inverse hyperbolic functions: `acosh`, `asinh`, `atanh`
+- Power and root functions: `pow`, `sqrt`
+- Gamma functions: `gamma`, `logGamma`
+
+Example:
+
+```r
+pow(2, 4) # 16
+sqrt(4)   # 2
+cos(90)   # -0.44807363
+```
