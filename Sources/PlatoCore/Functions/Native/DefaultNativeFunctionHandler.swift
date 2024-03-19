@@ -28,10 +28,14 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
             return try LogFunc.handle(parameters: parameters)
         case Log2Func.name:
             return try Log2Func.handle(parameters: parameters)
+        case Log10Func.name:
+            return try Log10Func.handle(parameters: parameters)
         case PowFunc.name:
             return try PowFunc.handle(parameters: parameters)
         case SqrtFunc.name:
             return try SqrtFunc.handle(parameters: parameters)
+        case ExpFunc.name:
+            return try ExpFunc.handle(parameters: parameters)
             // Sin
         case SinFunc.name:
             return try SinFunc.handle(parameters: parameters)
