@@ -5,10 +5,8 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 18/03/24.
 //
 
-import Foundation
-
 public struct PowFunc: FunctionResultHandling {
-    public static var name: String = "pow"
+    public static let name: String = "pow"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
