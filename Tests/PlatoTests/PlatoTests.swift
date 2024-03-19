@@ -357,6 +357,11 @@ final class PlatoTests: XCTestCase {
             return mul(5.5, 2.5)
         }
         scopeMul()
+        
+        func minus(at a, at b) {
+            return a - b
+        }
+        minus(a: 10, b: 15)
         """
         plato.addExpectedValue(string: "Hello, World!", forLine: 2)
         plato.addExpectedValue(int: 3, forLine: 9)
@@ -364,6 +369,7 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(float: 2.25, forLine: 19)
         plato.addExpectedValue(int: 10, forLine: 20)
         plato.addExpectedValue(float: 6.25, forLine: 28)
+        plato.addExpectedValue(int: -5, forLine: 33)
         XCTAssertNoThrow(try plato.run(code))
     }
     

@@ -1,14 +1,14 @@
 //
-//  CoshFunc.swift
-//  
+//  ExpFunc.swift
 //
-//  Created by Pedro Ésli Vieira do Nascimento on 18/03/24.
+//
+//  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
 //
 
 import Darwin
 
-public struct CoshFunc: FunctionResultHandling {
-    public static let name: String = "cosh"
+public struct ExpFunc: FunctionResultHandling {
+    public static let name: String = "exp"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
@@ -18,6 +18,7 @@ public struct CoshFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: cosh(x.asFloat))
+        
+        return Value(float: exp(x.asFloat))
     }
 }
