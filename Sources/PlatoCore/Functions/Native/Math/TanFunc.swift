@@ -1,14 +1,14 @@
 //
-//  SqrtFunc.swift
-//
+//  TanFunc.swift
+//  
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 18/03/24.
 //
 
 import Darwin
 
-public struct SqrtFunc: FunctionResultHandling {
-    public static let name: String = "sqrt"
+public struct TanFunc: FunctionResultHandling {
+    public static let name: String = "tan"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
@@ -18,6 +18,6 @@ public struct SqrtFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: sqrt(x.asFloat))
+        return Value(float: tan(x.asFloat))
     }
 }
