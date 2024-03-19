@@ -36,7 +36,7 @@ struct TestablePlato {
     }
     
     /// Adds an expected value for a 'visitExpressionStatement' result at a line.
-    /// Note: Lines begin a 1
+    /// Note: Lines begin at 1
     func addExpectedValue(_ value: Value, forLine line: Int) {
         interpreter.tests[line] = ExpectedTest(value: value)
     }

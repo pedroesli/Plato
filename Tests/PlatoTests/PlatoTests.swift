@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Plato
+//@testable import Plato
 @testable import PlatoCore
 
 final class PlatoTests: XCTestCase {
