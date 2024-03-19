@@ -315,7 +315,7 @@ random(0.1, 0.9)
 - Power and root functions: `pow`, `sqrt`
 - Gamma functions: `gamma`, `logGamma`
 
-Example:
+Examples:
 
 ```r
 pow(2, 4) # 16

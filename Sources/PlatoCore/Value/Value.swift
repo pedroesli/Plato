@@ -46,10 +46,21 @@ public final class Value {
         self.value = value
     }
     
+    public var asBool: Bool {
+        switch type {
+        case .int:
+            return asInteger != 0
+        case .float:
+            return asFloat != 0
+        default:
+            return value as! Bool
+        }
+    }
+    
     public var asInteger: Int {
         // Implicit upcasting
         if type == .boolean {
-            return (value as! Bool) ? 1 : 0
+            return asBool ? 1 : 0
         }
         return value as! Int
     }
@@ -58,22 +69,11 @@ public final class Value {
         // Implicit upcasting
         switch type {
         case .boolean:
-            return (value as! Bool) ? 1.0 : 0
+            return asBool ? 1.0 : 0
         case .int:
-            return Float(value as! Int)
+            return Float(asInteger)
         default:
             return value as! Float
-        }
-    }
-    
-    public var asBool: Bool {
-        switch type {
-        case .int:
-            return Bool(value as! Int != 0)
-        case .float:
-            return Bool(value as! Float != 0)
-        default:
-            return value as! Bool
         }
     }
     
@@ -84,7 +84,7 @@ public final class Value {
     public var asArray: ArrayValue {
         if type == .string {
             var stringArray: [Value] = []
-            for character in value as! String {
+            for character in asString {
                 stringArray.append(Value(string: String(character)))
             }
             return ArrayValue(stringArray)
