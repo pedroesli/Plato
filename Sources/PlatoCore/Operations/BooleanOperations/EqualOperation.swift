@@ -44,7 +44,7 @@ struct EqualOperation: BaseOperation {
                 )
             )
         default:
-            fatalError("Equal operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Equal operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
     

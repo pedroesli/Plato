@@ -4,17 +4,23 @@ import Foundation
 @testable import PlatoCore
 
 final class PlatoTests: XCTestCase {
+    
+    let plato = TestablePlato()
+    
+    override func tearDown() {
+        plato.reset()
+    }
+    
     func testGeneral() {
         let code = """
         6
         2
         "321pedro"
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testAddition() {
-        let plato = TestablePlato()
         let code = """
         1+2+5
         44+55.5
@@ -57,7 +63,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testMultiplication() {
-        let plato = TestablePlato()
         let code = """
         2*5
         25/5
@@ -76,7 +81,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testExponent() {
-        let plato = TestablePlato()
         let code = """
         2**true
         2**false
@@ -97,7 +101,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testBoolean() {
-        let plato = TestablePlato()
         let code = """
         true and true
         true and false
@@ -143,7 +146,7 @@ final class PlatoTests: XCTestCase {
         [1,2,3] != [4,5,6]
         [1,2] != [1,2]
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testCompare() {
@@ -155,11 +158,10 @@ final class PlatoTests: XCTestCase {
         "hey" <= "hey"
         "a" < "b"
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testAssignment() {
-        let plato = TestablePlato()
         let code = """
         a = 2
         a += 1
@@ -178,7 +180,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testTypeAssignment() {
-        let plato = TestablePlato()
         let code = """
         a: bool = true
         b: int = 1
@@ -215,7 +216,7 @@ final class PlatoTests: XCTestCase {
         b = [[1,2,3]]
         b[0][1]
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testIfStatement() {
@@ -230,7 +231,7 @@ final class PlatoTests: XCTestCase {
             "5"
         }
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testWhileStatement() {
@@ -250,7 +251,7 @@ final class PlatoTests: XCTestCase {
             a += 1
         }
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testForInStatement() {
@@ -265,7 +266,7 @@ final class PlatoTests: XCTestCase {
             word
         }
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testForFromToByStatement() {
@@ -279,11 +280,10 @@ final class PlatoTests: XCTestCase {
             }
         }
         """
-        XCTAssertNoThrow(try Plato.run(code))
+        XCTAssertNoThrow(try plato.run(code))
     }
     
     func testTypeFuncCall() {
-        let plato = TestablePlato()
         let code = """
         bool(1)
         bool("true")
@@ -328,7 +328,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testFunctionCall() {
-        let plato = TestablePlato()
         let code = """
         func printHelloWorld() {
             "Hello, World!"
@@ -369,7 +368,6 @@ final class PlatoTests: XCTestCase {
     }
     
     func testPrintFunction() {
-        let plato = TestablePlato()
         let code = """
             print("Hello, World!")
             a = 25
@@ -377,6 +375,14 @@ final class PlatoTests: XCTestCase {
             print("Result:", a)
             print(1, 2, 3, 4, separator: " ... ", terminator: "\n\n")
         """
+        XCTAssertNoThrow(try plato.run(code))
+    }
+    
+    func testRandomFunction() {
+        let code = """
+            random(1, 10)
+        """
+        plato.addExpectedValueInRange(1...10, forLine: 1)
         XCTAssertNoThrow(try plato.run(code))
     }
 }

@@ -43,7 +43,7 @@ struct DifferentOperation: BaseOperation {
                 )
             )
         default:
-            fatalError("Different operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Different operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
     

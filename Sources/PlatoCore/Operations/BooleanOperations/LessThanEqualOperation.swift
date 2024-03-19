@@ -34,7 +34,7 @@ struct LessThanEqualOperation: BaseOperation {
         case .string:
             return Value(bool: left.asString <= right.asString)
         default:
-            fatalError("Less than equal operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Less than equal operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
 }

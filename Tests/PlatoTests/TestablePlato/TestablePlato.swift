@@ -29,30 +29,42 @@ struct TestablePlato {
         }
     }
     
+    func reset() {
+        interpreter.tests = [:]
+    }
+    
     /// Adds an expected value for a 'visitExpressionStatement' result at a line.
     /// Note: Lines begin a 1
     func addExpectedValue(_ value: Value, forLine line: Int) {
-        interpreter.expectedValues[line] = value
+        interpreter.tests[line] = ExpectedTest(value: value)
     }
     
     func addExpectedValue(bool value: Bool, forLine line: Int) {
-        interpreter.expectedValues[line] = Value(bool: value)
+        interpreter.tests[line] = ExpectedTest(value: Value(bool: value))
     }
     
     func addExpectedValue(int value: Int, forLine line: Int) {
-        interpreter.expectedValues[line] = Value(int: value)
+        interpreter.tests[line] = ExpectedTest(value: Value(int: value))
     }
     
     func addExpectedValue(float value: Float, forLine line: Int) {
-        interpreter.expectedValues[line] = Value(float: value)
+        interpreter.tests[line] = ExpectedTest(value: Value(float: value))
     }
     
     func addExpectedValue(string value: String, forLine line: Int) {
-        interpreter.expectedValues[line] = Value(string: value)
+        interpreter.tests[line] = ExpectedTest(value: Value(string: value))
     }
     
     func addExpectedValue(array values: [Value], forLine line: Int) {
-        interpreter.expectedValues[line] = Value(array: ArrayValue(values))
+        interpreter.tests[line] = ExpectedTest(value: Value(array: ArrayValue(values)))
+    }
+    
+    func addExpectedValueInRange(_ range: ClosedRange<Int>, forLine line: Int) {
+        interpreter.tests[line] = IntRangeTest(range: range)
+    }
+    
+    func addExpectedValueInRange(_ range: ClosedRange<Float>, forLine line: Int) {
+        interpreter.tests[line] = FloatRangeTest(range: range)
     }
     
     private func handlePrint(printValue: PrintValue) {

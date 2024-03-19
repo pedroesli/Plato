@@ -10,7 +10,7 @@
 
 class TestablePlatoInterpreter: PlatoInterpreter {
     
-    var expectedValues: [Int : Value] = [:]
+    var tests: [Int : TestingMethod] = [:]
     
     override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
         guard let expression = ctx.expression(),
@@ -19,9 +19,9 @@ class TestablePlatoInterpreter: PlatoInterpreter {
               result.type.isInRange(of: .array)
         else { return nil }
         
-        if let expectedValue = expectedValues[line] {
-            guard expectedValue == result else {
-                return error("{Test Error} Expected 'Value(\(expectedValue), \(expectedValue.type))' but got 'Value(\(result), \(result.type))'", at: ctx)
+        if let test = tests[line] {
+            guard test.test(result) else {
+                return error(test.makeErrorMessage(result), at: ctx)
             }
         }
         

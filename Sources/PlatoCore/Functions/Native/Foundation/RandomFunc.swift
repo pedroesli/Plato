@@ -5,15 +5,13 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
 //
 
-import Foundation
-
 /// Returns a pseudo-random float between from and to (inclusive).
 public struct RandomFunc: FunctionResultHandling {
     public static let name: String = "random"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "from") }
-        guard parameters.count == 1 else { throw FunctionError.missingArgument(parameter: "to") }
+        guard parameters.count > 1 else { throw FunctionError.missingArgument(parameter: "to") }
         guard parameters.count == 2 else { throw FunctionError.extraArgument }
         
         let from = parameters[0].value

@@ -34,7 +34,7 @@ struct GreaterThanOperation: BaseOperation {
         case .string:
             return Value(bool: left.asString > right.asString)
         default:
-            fatalError("Greater than operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Greater than operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
 }

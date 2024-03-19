@@ -10,7 +10,7 @@ public struct PowFunc: FunctionResultHandling {
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
-        guard parameters.count == 1 else { throw FunctionError.missingArgument(parameter: "y") }
+        guard parameters.count > 1 else { throw FunctionError.missingArgument(parameter: "y") }
         guard parameters.count == 2 else { throw FunctionError.extraArgument }
         
         let x = parameters[0].value
