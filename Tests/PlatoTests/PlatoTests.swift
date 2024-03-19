@@ -13,7 +13,7 @@ final class PlatoTests: XCTestCase {
     
     func testGeneral() {
         let code = """
-        6
+        cos(90)
         2
         "321pedro"
         """

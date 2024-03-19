@@ -1,5 +1,5 @@
 //
-//  ExpFunc.swift
+//  GammaFunc.swift
 //
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
@@ -7,8 +7,8 @@
 
 import Darwin
 
-public struct ExpFunc: FunctionResultHandling {
-    public static let name: String = "exp"
+public struct GammaFunc: FunctionResultHandling {
+    public static let name: String = "gamma"
     
     public static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
@@ -18,6 +18,6 @@ public struct ExpFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: exp(x.asFloat))
+        return Value(float: tgamma(x.asFloat))
     }
 }

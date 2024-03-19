@@ -24,18 +24,24 @@ public struct DefaultNativeFunctionHandler: NativeFunctionHandling {
         case RandomFunc.name:
             return try RandomFunc.handle(parameters: parameters)
         // Math
-        case LogFunc.name:
-            return try LogFunc.handle(parameters: parameters)
-        case Log2Func.name:
-            return try Log2Func.handle(parameters: parameters)
-        case Log10Func.name:
-            return try Log10Func.handle(parameters: parameters)
         case PowFunc.name:
             return try PowFunc.handle(parameters: parameters)
         case SqrtFunc.name:
             return try SqrtFunc.handle(parameters: parameters)
         case ExpFunc.name:
             return try ExpFunc.handle(parameters: parameters)
+            // Log
+        case LogFunc.name:
+            return try LogFunc.handle(parameters: parameters)
+        case Log2Func.name:
+            return try Log2Func.handle(parameters: parameters)
+        case Log10Func.name:
+            return try Log10Func.handle(parameters: parameters)
+            // Gamma
+        case GammaFunc.name:
+            return try GammaFunc.handle(parameters: parameters)
+        case LogGammaFunc.name:
+            return try LogGammaFunc.handle(parameters: parameters)
             // Sin
         case SinFunc.name:
             return try SinFunc.handle(parameters: parameters)
