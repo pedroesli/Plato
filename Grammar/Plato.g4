@@ -112,7 +112,7 @@ parameter
 element
     : ID            #idElement
     | INT           #intElement
-    | FLOAT         #floatElement
+    | DOUBLE        #doubleElement
     | STRING        #stringElement
     | TRUE          #trueElement
     | FALSE         #falseElement

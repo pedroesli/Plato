@@ -18,6 +18,9 @@ public struct CosFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: cos(x.asFloat))
+        if x.type == .float {
+            return Value(float: cosf(x.asFloat))
+        }
+        return Value(double: cos(x.asDouble))
     }
 }

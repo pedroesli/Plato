@@ -44,21 +44,19 @@ CONTINUE    : 'continue';
 AT          : 'at';
 UNDERSCORE  : '_';
 
-// Elements
-ID      : UNDERSCORE? LETTER (LETTER | DIGIT)*;
-fragment
-LETTER  : [a-zA-Z];
-
-FLOAT   : INT '.' INT;
-
-INT     : DIGIT (UNDERSCORE? DIGIT)*;
-
+// Fragments
 fragment
 DIGIT   : [0-9];
-
-STRING  :  '"' ( ESC | ~[\\"] )*? '"';
+fragment
+LETTER  : [a-zA-Z];
 fragment
 ESC     : '\\' ([abtnfrv]|'"');
+
+// Values
+ID      : UNDERSCORE? LETTER (LETTER | DIGIT)*;
+INT     : DIGIT (UNDERSCORE? DIGIT)*;
+DOUBLE   : INT '.' INT;
+STRING  :  '"' ( ESC | ~[\\"] )*? '"';
 
 // Space
 NEWLINE     : '\r'? '\n';

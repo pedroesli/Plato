@@ -18,6 +18,9 @@ public struct ExpFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: exp(x.asFloat))
+        if x.type == .float {
+            return Value(float: expf(x.asFloat))
+        }
+        return Value(double: exp(x.asDouble))
     }
 }

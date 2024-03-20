@@ -18,6 +18,9 @@ public struct AsinhFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: asinh(x.asFloat))
+        if x.type == .float {
+            return Value(float: asinhf(x.asFloat))
+        }
+        return Value(double: asinh(x.asDouble))
     }
 }

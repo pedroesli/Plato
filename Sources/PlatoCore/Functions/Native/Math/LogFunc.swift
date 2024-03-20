@@ -18,7 +18,10 @@ public struct LogFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: log(x.asFloat))
+        if x.type == .float {
+            return Value(float: logf(x.asFloat))
+        }
+        return Value(double: log(x.asDouble))
     }
 }
 

@@ -10,6 +10,7 @@ public enum VariableType: String {
     case bool
     case int
     case float
+    case double
     case number
     case string
     case array
@@ -25,8 +26,10 @@ public enum VariableType: String {
         case .bool:
             valueType.isNumber
         case .int:
-            valueType == .int || valueType == .boolean
+            valueType == .int || valueType == .bool
         case .float:
+            valueType.isNumber
+        case .double:
             valueType.isNumber
         case .number:
             valueType.isNumber
@@ -43,11 +46,13 @@ public enum VariableType: String {
         case .any:
             valueType.isInRange(of: .array)
         case .bool:
-            valueType == .boolean
+            valueType == .bool
         case .int:
             valueType == .int
         case .float:
             valueType == .float
+        case .double:
+            valueType == .double
         case .number:
             valueType.isNumber
         case .string:

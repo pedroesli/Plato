@@ -20,9 +20,10 @@ struct ExponentOperation: BaseOperation {
     
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.boolean],
-        .int     : [.int, .boolean],
-        .float   : [.float, .int, .boolean],
+        .bool    : [.bool],
+        .int     : [.int, .bool],
+        .float   : [.float, .int, .bool],
+        .double  : [.double, .float, .int, .bool],
         .string  : [],
         .array   : [],
     ]
@@ -30,12 +31,14 @@ struct ExponentOperation: BaseOperation {
     func result() throws -> Value {
         try isCompatible(op: "**", type: .arithmetic)
         switch order.high {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(int: Int(pow(Float(left.asInteger), Float(right.asInteger))))
         case .float:
             return Value(float: pow(left.asFloat, right.asFloat))
+        case .double:
+            return Value(double: pow(left.asDouble, right.asDouble))
         default:
-            fatalError("Divide operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Divide operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
 }

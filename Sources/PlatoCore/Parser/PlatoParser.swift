@@ -24,9 +24,9 @@ open class PlatoParser: Parser {
                  DIF = 30, AND = 31, OR = 32, NOT = 33, TRUE = 34, FALSE = 35, 
                  ASSIGN = 36, MUL_ASSIGN = 37, DIV_ASSIGN = 38, MOD_ASSIGN = 39, 
                  ADD_ASSIGN = 40, SUB_ASSIGN = 41, RETURN = 42, BREAK = 43, 
-                 CONTINUE = 44, AT = 45, UNDERSCORE = 46, ID = 47, FLOAT = 48, 
-                 INT = 49, STRING = 50, NEWLINE = 51, WHITESPACE = 52, COMMENT = 53, 
-                 COMMENT_MULTILINE = 54
+                 CONTINUE = 44, AT = 45, UNDERSCORE = 46, ID = 47, INT = 48, 
+                 DOUBLE = 49, STRING = 50, NEWLINE = 51, WHITESPACE = 52, 
+                 COMMENT = 53, COMMENT_MULTILINE = 54
 	}
 
 	public
@@ -62,7 +62,7 @@ open class PlatoParser: Parser {
 		"LT", "LTE", "GT", "GTE", "EQUAL", "DIF", "AND", "OR", "NOT", "TRUE", 
 		"FALSE", "ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "ADD_ASSIGN", 
 		"SUB_ASSIGN", "RETURN", "BREAK", "CONTINUE", "AT", "UNDERSCORE", "ID", 
-		"FLOAT", "INT", "STRING", "NEWLINE", "WHITESPACE", "COMMENT", "COMMENT_MULTILINE"
+		"INT", "DOUBLE", "STRING", "NEWLINE", "WHITESPACE", "COMMENT", "COMMENT_MULTILINE"
 	]
 	public
 	static let VOCABULARY = Vocabulary(_LITERAL_NAMES, _SYMBOLIC_NAMES)
@@ -2374,6 +2374,30 @@ open class PlatoParser: Parser {
 			}
 		}
 	}
+	public class DoubleElementContext: ElementContext {
+			open
+			func DOUBLE() -> TerminalNode? {
+				return getToken(PlatoParser.Tokens.DOUBLE.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: ElementContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? PlatoVisitor {
+			    return visitor.visitDoubleElement(self)
+			}
+			else if let visitor = visitor as? PlatoBaseVisitor {
+			    return visitor.visitDoubleElement(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
 	public class FalseElementContext: ElementContext {
 			open
 			func FALSE() -> TerminalNode? {
@@ -2470,30 +2494,6 @@ open class PlatoParser: Parser {
 			}
 		}
 	}
-	public class FloatElementContext: ElementContext {
-			open
-			func FLOAT() -> TerminalNode? {
-				return getToken(PlatoParser.Tokens.FLOAT.rawValue, 0)
-			}
-
-		public
-		init(_ ctx: ElementContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? PlatoVisitor {
-			    return visitor.visitFloatElement(self)
-			}
-			else if let visitor = visitor as? PlatoBaseVisitor {
-			    return visitor.visitFloatElement(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
 	@discardableResult
 	 open func element() throws -> ElementContext {
 		var _localctx: ElementContext
@@ -2522,11 +2522,11 @@ open class PlatoParser: Parser {
 
 		 		break
 
-		 	case .FLOAT:
-		 		_localctx =  FloatElementContext(_localctx);
+		 	case .DOUBLE:
+		 		_localctx =  DoubleElementContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
 		 		setState(264)
-		 		try match(PlatoParser.Tokens.FLOAT.rawValue)
+		 		try match(PlatoParser.Tokens.DOUBLE.rawValue)
 
 		 		break
 
@@ -2803,7 +2803,7 @@ open class PlatoParser: Parser {
 		250,252,3,38,19,0,251,249,1,0,0,0,252,255,1,0,0,0,253,251,1,0,0,0,253,
 		254,1,0,0,0,254,37,1,0,0,0,255,253,1,0,0,0,256,257,5,47,0,0,257,259,5,
 		2,0,0,258,256,1,0,0,0,258,259,1,0,0,0,259,260,1,0,0,0,260,261,3,32,16,
-		0,261,39,1,0,0,0,262,270,5,47,0,0,263,270,5,49,0,0,264,270,5,48,0,0,265,
+		0,261,39,1,0,0,0,262,270,5,47,0,0,263,270,5,48,0,0,264,270,5,49,0,0,265,
 		270,5,50,0,0,266,270,5,34,0,0,267,270,5,35,0,0,268,270,3,42,21,0,269,262,
 		1,0,0,0,269,263,1,0,0,0,269,264,1,0,0,0,269,265,1,0,0,0,269,266,1,0,0,
 		0,269,267,1,0,0,0,269,268,1,0,0,0,270,41,1,0,0,0,271,273,5,17,0,0,272,

@@ -18,6 +18,9 @@ public struct AcoshFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: acosh(x.asFloat))
+        if x.type == .float {
+            return Value(float: acoshf(x.asFloat))
+        }
+        return Value(double: acosh(x.asDouble))
     }
 }

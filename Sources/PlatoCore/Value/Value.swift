@@ -11,6 +11,11 @@ public final class Value {
     public let type: ValueType
     private var value: Any
     
+    public init(bool: Bool) {
+        self.type = .bool
+        self.value = bool
+    }
+    
     public init(int: Int) {
         self.type = .int
         self.value = int
@@ -21,9 +26,9 @@ public final class Value {
         self.value = float
     }
     
-    public init(bool: Bool) {
-        self.type = .boolean
-        self.value = bool
+    public init(double: Double) {
+        self.type = .double
+        self.value = double
     }
     
     public init(string: String) {
@@ -47,11 +52,14 @@ public final class Value {
     }
     
     public var asBool: Bool {
+        // Implicit downcasting
         switch type {
         case .int:
             return asInteger != 0
         case .float:
             return asFloat != 0
+        case .double:
+            return asDouble != 0
         default:
             return value as! Bool
         }
@@ -59,21 +67,37 @@ public final class Value {
     
     public var asInteger: Int {
         // Implicit upcasting
-        if type == .boolean {
+        if type == .bool {
             return asBool ? 1 : 0
         }
         return value as! Int
     }
     
     public var asFloat: Float {
-        // Implicit upcasting
         switch type {
-        case .boolean:
+        case .bool:
             return asBool ? 1.0 : 0
         case .int:
             return Float(asInteger)
+        // Implicit down casting for double
+        case .double:
+            return Float(asDouble)
         default:
             return value as! Float
+        }
+    }
+    
+    public var asDouble: Double {
+        // Implicit upcasting
+        switch type {
+        case .bool:
+            return asBool ? 1.0 : 0
+        case .int:
+            return Double(asInteger)
+        case .float:
+            return Double(asFloat)
+        default:
+            return value as! Double
         }
     }
     
@@ -112,8 +136,8 @@ internal extension Value {
     // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.
     static func == (lhs: Value, rhs: Value) -> Bool {
         switch lhs.type {
-        case .boolean:
-            guard rhs.type == .boolean else { return false }
+        case .bool:
+            guard rhs.type == .bool else { return false }
             return lhs.asBool == rhs.asBool
         case .int:
             guard rhs.type == .int else { return false }
@@ -121,6 +145,9 @@ internal extension Value {
         case .float:
             guard rhs.type == .float else { return false }
             return lhs.asFloat == rhs.asFloat
+        case .double:
+            guard rhs.type == .double else { return false }
+            return lhs.asDouble == rhs.asDouble
         case .string:
             guard rhs.type == .string else { return false }
             return lhs.asString == rhs.asString

@@ -21,12 +21,14 @@ public struct RandomFunc: FunctionResultHandling {
         guard to.type.isNumber else { throw FunctionError.typeError(parameterType: to.type, expectedType: .number) }
         
         switch highestOrder(from, to) {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(int: Int.random(in: from.asInteger...to.asInteger))
         case .float:
             return Value(float: Float.random(in: from.asFloat...to.asFloat))
+        case .double:
+            return Value(double: Double.random(in: from.asDouble...to.asDouble))
         default:
-            fatalError("Random function failed. Reason: no operation for \(highestOrder(from, to)) type")
+            fatalError("Random function failed. Reason: unsupported operation for \(highestOrder(from, to)) type")
         }
     }
 }

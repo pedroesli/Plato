@@ -11,9 +11,10 @@ struct GreaterThanOperation: BaseOperation {
     let order: OrderType
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.boolean],
-        .int     : [.int, .boolean],
-        .float   : [.float, .int, .boolean],
+        .bool    : [.bool],
+        .int     : [.int, .bool],
+        .float   : [.float, .int, .bool],
+        .double  : [.double, .float, .int, .bool],
         .string  : [.string],
         .array   : [],
     ]
@@ -27,10 +28,12 @@ struct GreaterThanOperation: BaseOperation {
     func result() throws -> Value {
         try isCompatible(op: ">", type: .boolean)
         switch order.high {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(bool: left.asInteger > right.asInteger)
         case .float:
             return Value(bool: left.asFloat > right.asFloat)
+        case .double:
+            return Value(bool: left.asDouble > right.asDouble)
         case .string:
             return Value(bool: left.asString > right.asString)
         default:

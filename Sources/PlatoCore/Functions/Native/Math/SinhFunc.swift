@@ -18,6 +18,9 @@ public struct SinhFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: sinh(x.asFloat))
+        if x.type == .float {
+            return Value(float: sinhf(x.asFloat))
+        }
+        return Value(double: sinh(x.asDouble))
     }
 }

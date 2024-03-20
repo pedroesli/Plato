@@ -7,16 +7,17 @@
 
 /// The atomic type of a value
 public enum ValueType: Int {
-    case boolean
+    case bool
     case int
     case float
+    case double
     case string
     case array
     case void
     case command
     
     public var isNumber: Bool {
-        isInRange(of: .float)
+        isInRange(of: .double)
     }
     
     public func isInRange(of type: ValueType) -> Bool {

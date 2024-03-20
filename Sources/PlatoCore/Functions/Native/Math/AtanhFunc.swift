@@ -18,6 +18,9 @@ public struct AtanhFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: atanh(x.asFloat))
+        if x.type == .float {
+            return Value(float: atanhf(x.asFloat))
+        }
+        return Value(double: atanh(x.asDouble))
     }
 }

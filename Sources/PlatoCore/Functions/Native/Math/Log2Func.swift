@@ -18,7 +18,10 @@ public struct Log2Func: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: log2(x.asFloat))
+        if x.type == .float {
+            return Value(float: log2f(x.asFloat))
+        }
+        return Value(double: log2(x.asDouble))
     }
 }
 

@@ -18,6 +18,9 @@ public struct CoshFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: cosh(x.asFloat))
+        if x.type == .float {
+            return Value(float: coshf(x.asFloat))
+        }
+        return Value(double: cosh(x.asDouble))
     }
 }

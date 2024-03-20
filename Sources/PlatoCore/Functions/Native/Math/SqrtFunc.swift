@@ -18,6 +18,9 @@ public struct SqrtFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: sqrt(x.asFloat))
+        if x.type == .float {
+            return Value(float: sqrtf(x.asFloat))
+        }
+        return Value(double: sqrt(x.asDouble))
     }
 }

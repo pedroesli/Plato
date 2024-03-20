@@ -25,7 +25,8 @@ public class Variable {
         case .any, .number, .string, .array:
             self.value = value
         case .bool:
-            guard value.type == .boolean else {
+            // Upcasting
+            guard value.type == .bool else {
                 self.value = Value(bool: value.asBool)
                 return
             }
@@ -39,6 +40,12 @@ public class Variable {
         case .float:
             guard value.type == .float else {
                 self.value = Value(float: value.asFloat)
+                return
+            }
+            self.value = value
+        case .double:
+            guard value.type == .double else {
+                self.value = Value(double: value.asDouble)
                 return
             }
             self.value = value

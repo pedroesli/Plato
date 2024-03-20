@@ -18,9 +18,10 @@ struct ModuloOperation: BaseOperation {
     
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.boolean],
-        .int     : [.int, .boolean],
-        .float   : [.float, .int, .boolean],
+        .bool    : [.bool],
+        .int     : [.int, .bool],
+        .float   : [.float, .int, .bool],
+        .double  : [.double, .float, .int, .bool],
         .string  : [],
         .array   : [],
     ]
@@ -32,12 +33,14 @@ struct ModuloOperation: BaseOperation {
         }
         
         switch order.high {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(int: left.asInteger % right.asInteger)
         case .float:
             return Value(float: left.asFloat.truncatingRemainder(dividingBy: right.asFloat))
+        case .double:
+            return Value(double: left.asDouble.truncatingRemainder(dividingBy: right.asDouble))
         default:
-            fatalError("Modulo operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Modulo operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
 }

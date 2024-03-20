@@ -411,13 +411,13 @@ open class PlatoVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code floatElement}
+	 * Visit a parse tree produced by the {@code doubleElement}
 	 * labeled alternative in {@link PlatoParser#element}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitFloatElement(_ ctx: PlatoParser.FloatElementContext) -> T {
+	open func visitDoubleElement(_ ctx: PlatoParser.DoubleElementContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

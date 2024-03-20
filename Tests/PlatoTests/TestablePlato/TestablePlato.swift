@@ -42,23 +42,27 @@ struct TestablePlato {
     }
     
     func addExpectedValue(bool value: Bool, forLine line: Int) {
-        interpreter.tests[line] = ExpectedTest(value: Value(bool: value))
+        self.addExpectedValue(Value(bool: value), forLine: line)
     }
     
     func addExpectedValue(int value: Int, forLine line: Int) {
-        interpreter.tests[line] = ExpectedTest(value: Value(int: value))
+        self.addExpectedValue(Value(int: value), forLine: line)
     }
     
     func addExpectedValue(float value: Float, forLine line: Int) {
-        interpreter.tests[line] = ExpectedTest(value: Value(float: value))
+        self.addExpectedValue(Value(float: value), forLine: line)
+    }
+    
+    func addExpectedValue(double value: Double, forLine line: Int) {
+        self.addExpectedValue(Value(double: value), forLine: line)
     }
     
     func addExpectedValue(string value: String, forLine line: Int) {
-        interpreter.tests[line] = ExpectedTest(value: Value(string: value))
+        self.addExpectedValue(Value(string: value), forLine: line)
     }
     
     func addExpectedValue(array values: [Value], forLine line: Int) {
-        interpreter.tests[line] = ExpectedTest(value: Value(array: ArrayValue(values)))
+        self.addExpectedValue(Value(array: ArrayValue(values)), forLine: line)
     }
     
     func addExpectedValue(rangeInt: ClosedRange<Int>, forLine line: Int) {
@@ -67,6 +71,10 @@ struct TestablePlato {
     
     func addExpectedValue(rangeFloat: ClosedRange<Float>, forLine line: Int) {
         interpreter.tests[line] = FloatRangeTest(range: rangeFloat)
+    }
+    
+    func addExpectedValue(rangeDouble: ClosedRange<Double>, forLine line: Int) {
+        interpreter.tests[line] = DoubleRangeTest(range: rangeDouble)
     }
     
     private func handlePrint(printValue: PrintValue) {

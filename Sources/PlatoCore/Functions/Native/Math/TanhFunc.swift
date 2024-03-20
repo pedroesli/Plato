@@ -18,6 +18,9 @@ public struct TanhFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: tanh(x.asFloat))
+        if x.type == .float {
+            return Value(float: tanhf(x.asFloat))
+        }
+        return Value(double: tanh(x.asDouble))
     }
 }

@@ -116,29 +116,12 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return idError
         }
         
-        let idType = ctx.idTypeStatement()!.ID()!.getText()
-        let type: VariableType!
-        switch idType {
-        case VariableType.any.text:
-            type = .any
-        case VariableType.bool.text:
-            type = .bool
-        case VariableType.int.text:
-            type = .int
-        case VariableType.float.text:
-            type = .float
-        case VariableType.number.text:
-            type = .number
-        case VariableType.string.text:
-            type = .string
-        case VariableType.array.text:
-            type = .array
-        default:
-            return error("The type '\(idType)'does not exit", at: ctx)
+        guard let type = getParameterType(ctx.idTypeStatement()) else {
+            return error("The type '\(ctx.idTypeStatement()!.ID()!.getText())' does not exit", at: ctx)
         }
-        
+   
         guard type.isCompatible(with: value.type) else {
-            return error("Cannot assign value of type '\(value.type)' to type '\(type!)'", at: ctx)
+            return error("Cannot assign value of type '\(value.type)' to type '\(type)'", at: ctx)
         }
         
         variables.peek().createVariable(type: type, value: value, forKey: id)
@@ -328,7 +311,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         var result: Value?
         
         switch highestType {
-        case .boolean, .int:
+        case .bool, .int:
             for index in stride(from: from.asInteger, to: to.asInteger, by: by.asInteger) {
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
@@ -364,6 +347,24 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     continue
                 }
             }
+        case .double:
+            for index in stride(from: from.asDouble, to: to.asDouble, by: by.asDouble) {
+                if !canUseBreakContinue {
+                    canUseBreakContinue = true
+                }
+                newScope()
+                variables.peek().createVariable(type: .any, value: Value(double: index), forKey: id)
+                result = visit(statements)
+                popScope()
+                if result?.type == .command {
+                    if result?.asCommand == .breakCommand {
+                        result = Value.void
+                        break
+                    }
+                    result = Value.void
+                    continue
+                }
+            }
         default:
             return unexpectedError("No switch statement for \(highestType)",at: ctx)
         }
@@ -379,7 +380,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         if let arguments = ctx.functionArguments()?.functionArgument() {
             for argument in arguments {
                 guard let parameterType = getParameterType(argument.idTypeStatement()) else {
-                    return error("The type '\(argument.idTypeStatement()!.ID()!.getText())'does not exit", at: ctx)
+                    return error("The type '\(argument.idTypeStatement()!.ID()!.getText())' does not exit", at: ctx)
                 }
                 parameters.append(
                     Parameter(
@@ -612,8 +613,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return Value(int: Int(ctx.INT()!.getText().replacingOccurrences(of: "_", with: ""))!)
     }
     
-    open override func visitFloatElement(_ ctx: PlatoParser.FloatElementContext) -> Value? {
-        return Value(float: Float(ctx.FLOAT()!.getText())!)
+    open override func visitDoubleElement(_ ctx: PlatoParser.DoubleElementContext) -> Value? {
+        return Value(double: Double(ctx.DOUBLE()!.getText())!)
     }
     
     open override func visitTrueElement(_ ctx: PlatoParser.TrueElementContext) -> Value? {
@@ -723,7 +724,7 @@ extension PlatoInterpreter {
             }
             guard let expression = ctx.expression(index), let indexValue = visit(expression) else { return nil }
             guard indexValue.type.isInRange(of: .int) else {
-                return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.boolean)'", at: ctx)
+                return error("Subscript index can only use types of '\(ValueType.int)' and '\(ValueType.bool)'", at: ctx)
             }
             
             let currentArray = currentValue.asArray
@@ -737,10 +738,12 @@ extension PlatoInterpreter {
     
     public func minusUnaryValue(_ value: Value) -> Value? {
         switch value.type {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(int: -value.asInteger)
         case .float:
             return Value(float: -value.asFloat)
+        case .double:
+            return Value(double: -value.asDouble)
         default:
             return nil
         }
@@ -799,7 +802,9 @@ extension PlatoInterpreter {
         case VariableType.int.text:
             return .int
         case VariableType.float.text:
-            return.float
+            return .float
+        case VariableType.double.text:
+            return .double
         case VariableType.number.text:
             return .number
         case VariableType.string.text:

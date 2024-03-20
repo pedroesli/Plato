@@ -18,6 +18,9 @@ public struct SinFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: sin(x.asFloat))
+        if x.type == .float {
+            return Value(float: sinf(x.asFloat))
+        }
+        return Value(double: sin(x.asDouble))
     }
 }

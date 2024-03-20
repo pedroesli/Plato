@@ -282,7 +282,7 @@ open class PlatoBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitFloatElement(_ ctx: PlatoParser.FloatElementContext) -> T? { return visitChildren(ctx) }
+	open func visitDoubleElement(_ ctx: PlatoParser.DoubleElementContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

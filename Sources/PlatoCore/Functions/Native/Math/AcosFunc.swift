@@ -18,6 +18,9 @@ public struct AcosFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: acos(x.asFloat))
+        if x.type == .float {
+            return Value(float: acosf(x.asFloat))
+        }
+        return Value(double: acos(x.asDouble))
     }
 }

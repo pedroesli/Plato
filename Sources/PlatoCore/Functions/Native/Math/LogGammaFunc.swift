@@ -17,6 +17,10 @@ public struct LogGammaFunc: FunctionResultHandling {
         let x = parameters[0].value
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
-        return Value(float: lgamma(x.asFloat).0)
+        
+        if x.type == .float {
+            return Value(float: lgammaf(x.asFloat))
+        }
+        return Value(double: lgamma(x.asDouble))
     }
 }

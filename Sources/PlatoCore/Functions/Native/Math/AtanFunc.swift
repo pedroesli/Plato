@@ -18,6 +18,9 @@ public struct AtanFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: atan(x.asFloat))
+        if x.type == .float {
+            return Value(float: atanf(x.asFloat))
+        }
+        return Value(double: atan(x.asDouble))
     }
 }

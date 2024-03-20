@@ -18,9 +18,10 @@ struct DivideOperation: BaseOperation {
     
     static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.boolean],
-        .int     : [.int, .boolean],
-        .float   : [.float, .int, .boolean],
+        .bool    : [.bool],
+        .int     : [.int, .bool],
+        .float   : [.float, .int, .bool],
+        .double  : [.double, .float, .int, .bool],
         .string  : [],
         .array   : [],
     ]
@@ -32,12 +33,14 @@ struct DivideOperation: BaseOperation {
         }
         
         switch order.high {
-        case .boolean, .int:
+        case .bool, .int:
             return Value(int: left.asInteger / right.asInteger)
         case .float:
             return Value(float: left.asFloat / right.asFloat)
+        case .double:
+            return Value(double: left.asDouble / right.asDouble)
         default:
-            fatalError("Divide operation failed. Reason: no operation for \(order.high) type")
+            fatalError("Divide operation failed. Reason: unsupported operation for \(order.high) type")
         }
     }
     

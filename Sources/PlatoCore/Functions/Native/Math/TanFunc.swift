@@ -18,6 +18,9 @@ public struct TanFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: tan(x.asFloat))
+        if x.type == .float {
+            return Value(float: tanf(x.asFloat))
+        }
+        return Value(double: tan(x.asDouble))
     }
 }

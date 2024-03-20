@@ -18,6 +18,9 @@ public struct GammaFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: tgamma(x.asFloat))
+        if x.type == .float {
+            return Value(float: tgammaf(x.asFloat))
+        }
+        return Value(double: tgamma(x.asDouble))
     }
 }

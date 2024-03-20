@@ -11,9 +11,10 @@ struct OrOperation: BaseOperation {
     let order: OrderType
     static var compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
-        .boolean : [.float, .int, .boolean],
-        .int     : [.float, .int, .boolean],
-        .float   : [.float, .int, .boolean],
+        .bool    : [.bool, .int, .float, .double],
+        .int     : [.bool, .int, .float, .double],
+        .float   : [.bool, .int, .float, .double],
+        .double  : [.bool, .int, .float, .double],
         .string  : [],
         .array   : [],
     ]

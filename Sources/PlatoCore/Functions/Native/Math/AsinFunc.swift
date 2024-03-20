@@ -18,6 +18,9 @@ public struct AsinFunc: FunctionResultHandling {
         
         guard x.type.isNumber else { throw FunctionError.typeError(parameterType: x.type, expectedType: .number) }
         
-        return Value(float: asin(x.asFloat))
+        if x.type == .float {
+            return Value(float: asinf(x.asFloat))
+        }
+        return Value(double: asin(x.asDouble))
     }
 }
