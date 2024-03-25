@@ -34,31 +34,27 @@ final class PlatoTests: XCTestCase {
         5+10-2
         1_000_000+1_500_000
         """
-        plato.addExpectedValue(Value(int: 8), forLine: 1)
-        plato.addExpectedValue(Value(double: 99.5), forLine: 2)
-        plato.addExpectedValue(Value(int: 1), forLine: 3)
-        plato.addExpectedValue(Value(int: 4), forLine: 4)
-        plato.addExpectedValue(Value(string: "Hello, World!"), forLine: 5)
+        plato.addExpectedValue(int: 8, forLine: 1)
+        plato.addExpectedValue(double: 99.5, forLine: 2)
+        plato.addExpectedValue(int: 1, forLine: 3)
+        plato.addExpectedValue(int: 4, forLine: 4)
+        plato.addExpectedValue(string: "Hello, World!", forLine: 5)
         plato.addExpectedValue(
-            Value(
-                array: ArrayValue(
-                    [
-                        Value(int: 1),
-                        Value(int: 2),
-                        Value(int: 3),
-                        Value(int: 4),
-                        Value(int: 5),
-                        Value(int: 6)
-                    ]
-                )
-            ),
+            array: [
+                Value(int: 1),
+                Value(int: 2),
+                Value(int: 3),
+                Value(int: 4),
+                Value(int: 5),
+                Value(int: 6)
+            ],
             forLine: 6
         )
-        plato.addExpectedValue(Value(int: -2), forLine: 7)
-        plato.addExpectedValue(Value(double: -2.5), forLine: 8)
-        plato.addExpectedValue(Value(int: 3), forLine: 9)
-        plato.addExpectedValue(Value(int: 13), forLine: 10)
-        plato.addExpectedValue(Value(int: 2_500_000), forLine: 11)
+        plato.addExpectedValue(int: -2, forLine: 7)
+        plato.addExpectedValue(double: -2.5, forLine: 8)
+        plato.addExpectedValue(int: 3, forLine: 9)
+        plato.addExpectedValue(int: 13, forLine: 10)
+        plato.addExpectedValue(int: 2_500_000, forLine: 11)
         XCTAssertNoThrow(try plato.run(code))
     }
     
@@ -115,17 +111,17 @@ final class PlatoTests: XCTestCase {
         not 0
         not 4.5
         """
-        plato.addExpectedValue(bool: true , forLine: 1)
+        plato.addExpectedValue(bool: true,  forLine: 1)
         plato.addExpectedValue(bool: false, forLine: 2)
-        plato.addExpectedValue(bool: true , forLine: 3)
-        plato.addExpectedValue(bool: true , forLine: 4)
+        plato.addExpectedValue(bool: true,  forLine: 3)
+        plato.addExpectedValue(bool: true,  forLine: 4)
         plato.addExpectedValue(bool: false, forLine: 5)
-        plato.addExpectedValue(bool: true , forLine: 6)
-        plato.addExpectedValue(bool: true , forLine: 7)
+        plato.addExpectedValue(bool: true,  forLine: 6)
+        plato.addExpectedValue(bool: true,  forLine: 7)
         plato.addExpectedValue(bool: false, forLine: 8)
-        plato.addExpectedValue(bool: true , forLine: 9)
+        plato.addExpectedValue(bool: true,  forLine: 9)
         plato.addExpectedValue(bool: false, forLine: 10)
-        plato.addExpectedValue(bool: true , forLine: 11)
+        plato.addExpectedValue(bool: true,  forLine: 11)
         plato.addExpectedValue(bool: false, forLine: 12)
         XCTAssertNoThrow(try plato.run(code))
     }
@@ -146,6 +142,19 @@ final class PlatoTests: XCTestCase {
         [1,2,3] != [4,5,6]
         [1,2] != [1,2]
         """
+        plato.addExpectedValue(bool: true,  forLine: 1)
+        plato.addExpectedValue(bool: true,  forLine: 2)
+        plato.addExpectedValue(bool: true,  forLine: 3)
+        plato.addExpectedValue(bool: true,  forLine: 4)
+        plato.addExpectedValue(bool: false, forLine: 5)
+        plato.addExpectedValue(bool: false, forLine: 6)
+        plato.addExpectedValue(bool: false, forLine: 7)
+        plato.addExpectedValue(bool: true,  forLine: 8)
+        plato.addExpectedValue(bool: true,  forLine: 9)
+        plato.addExpectedValue(bool: true,  forLine: 10)
+        plato.addExpectedValue(bool: false, forLine: 11)
+        plato.addExpectedValue(bool: true,  forLine: 12)
+        plato.addExpectedValue(bool: false, forLine: 13)
         XCTAssertNoThrow(try plato.run(code))
     }
     
@@ -153,11 +162,23 @@ final class PlatoTests: XCTestCase {
         let code = """
         2 < 3
         5 > 2
+        5.2 > 5.3
+        6.3 < 6
         2 <= 2
         5.5 >= 3.3
         "hey" <= "hey"
         "a" < "b"
+        "a" > "b"
         """
+        plato.addExpectedValue(bool: true,  forLine: 1)
+        plato.addExpectedValue(bool: true,  forLine: 2)
+        plato.addExpectedValue(bool: false, forLine: 3)
+        plato.addExpectedValue(bool: false, forLine: 4)
+        plato.addExpectedValue(bool: true,  forLine: 5)
+        plato.addExpectedValue(bool: true,  forLine: 6)
+        plato.addExpectedValue(bool: true,  forLine: 7)
+        plato.addExpectedValue(bool: true,  forLine: 8)
+        plato.addExpectedValue(bool: false, forLine: 9)
         XCTAssertNoThrow(try plato.run(code))
     }
     
@@ -219,6 +240,11 @@ final class PlatoTests: XCTestCase {
         b = [[1,2,3]]
         b[0][1]
         """
+        plato.addExpectedValue(array: [], forLine: 1)
+        plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(int: 3), Value(int: 5)], forLine: 2)
+        plato.addExpectedValue(string: "World", forLine: 3)
+        plato.addExpectedValue(int: 4, forLine: 5)
+        plato.addExpectedValue(int: 2, forLine: 7)
         XCTAssertNoThrow(try plato.run(code))
     }
     
@@ -234,6 +260,7 @@ final class PlatoTests: XCTestCase {
             "5"
         }
         """
+        plato.addExpectedValue(string: "2", forLine: 4)
         XCTAssertNoThrow(try plato.run(code))
     }
     
@@ -269,6 +296,7 @@ final class PlatoTests: XCTestCase {
             word
         }
         """
+        plato.addExpectedValue(rangeInt: 1...6, forLine: 3)
         XCTAssertNoThrow(try plato.run(code))
     }
     
