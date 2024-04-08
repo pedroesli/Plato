@@ -9,7 +9,8 @@ import Foundation
 ///     hello = "Hello, World!"
 ///     hello
 /// """
-/// let plato = Plato(code: code)
+/// let plato = Plato()
+/// try plato.run(code)
 /// ```
 public class Plato {
     
@@ -20,8 +21,6 @@ public class Plato {
     }
     
     private let interpreter = PlatoInterpreter()
-    private var task: Task<(), Error>? = nil
-    private var isTaskRunning = false
     
     /// Initiate a new Plato executer.
     public init() {
