@@ -10,6 +10,11 @@ import Antlr4
 
 struct TestablePlato {
     
+    var config: PlatoConfiguration {
+        set { interpreter.config = newValue }
+        get { interpreter.config }
+    }
+    
     private let interpreter = TestablePlatoInterpreter()
     
     init() {
@@ -31,6 +36,7 @@ struct TestablePlato {
     
     /// Resets the interpreter by clearing the cache and errors.
     func reset() {
+        interpreter.config = PlatoConfiguration()
         interpreter.tests = [:]
         interpreter.reset()
     }

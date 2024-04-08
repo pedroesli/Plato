@@ -1,8 +1,37 @@
 import PlatoCore
 import Antlr4
+import Foundation
 
-public struct Plato {
-    static func run(_ code: String) throws {
+/// The Plato class that allows you to configure the interpreter and execute Plato code.
+///
+/// ```
+/// let code = """
+///     hello = "Hello, World!"
+///     hello
+/// """
+/// let plato = Plato(code: code)
+/// ```
+public class Plato {
+    
+    /// Configure Plato interpreter.
+    public var config: PlatoConfiguration {
+        set { interpreter.config = newValue }
+        get { interpreter.config }
+    }
+    
+    private let interpreter = PlatoInterpreter()
+    private var task: Task<(), Error>? = nil
+    private var isTaskRunning = false
+    
+    /// Initiate a new Plato executer.
+    public init() {
+        
+    }
+    
+    /// Executes the provided Plato code.
+    public func run(_ code: String) throws {
+        guard !code.isEmpty else { return }
+        
         let input = ANTLRInputStream(code)
         let lexer = PlatoLexer(input)
         let tokens = CommonTokenStream(lexer)
@@ -10,10 +39,14 @@ public struct Plato {
         parser.setErrorHandler(BailErrorStrategy())
         let tree = try parser.program()
         
-        let interpreter = PlatoInterpreter()
         _ = interpreter.visit(tree)
         if let error = interpreter.error {
             throw error
         }
     }
+    
+    /// Stops the interpreter if it's running .
+//    public func stop() {
+//        
+//    }
 }

@@ -1,11 +1,11 @@
 import XCTest
 import Foundation
-//@testable import Plato
+@testable import Plato
 @testable import PlatoCore
 
 final class PlatoTests: XCTestCase {
     
-    let plato = TestablePlato()
+    var plato = TestablePlato()
     
     override func tearDown() {
         plato.reset()
@@ -433,5 +433,41 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(rangeInt: -20...20, forLine: 3)
         plato.addExpectedValue(rangeDouble: 0.1...0.9, forLine: 4)
         XCTAssertNoThrow(try plato.run(code))
+    }
+    
+//    func testInfinity() async throws {
+//        let plato = Plato()
+//        let code = """
+//            a = 0
+//            while true {
+//                a
+//                a += 1
+//            }
+//        """
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+//            print("reseting")
+//            plato.stop()
+//        })
+//        try await plato.run(code)
+//    }
+    
+    func testMaxLoop() {
+        plato.config.loop = .max(10)
+        var code = """
+            count = 0
+            max = 20
+            while count < max {
+                count += 1
+            }
+            count
+        """
+        XCTAssertThrowsError(try plato.run(code))
+        code = """
+            count = 0
+            for index from 0 to 15 by 1 {
+                count += 1
+            }
+        """
+        XCTAssertThrowsError(try plato.run(code))
     }
 }

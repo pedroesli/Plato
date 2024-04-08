@@ -16,6 +16,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: RuntimeError?
+    public var config = PlatoConfiguration()
     
     internal let variables = Stack<VariableScope>()
     internal let functions = Stack<FunctionScope>()
@@ -25,7 +26,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     private var globalVariables = VariableScope(parent: nil)
     private var globalFunctions = FunctionScope(parent: nil)
     private var canUseBreakContinue = false
-    private var printHandler: PrintHandler = DefaultPrintHandler.handle(printValue:)
+//    private var printHandler: PrintHandler = DefaultPrintHandler.handle(printValue:)
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
@@ -206,6 +207,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return visit(statements)
     }
     
+    // MARK: Loops
     open override func visitWhileStatement(_ ctx: PlatoParser.WhileStatementContext) -> Value? {
         guard var condition = visit(ctx.expression()!) else { return nil }
         
@@ -218,7 +220,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         var result: Value?
+        var maxLoopCount = 0
+        
         while condition.asBool {
+            // Check the max allowed loop count
+            if let maxLoop = config.loop.value {
+                guard maxLoopCount <= maxLoop else {
+                    return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
+                }
+                maxLoopCount += 1
+            }
+            
             if let statements = ctx.statements() {
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
@@ -235,7 +247,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     continue
                 }
             }
-            // update the condition value
+            
+            // Update the condition value
             guard let nextCondition = visit(ctx.expression()!) else { return nil }
             condition = nextCondition
             guard condition.type.isNumber else {
@@ -258,6 +271,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         var result: Value?
+        var maxLoopCount = 0
+        
         for value in values.asArray {
             if !canUseBreakContinue {
                 canUseBreakContinue = true
@@ -275,6 +290,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 }
                 result = Value.void
                 continue
+            }
+            
+            // Check the max loop count allowed
+            if let maxLoop = config.loop.value {
+                guard maxLoopCount <= maxLoop else {
+                    return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
+                }
+                maxLoopCount += 1
             }
         }
         
@@ -309,6 +332,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         let highestType = highestValueType(from.type, highestValueType(to.type, by.type))
         var result: Value?
+        var maxLoopCount = 0
         
         switch highestType {
         case .bool, .int:
@@ -328,6 +352,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     result = Value.void
                     continue
                 }
+                
+                // Check the max loop count allowed
+                if let maxLoop = config.loop.value {
+                    guard maxLoopCount <= maxLoop else {
+                        return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
+                    }
+                    maxLoopCount += 1
+                }
             }
         case .float:
             for index in stride(from: from.asFloat, to: to.asFloat, by: by.asFloat) {
@@ -346,6 +378,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     result = Value.void
                     continue
                 }
+                
+                // Check the max loop count allowed
+                if let maxLoop = config.loop.value {
+                    guard maxLoopCount <= maxLoop else {
+                        return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
+                    }
+                    maxLoopCount += 1
+                }
             }
         case .double:
             for index in stride(from: from.asDouble, to: to.asDouble, by: by.asDouble) {
@@ -363,6 +403,14 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     }
                     result = Value.void
                     continue
+                }
+                
+                // Check the max loop count allowed
+                if let maxLoop = config.loop.value {
+                    guard maxLoopCount <= maxLoop else {
+                        return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
+                    }
+                    maxLoopCount += 1
                 }
             }
         default:
@@ -671,12 +719,12 @@ extension PlatoInterpreter {
 extension PlatoInterpreter {
     
     public func setPrintHandler(_ handle: @escaping PrintHandler) {
-        self.printHandler = handle
+        self.config.printHandler = handle
     }
     
     /// Use this method to call the print handler closure
     public func handlePrint(_ printValue: PrintValue) {
-        self.printHandler(printValue)
+        self.config.printHandler(printValue)
     }
     
     public func handleExpressionStatementPrint(line: Int, value: Value) {
