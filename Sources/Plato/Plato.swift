@@ -36,7 +36,7 @@ public class Plato {
         self.interpreter = interpreter
     }
     
-    /// Executes the provided Plato code asynchronously with an optional closure to handle something when the code is done executing.
+    /// Executes the provided Plato code asynchronously with an optional completion closure for when the code is done executing.
     public func run(_ code: String, qos: DispatchQoS.QoSClass = .default, completion: ((Error?) -> Void)?) {
         guard !code.isEmpty else { return }
         
