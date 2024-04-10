@@ -20,27 +20,56 @@ public class Plato {
         get { interpreter.config }
     }
     
-    private let interpreter = PlatoInterpreter()
-    
-    /// Initiate a new Plato executer.
-    public init() {
-        
+    public var readLineContinuation: PlatoContinuation {
+        get { interpreter.readLineContinuation }
     }
     
-    /// Executes the provided Plato code.
-    public func run(_ code: String) throws {
+    private let interpreter: PlatoInterpreter
+    
+    /// Initiate a new Plato executer with the default interpreter.
+    public init() {
+        self.interpreter = PlatoInterpreter()
+    }
+    
+    /// Initiate a new Plato executer with a custom interpreter.
+    public init(interpreter: PlatoInterpreter) {
+        self.interpreter = interpreter
+    }
+    
+    /// Executes the provided Plato code asynchronously with an optional closure to handle something when the code is done executing.
+    public func run(_ code: String, qos: DispatchQoS.QoSClass = .default, completion: ((Error?) -> Void)?) {
         guard !code.isEmpty else { return }
         
-        let input = ANTLRInputStream(code)
-        let lexer = PlatoLexer(input)
-        let tokens = CommonTokenStream(lexer)
-        let parser = try PlatoParser(tokens)
-        parser.setErrorHandler(BailErrorStrategy())
-        let tree = try parser.program()
-        
-        _ = interpreter.visit(tree)
-        if let error = interpreter.error {
-            throw error
+        DispatchQueue.global(qos: qos).async {
+            do {
+                let input = ANTLRInputStream(code)
+                let lexer = PlatoLexer(input)
+                let tokens = CommonTokenStream(lexer)
+                let parser = try PlatoParser(tokens)
+                parser.setErrorHandler(BailErrorStrategy())
+                let tree = try parser.program()
+                
+                _ = self.interpreter.visit(tree)
+                if let error = self.interpreter.error {
+                    throw error
+                }
+                completion?(nil)
+            } catch {
+                completion?(error)
+            }
+        }
+    }
+    
+    /// Executes the provided Plato code asynchronously.
+    public func run(_ code: String, qos: DispatchQoS.QoSClass = .default) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            run(code, qos: qos) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume()
+            }
         }
     }
     

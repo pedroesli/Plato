@@ -5,40 +5,44 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 13/02/24.
 //
 
+import Plato
 import PlatoCore
 import Antlr4
 
-struct TestablePlato {
+class TestablePlato {
     
     var config: PlatoConfiguration {
         set { interpreter.config = newValue }
         get { interpreter.config }
     }
     
-    private let interpreter = TestablePlatoInterpreter()
-    
-    init() {
-        interpreter.setPrintHandler(handlePrint(printValue:))
+    var readLineContinuation: PlatoContinuation {
+        get { interpreter.readLineContinuation }
     }
     
-    func run(_ code: String) throws {
-        let input = ANTLRInputStream(code)
-        let lexer = PlatoLexer(input)
-        let tokens = CommonTokenStream(lexer)
-        let parser = try PlatoParser(tokens)
-        parser.setErrorHandler(BailErrorStrategy())
-        let tree = try parser.program()
-        _ = interpreter.visit(tree)
-        if let error = interpreter.error {
-            throw error
-        }
+    private let interpreter = TestablePlatoInterpreter()
+    private let plato: Plato
+    
+    init() {
+        self.plato = Plato(interpreter: interpreter)
+        
+        self.interpreter.config.setPrintHandler(self.handlePrint(printValue:))
+    }
+    
+    func run(_ code: String) async throws {
+        try await plato.run(code)
     }
     
     /// Resets the interpreter by clearing the cache and errors.
     func reset() {
         interpreter.config = PlatoConfiguration()
+        interpreter.config.setPrintHandler(self.handlePrint(printValue:))
         interpreter.tests = [:]
         interpreter.reset()
+    }
+    
+    func clearCache() {
+        interpreter.clearCache()
     }
     
     /// Adds an expected value for a 'visitExpressionStatement' result at a line.

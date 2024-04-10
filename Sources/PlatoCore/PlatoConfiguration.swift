@@ -1,21 +1,28 @@
 //
-//  File.swift
+//  PlatoConfiguration.swift
 //  
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 08/04/24.
 //
-
-import Foundation
 
 public struct PlatoConfiguration {
     public typealias PrintHandler = (_ printValue: PrintValue) -> Void
     
     /// Set how loops should run
     public var loop: Looping = .indefinitely
-    /// Set a handler to handle custom printing of values.
-    public var printHandler: PrintHandler =  DefaultPrintHandler.handle(printValue:)
+    public var readLine: ReadLine = .default
+    internal var printHandler: PrintHandler?
     
     public init() { }
+    
+    public init(printHandler: PrintHandler?) {
+        self.printHandler = printHandler
+    }
+    
+    /// Set a handler to handle custom printing of values.
+    public mutating func setPrintHandler(_ handler: @escaping PrintHandler) {
+        self.printHandler = handler
+    }
 }
 
 extension PlatoConfiguration {
@@ -33,5 +40,12 @@ extension PlatoConfiguration {
                 return max
             }
         }
+    }
+    
+    public enum ReadLine {
+        /// Use the default readLine() method to get user input.
+        case `default`
+        /// Use the continuation method to return a user input.
+        case continuation
     }
 }

@@ -6,7 +6,7 @@
 //
 
 // Plato print function handler
-class PrintFunc {
+struct PrintFunc {
     static let name = "print"
     
     let parameters: [CallParameter]
@@ -18,7 +18,7 @@ class PrintFunc {
         self.parameters = parameters
     }
     
-    func getFormattedValue() throws -> String {
+    mutating func getFormattedValue() throws -> String {
         if parameters.isEmpty {
             return "\n"
         }
@@ -35,7 +35,7 @@ class PrintFunc {
         return formattedValue
     }
     
-    private func splitParameters() throws {
+    private mutating func splitParameters() throws {
         for parameter in parameters {
             if parameter.id == "separator" {
                 guard parameter.value.type == .string else {

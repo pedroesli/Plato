@@ -5,22 +5,22 @@ import Foundation
 
 final class PlatoTests: XCTestCase {
     
-    var plato = TestablePlato()
+    let plato = TestablePlato()
     
     override func tearDown() {
         plato.reset()
     }
     
-    func testGeneral() {
+    func testGeneral() async throws {
         let code = """
         cos(90)
         2
         "321pedro"
         """
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testAddition() {
+    func testAddition() async throws {
         let code = """
         1+2+5
         44+55.5
@@ -55,10 +55,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(int: 3, forLine: 9)
         plato.addExpectedValue(int: 13, forLine: 10)
         plato.addExpectedValue(int: 2_500_000, forLine: 11)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testMultiplication() {
+    func testMultiplication() async throws {
         let code = """
         2*5
         25/5
@@ -73,10 +73,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(int: 0, forLine: 4)
         plato.addExpectedValue(double: 0.375, forLine: 5)
         plato.addExpectedValue(double: 13.75, forLine: 6)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testExponent() {
+    func testExponent() async throws {
         let code = """
         2**true
         2**false
@@ -93,10 +93,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(double: 6.25, forLine: 5)
         plato.addExpectedValue(double: 5.656854249492381, forLine: 6)
         plato.addExpectedValue(double: 50.4525138385402, forLine: 7)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testBoolean() {
+    func testBoolean() async throws {
         let code = """
         true and true
         true and false
@@ -123,10 +123,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(bool: false, forLine: 10)
         plato.addExpectedValue(bool: true,  forLine: 11)
         plato.addExpectedValue(bool: false, forLine: 12)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testEquality() {
+    func testEquality() async throws {
         let code = """
         true == true
         true != false
@@ -155,10 +155,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(bool: false, forLine: 11)
         plato.addExpectedValue(bool: true,  forLine: 12)
         plato.addExpectedValue(bool: false, forLine: 13)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testCompare() {
+    func testCompare() async throws {
         let code = """
         2 < 3
         5 > 2
@@ -179,10 +179,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(bool: true,  forLine: 7)
         plato.addExpectedValue(bool: true,  forLine: 8)
         plato.addExpectedValue(bool: false, forLine: 9)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testAssignment() {
+    func testAssignment() async throws {
         let code = """
         a = 2
         a += 1
@@ -197,10 +197,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(int: 5, forLine: 5)
         plato.addExpectedValue(float: 1.5, forLine: 7)
         plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(int: 3)], forLine: 9)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testTypeAssignment() {
+    func testTypeAssignment() async throws {
         let code = """
         a: bool = true
         b: int = 1
@@ -227,10 +227,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(string: "hey", forLine: 14)
         plato.addExpectedValue(array: [Value(int: 1), Value(int: 2), Value(int: 3), Value(int: 4)], forLine: 15)
         plato.addExpectedValue(string: "test", forLine: 16)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testArray() {
+    func testArray() async throws {
         let code = """
         []
         [1, 2, 3, 5]
@@ -245,10 +245,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(string: "World", forLine: 3)
         plato.addExpectedValue(int: 4, forLine: 5)
         plato.addExpectedValue(int: 2, forLine: 7)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testIfStatement() {
+    func testIfStatement() async throws {
         let code = """
         if 1 == 2 {
             "1"
@@ -261,10 +261,10 @@ final class PlatoTests: XCTestCase {
         }
         """
         plato.addExpectedValue(string: "2", forLine: 4)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testWhileStatement() {
+    func testWhileStatement() async throws {
         let code = """
         a = 0
         while a < 10 {
@@ -281,10 +281,10 @@ final class PlatoTests: XCTestCase {
             a += 1
         }
         """
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testForInStatement() {
+    func testForInStatement() async throws {
         let code = """
         numbers = [1, 2, 3, 4, 5, 6]
         for number in numbers {
@@ -297,10 +297,10 @@ final class PlatoTests: XCTestCase {
         }
         """
         plato.addExpectedValue(rangeInt: 1...6, forLine: 3)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testForFromToByStatement() {
+    func testForFromToByStatement() async throws{
         let code = """
         for index from 0 to 10 by 1 {
             for j in [1, 2, 3, 4, 5] {
@@ -311,10 +311,10 @@ final class PlatoTests: XCTestCase {
             }
         }
         """
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testTypeFuncCall() {
+    func testTypeFuncCall() async throws {
         let code = """
         bool(1)
         bool("true")
@@ -361,10 +361,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(double: 0.5123456123, forLine: 20)
         plato.addExpectedValue(double: 0, forLine: 21)
         plato.addExpectedValue(double: 1, forLine: 22)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testFunctionCall() {
+    func testFunctionCall() async throws {
         let code = """
         func printHelloWorld() {
             "Hello, World!"
@@ -407,10 +407,10 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(int: 10, forLine: 20)
         plato.addExpectedValue(double: 6.25, forLine: 28)
         plato.addExpectedValue(int: -5, forLine: 33)
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testPrintFunction() {
+    func testPrintFunction() async throws {
         let code = """
             print("Hello, World!")
             a = 25
@@ -418,10 +418,10 @@ final class PlatoTests: XCTestCase {
             print("Result:", a)
             print(1, 2, 3, 4, separator: " ... ", terminator: "\n\n")
         """
-        XCTAssertNoThrow(try plato.run(code))
+        try await self.plato.run(code)
     }
     
-    func testRandomFunction() {
+    func testRandomFunction() async throws {
         let code = """
             random(1, 9.5)
             random(1, 10)
@@ -432,7 +432,8 @@ final class PlatoTests: XCTestCase {
         plato.addExpectedValue(rangeInt: 1...10, forLine: 2)
         plato.addExpectedValue(rangeInt: -20...20, forLine: 3)
         plato.addExpectedValue(rangeDouble: 0.1...0.9, forLine: 4)
-        XCTAssertNoThrow(try plato.run(code))
+        
+        try await self.plato.run(code)
     }
     
 //    func testInfinity() async throws {
@@ -451,8 +452,10 @@ final class PlatoTests: XCTestCase {
 //        try await plato.run(code)
 //    }
     
-    func testMaxLoop() {
-        plato.config.loop = .max(10)
+    func testMaxLoop() async throws {
+        let max = 10
+        plato.config.loop = .max(max)
+        
         var code = """
             count = 0
             max = 20
@@ -461,13 +464,57 @@ final class PlatoTests: XCTestCase {
             }
             count
         """
-        XCTAssertThrowsError(try plato.run(code))
+        try await assertThrowsError(
+            try await plato.run(code),
+            message: "Plato has to throw an error where loop has a max of \(max) allowed loops."
+        )
+        
+        plato.clearCache()
+        
         code = """
             count = 0
             for index from 0 to 15 by 1 {
                 count += 1
             }
+            count
         """
-        XCTAssertThrowsError(try plato.run(code))
+        try await assertThrowsError(
+            try await plato.run(code),
+            message: "Plato has to throw an error where loop has a max of \(max) allowed loops."
+        )
+    }
+    
+    func testReadLineContinuation() async throws {
+        plato.config.readLine = .continuation
+        
+        let code = """
+            a = readLine()
+            a
+        """
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            print("resuming")
+            self.plato.readLineContinuation.resume(returning: Value(string: "Hello"))
+        }
+        try await plato.run(code)
+    }
+    
+    /// Expects the expression to throw an error to pass.
+    func assertThrowsError(_ expression: @autoclosure () async throws -> Void, message: String) async throws {
+        var pass = true
+        do {
+            try await expression()
+            pass = false
+        } catch {
+            
+        }
+        
+        if !pass {
+            throw PError.expectsThrow(message)
+        }
+    }
+    
+    enum PError: Error {
+        case expectsThrow(String)
     }
 }

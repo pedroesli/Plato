@@ -6,7 +6,9 @@
 //
 
 public struct DefaultPrintHandler {
-    static func handle(printValue: PrintValue) {
+    let printValue: PrintValue
+    
+    func handle() {
         print(printValue.formattedValue, terminator: printValue.terminator)
     }
 }
