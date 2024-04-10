@@ -15,7 +15,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public typealias PrintHandler = (_ printValue: PrintValue) -> Void
     
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
-    public var error: RuntimeError?
+    public var error: PlatoError?
     public var config = PlatoConfiguration()
     public var readLineContinuation: PlatoContinuation = PlatoContinuation()
     
@@ -705,7 +705,7 @@ extension PlatoInterpreter {
     public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
-        error = RuntimeError(
+        error = PlatoError(
             message: message,
             badCode: ctx.getText(),
             line: line,
@@ -896,6 +896,10 @@ extension PlatoInterpreter {
     /// Use this method to reset the interpreter without the need to reconfigure it. (Resets the cache and errors)
     public func reset() {
         error = nil
+        returnValue = .void
+        canUseReturn = false
+        canUseBreakContinue = false
+        
         clearCache()
     }
     
@@ -909,9 +913,5 @@ extension PlatoInterpreter {
         
         variables.push(globalVariables)
         functions.push(globalFunctions)
-        
-        returnValue = .void
-        canUseReturn = false
-        canUseBreakContinue = false
     }
 }

@@ -75,6 +75,6 @@ public class Plato {
     
     /// Stops the interpreter if it's running .
 //    public func stop() {
-//        
+//        let config = interpreter.config
 //    }
 }
