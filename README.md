@@ -43,6 +43,7 @@ plato.config.readLine = .continuation
 try await plato.run(code)
 
 plato.readLineContinuation.resume(returning: Value(string: "Plato is awesome!"))
+```
 
 # Basics
 
