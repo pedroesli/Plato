@@ -10,7 +10,7 @@ import Foundation
 ///     hello
 /// """
 /// let plato = Plato()
-/// try plato.run(code)
+/// try await plato.run(code)
 /// ```
 public class Plato {
     
@@ -53,6 +53,8 @@ public class Plato {
                 if let error = self.interpreter.error {
                     throw error
                 }
+                
+                self.interpreter.reset()
                 completion?(nil)
             } catch {
                 completion?(error)

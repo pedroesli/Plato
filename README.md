@@ -4,6 +4,46 @@
 
 Plato is an interpreter written in Swift and inspired by R. It is a high-level, [imperative](https://en.wikipedia.org/wiki/Imperative_programming), [structured programming](https://en.wikipedia.org/wiki/Structured_programming) and [gradually typed](https://en.wikipedia.org/wiki/Gradual_typing) language. Its goal is to make mathematical operations easier and to be able to develop iOS apps that can integrate a programming language without the need to compile it.
 
+# How to use
+
+```swift
+let code = """
+a = 25 + (2 ** 3)
+b = a - 5
+b
+"""
+let plato = Plato()
+try await plato.run(code)
+```
+
+You can also configure Plato
+
+```swift
+// Limit the run loop until the specified value (inclusive).
+plato.config.loop = .max(100)
+```
+
+Or use print handlers for custom printing
+
+```swift
+plato.config.setPrintHandler { printValue in
+    results.append(printValue.formattedValue)
+}
+```
+
+Or for reading user input when the readLine() function is used
+
+```swift
+let code = """
+a = readLine()
+a // Prints "Plato is awesome!"
+"""
+let plato = Plato()
+plato.config.readLine = .continuation
+try await plato.run(code)
+
+plato.readLineContinuation.resume(returning: Value(string: "Plato is awesome!"))
+
 # Basics
 
 To do simple calculations, just add the equations together and it will print the result without the need of using the `print` function.
