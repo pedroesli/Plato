@@ -25,6 +25,8 @@ public class Function {
     }
     
     public func handle(callParameters: [CallParameter], interpreter: PlatoInterpreter) throws -> Value? {
+        guard !interpreter.isHalting else { return nil }
+        
         interpreter.newScope()
         interpreter.canUseReturn = true
         for (index, parameter) in parameters.enumerated() {
@@ -35,6 +37,7 @@ public class Function {
         }
         interpreter.canUseReturn = false
         interpreter.popScope()
+        
         return interpreter.returnValue
     }
 }

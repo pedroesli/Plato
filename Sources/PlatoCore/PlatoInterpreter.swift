@@ -18,6 +18,13 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public var error: PlatoError?
     public var config = PlatoConfiguration()
     public var readLineContinuation: PlatoContinuation = PlatoContinuation()
+    public private(set) var isExecuting = false {
+        didSet {
+            guard !isExecuting else { return }
+            executionHandler?()
+        }
+    }
+    public private(set) var isHalting = false
     
     internal let variables = Stack<VariableScope>()
     internal let functions = Stack<FunctionScope>()
@@ -27,22 +34,28 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     private var globalVariables = VariableScope(parent: nil)
     private var globalFunctions = FunctionScope(parent: nil)
     private var canUseBreakContinue = false
+    private var executionHandler: (() -> Void)?
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
         variables.push(globalVariables)
         functions.push(globalFunctions)
         
-        return visit(statements)
+        isExecuting = true
+        let result = visit(statements)
+        isExecuting = false
+        return result
     }
     
     // MARK: Statements
     
     open override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
-        // Stop mechanism when an error occurs
         var result: Value?
         for statement in ctx.statement() {
+            guard !isHalting else { return .void }
+            
             result = visit(statement)
+            // Stop mechanism when an error occurs
             guard error == nil else { return nil }
             if result?.type == .command {
                 break
@@ -52,7 +65,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     
     open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
-        guard let expression = ctx.expression(),
+        guard !isHalting,
+              let expression = ctx.expression(),
               let result = visit(expression),
               result.type.isInRange(of: .array)
         else { return nil }
@@ -64,21 +78,21 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     open override func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> Value? {
         guard canUseBreakContinue else {
-            return error("'break' is only allowed inside a loop", at: ctx)
+            return error("The 'break' keyword is only allowed inside a loop", at: ctx)
         }
         return Value(command: .breakCommand)
     }
     
     open override func visitContinueStatement(_ ctx: PlatoParser.ContinueStatementContext) -> Value? {
         guard canUseBreakContinue else {
-            return error("'continue' is only allowed inside a loop", at: ctx)
+            return error("The 'continue' keyword is only allowed inside a loop", at: ctx)
         }
         return Value(command: .continueCommand)
     }
     
     open override func visitReturnStatement(_ ctx: PlatoParser.ReturnStatementContext) -> Value? {
         guard canUseReturn else {
-            return error("'return' is only allowed inside a function", at: ctx)
+            return error("The 'return' keyword is only allowed inside a function", at: ctx)
         }
         guard let expression = ctx.expression(), let value = visit(expression) else {
             returnValue = .void
@@ -232,12 +246,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
             
             if let statements = ctx.statements() {
+                guard !isHalting else { return .void }
+                
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
                 }
+                
+                // Create a new while scope
                 newScope()
                 result = visit(statements)
                 popScope()
+                
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand || result?.asCommand == .returnCommand {
                         result = Value.void
@@ -274,15 +293,20 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         var maxLoopCount = 0
         
         for value in values.asArray {
+            guard !isHalting else { return .void }
+            
             if !canUseBreakContinue {
                 canUseBreakContinue = true
             }
+            
+            // New for in scope
             newScope()
             variables.peek().createVariable(type: .any, value: value, forKey: id)
             if let statements = ctx.statements() {
                 result = visit(statements)
             }
             popScope()
+            
             if result?.type == .command {
                 if result?.asCommand == .breakCommand {
                     result = Value.void
@@ -327,7 +351,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
         
         guard let statements = ctx.statements() else {
-            return nil
+            return .void
         }
         
         let highestType = highestValueType(from.type, highestValueType(to.type, by.type))
@@ -337,13 +361,18 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         switch highestType {
         case .bool, .int:
             for index in stride(from: from.asInteger, to: to.asInteger, by: by.asInteger) {
+                guard !isHalting else { return .void }
+                
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
                 }
+                
+                // New FromToBy Scope
                 newScope()
                 variables.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
                 result = visit(statements)
                 popScope()
+                
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand {
                         result = Value.void
@@ -363,13 +392,17 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         case .float:
             for index in stride(from: from.asFloat, to: to.asFloat, by: by.asFloat) {
+                guard !isHalting else { return .void }
+                
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
                 }
+                
                 newScope()
                 variables.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
                 result = visit(statements)
                 popScope()
+                
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand {
                         result = Value.void
@@ -389,6 +422,8 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         case .double:
             for index in stride(from: from.asDouble, to: to.asDouble, by: by.asDouble) {
+                guard !isHalting else { return .void }
+                
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
                 }
@@ -893,12 +928,22 @@ extension PlatoInterpreter {
         }
     }
     
+    /// Halts the interpreter from executing and resets.
+    public func halt(_ completion: (() -> Void)? = nil) {
+        isHalting = true
+        executionHandler = {
+            self.reset()
+            completion?()
+        }
+    }
+    
     /// Use this method to reset the interpreter without the need to reconfigure it. (Resets the cache and errors)
     public func reset() {
         error = nil
         returnValue = .void
         canUseReturn = false
         canUseBreakContinue = false
+        isHalting = false
         
         clearCache()
     }

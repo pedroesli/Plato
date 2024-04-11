@@ -73,8 +73,15 @@ public class Plato {
         }
     }
     
-    /// Stops the interpreter if it's running .
-//    public func stop() {
-//        let config = interpreter.config
-//    }
+    /// Halts the interpreter from executing and resets.
+    public func halt(_ completion: (() -> Void)? = nil) {
+        interpreter.halt(completion)
+    }
+    
+    /// Halts the interpreter from executing and resets.
+    public func halt() async {
+        return await withCheckedContinuation { continuation in
+            interpreter.halt(continuation.resume)
+        }
+    }
 }

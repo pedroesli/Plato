@@ -436,21 +436,24 @@ final class PlatoTests: XCTestCase {
         try await self.plato.run(code)
     }
     
-//    func testInfinity() async throws {
-//        let plato = Plato()
-//        let code = """
-//            a = 0
-//            while true {
-//                a
-//                a += 1
-//            }
-//        """
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-//            print("reseting")
-//            plato.stop()
-//        })
-//        try await plato.run(code)
-//    }
+    func testInfinity() async throws {
+        let plato = Plato()
+        let code = """
+            a = 0
+            while true {
+                a
+                a += 1
+            }
+        """
+
+        Task {
+            try await Task.sleep(nanoseconds: UInt64(0.5 * 1_000_000_000))
+            print("Halting")
+            await plato.halt()
+            print("Done halting")
+        }
+        try await plato.run(code)
+    }
     
     func testMaxLoop() async throws {
         let max = 10
