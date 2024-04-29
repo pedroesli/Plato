@@ -104,23 +104,27 @@ print(61 < 3)
 
 # Data Types
 
-- float
-- int
 - boolean
+- int
+- float
+- double
 - string
 
 ```r
-# float
-15.5
-1_00.00_2 # is equivalent to 100.002
+# boolean
+true
+false
 
 # int
 42
 1_000_00 # is equivalent to 10000
 
-# boolean
-true
-false
+# float
+15.123456 
+1_00.00_2 # is equivalent to 100.002
+
+# double
+0.236819230486571
 
 # string
 "Hello, World!"
@@ -162,9 +166,10 @@ a: any = 25
 b: bool = true
 c: int = 1
 d: float = 1.5
-e: number = 25 # accepts float, int and bool
-e: string = "This is a string"
-f: array = [1, 2, 3]
+e: double = 1.1235632
+f: number = 25 # accepts float, int and bool
+g: string = "This is a string"
+h: array = [1, 2, 3]
 ```
 
 # Operators
@@ -231,8 +236,8 @@ if 2==3 {
 ```r
 i = 0
 while i < 10 { 
-    print(i)
-    i += 1
+	print(i)
+	i += 1
 }
 ```
 
@@ -351,12 +356,13 @@ random(0.1, 0.9)
 - Logarithmic functions: `log` , `log2`, `log10`
 - Trigonometric functions: `cos`, `sin`, `tan`
 - Inverse trigonometric functions: `acos`, `asin`, `atan`
+
 - Hyperbolic functions: `cosh`, `sinh`, `tanh`
 - Inverse hyperbolic functions: `acosh`, `asinh`, `atanh`
 - Power and root functions: `pow`, `sqrt`
 - Gamma functions: `gamma`, `logGamma`
 
-Examples:
+Example:
 
 ```r
 pow(2, 4) # 16
