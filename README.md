@@ -1,6 +1,8 @@
 # Plato
 
 ![PlatoLogo](/Resources/PlatoLogoWide.png)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fpedroesli%2FPlato%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/pedroesli/Plato)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fpedroesli%2FPlato%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/pedroesli/Plato)
 
 Plato is an interpreter written in Swift and inspired by R. It is a high-level, [imperative](https://en.wikipedia.org/wiki/Imperative_programming), [structured programming](https://en.wikipedia.org/wiki/Structured_programming) and [gradually typed](https://en.wikipedia.org/wiki/Gradual_typing) language. Its goal is to make mathematical operations easier and to be able to develop iOS apps that can integrate a programming language without the need to compile it.
 
@@ -26,6 +28,8 @@ plato.config.loop = .max(100)
 Or use print handlers for custom printing
 
 ```swift
+let results: [String] = []
+
 plato.config.setPrintHandler { printValue in
     results.append(printValue.formattedValue)
 }
