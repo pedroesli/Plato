@@ -7,10 +7,10 @@
 
 import Darwin
 
-public struct AtanFunc: FunctionResultHandling {
-    public static let name: String = "atan"
+struct AtanFunc: FunctionResultHandling {
+    static let name: String = "atan"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
         guard parameters.count == 1 else { throw FunctionError.extraArgument }
         

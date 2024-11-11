@@ -7,10 +7,10 @@
 
 import Darwin
 
-public struct Log10Func: FunctionResultHandling {
-    public static let name: String = "log10"
+struct Log10Func: FunctionResultHandling {
+    static let name: String = "log10"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
         guard parameters.count == 1 else { throw FunctionError.extraArgument }
         

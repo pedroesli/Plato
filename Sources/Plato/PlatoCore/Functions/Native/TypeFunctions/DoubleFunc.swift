@@ -5,11 +5,11 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
 //
 
-public struct DoubleFunc: FunctionResultHandling {
+struct DoubleFunc: FunctionResultHandling {
     
-    public static let name: String = "double"
+    static let name: String = "double"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "value") }
         guard parameters.count == 1 else { throw FunctionError.extraArgument }
         let value = parameters[0].value

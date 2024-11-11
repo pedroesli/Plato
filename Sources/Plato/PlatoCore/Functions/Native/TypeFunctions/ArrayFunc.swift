@@ -5,11 +5,11 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 15/02/24.
 //
 
-public struct ArrayFunc: FunctionResultHandling {
+struct ArrayFunc: FunctionResultHandling {
     
-    public static let name: String = "array"
+    static let name: String = "array"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "values") }
         if let result = try repeatingValue(parameters){
             return result

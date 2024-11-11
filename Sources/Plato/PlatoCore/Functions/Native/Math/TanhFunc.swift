@@ -7,10 +7,10 @@
 
 import Darwin
 
-public struct TanhFunc: FunctionResultHandling {
-    public static let name: String = "tanh"
+struct TanhFunc: FunctionResultHandling {
+    static let name: String = "tanh"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
         guard parameters.count == 1 else { throw FunctionError.extraArgument }
         

@@ -7,10 +7,10 @@
 
 import Darwin
 
-public struct CoshFunc: FunctionResultHandling {
-    public static let name: String = "cosh"
+struct CoshFunc: FunctionResultHandling {
+    static let name: String = "cosh"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
         guard parameters.count == 1 else { throw FunctionError.extraArgument }
         

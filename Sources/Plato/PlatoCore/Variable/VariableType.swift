@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 12/02/24.
 //
 
-public enum VariableType: String, Sendable {
+enum VariableType: String, Sendable {
     case any
     case bool
     case int
@@ -15,11 +15,11 @@ public enum VariableType: String, Sendable {
     case string
     case array
     
-    public var text: String {
+    var text: String {
         self.rawValue
     }
     
-    public func isCompatible(with valueType: ValueType) -> Bool {
+    func isCompatible(with valueType: ValueType) -> Bool {
         switch self {
         case .any:
             valueType.isInRange(of: .array)
@@ -41,7 +41,7 @@ public enum VariableType: String, Sendable {
     }
     
     /// Return true if ValueType is the of the same type or compatible with any, otherwise return false. Used in function parameters.
-    public func isStrictCompatible(with valueType: ValueType) -> Bool {
+    func isStrictCompatible(with valueType: ValueType) -> Bool {
         switch self {
         case .any:
             valueType.isInRange(of: .array)

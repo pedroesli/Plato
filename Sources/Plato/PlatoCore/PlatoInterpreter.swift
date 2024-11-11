@@ -10,7 +10,7 @@
 import Antlr4
 import Foundation
 
-public class PlatoInterpreter: PlatoBaseVisitor<Value> {
+class PlatoInterpreter: PlatoBaseVisitor<Value> {
     public var configuration: PlatoConfiguration
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: PlatoError?

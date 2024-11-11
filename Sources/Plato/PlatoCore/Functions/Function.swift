@@ -7,24 +7,24 @@
 
 import Foundation
 
-public class Function {
+class Function {
     private let parameters: [Parameter]
     private let ctx: PlatoParser.FunctionDeclarationContext
     
-    public var parametersCount: Int {
+    var parametersCount: Int {
         return parameters.count
     }
     
-    public init(parameters: [Parameter], ctx: PlatoParser.FunctionDeclarationContext) {
+    init(parameters: [Parameter], ctx: PlatoParser.FunctionDeclarationContext) {
         self.parameters = parameters
         self.ctx = ctx
     }
     
-    public func compareParameters(with callParameters: [CallParameter]) -> Bool {
+    func compareParameters(with callParameters: [CallParameter]) -> Bool {
         return parameters.elementsEqual(callParameters, by: { $0.compare(with: $1) })
     }
     
-    public func handle(callParameters: [CallParameter], interpreter: PlatoInterpreter) throws -> Value? {
+    func handle(callParameters: [CallParameter], interpreter: PlatoInterpreter) throws -> Value? {
         guard !interpreter.isHalting else { return nil }
         
         interpreter.newScope()
@@ -43,11 +43,11 @@ public class Function {
 }
 
 extension Function: Hashable {
-    public static func == (lhs: Function, rhs: Function) -> Bool {
+    static func == (lhs: Function, rhs: Function) -> Bool {
         lhs.parameters == rhs.parameters
     }
     
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(parameters)
     }
 }

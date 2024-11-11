@@ -7,14 +7,16 @@
 
 import Foundation
 
-public enum FunctionError: Error, LocalizedError {
+enum FunctionError: Error {
     case notFound(funcName: String)
     case missingArgument(parameter: String)
     case typeError(parameterType: ValueType, expectedType: VariableType)
     case noMatch
     case extraArgument
+}
 
-    public var errorDescription: String? {
+extension FunctionError: LocalizedError {
+    var errorDescription: String? {
         switch self {
         case .notFound(let funcName):
             return "Cannot find function '\(funcName)'"

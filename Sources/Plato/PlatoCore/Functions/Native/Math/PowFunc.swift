@@ -5,10 +5,10 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 18/03/24.
 //
 
-public struct PowFunc: FunctionResultHandling {
-    public static let name: String = "pow"
+struct PowFunc: FunctionResultHandling {
+    static let name: String = "pow"
     
-    public static func handle(parameters: [CallParameter]) throws -> Value {
+    static func handle(parameters: [CallParameter]) throws -> Value {
         guard !parameters.isEmpty else { throw FunctionError.missingArgument(parameter: "x") }
         guard parameters.count > 1 else { throw FunctionError.missingArgument(parameter: "y") }
         guard parameters.count == 2 else { throw FunctionError.extraArgument }

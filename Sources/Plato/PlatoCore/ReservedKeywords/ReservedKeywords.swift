@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
 //
 
-public enum ReservedKeywords: String, CaseIterable {
+enum ReservedKeywords: String, CaseIterable {
     case elseKey        = "else"
     case whileKey       = "while"
     case forKey         = "for"
