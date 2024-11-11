@@ -23,4 +23,8 @@ enum ReservedKeywords: String, CaseIterable {
     case breakKey       = "break"
     case continueKey    = "continue"
     case atKey          = "at"
+    
+    func getKeyword() -> String {
+        self.rawValue
+    }
 }

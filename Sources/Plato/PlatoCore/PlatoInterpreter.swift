@@ -897,7 +897,7 @@ extension PlatoInterpreter {
     }
     
     public func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
-        if !IDValidator.isValid(id) {
+        guard ReservedKeywordValidator(keyword: id).isValid() else {
             return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
         }
         return nil
