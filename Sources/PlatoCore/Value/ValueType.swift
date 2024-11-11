@@ -6,7 +6,7 @@
 //
 
 /// The atomic type of a value
-public enum ValueType: Int {
+public enum ValueType: Int, Sendable {
     case bool
     case int
     case float

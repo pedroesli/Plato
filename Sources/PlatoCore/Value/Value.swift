@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class Value {
+public class Value {
     public let type: ValueType
     private var value: Any
     
@@ -121,8 +121,8 @@ public final class Value {
     }
 }
 
-public extension Value {
-    static let void = Value(type: .void, value: ())
+extension Value {
+    nonisolated(unsafe) static let void = Value(type: .void, value: ())
 }
 
 extension Value: CustomStringConvertible {
@@ -131,6 +131,7 @@ extension Value: CustomStringConvertible {
     }
 }
 
+// TODO: Move this to the test folder
 internal extension Value {
     
     // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.

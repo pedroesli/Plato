@@ -9,7 +9,7 @@ struct LessThanEqualOperation: BaseOperation {
     let left: Value
     let right: Value
     let order: OrderType
-    static var compatibleMatrix: [ValueType : [ValueType]] = [
+    static let compatibleMatrix: [ValueType : [ValueType]] = [
         .void    : [],
         .bool    : [.bool],
         .int     : [.int, .bool],

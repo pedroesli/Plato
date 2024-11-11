@@ -8,7 +8,7 @@
 import Foundation
 
 /// Reference type array for values
-public final class ArrayValue: Sequence {
+public class ArrayValue: Sequence {
     private var values: [Value]
     
     public init() {
@@ -63,6 +63,7 @@ extension ArrayValue: CustomStringConvertible {
     }
 }
 
+// TODO: Move to test folder
 internal extension ArrayValue {
     // More strict equality used for test purposes. If you need to do equality checks for code, use the EqualOperation instead.
     static func == (lhs: ArrayValue, rhs: ArrayValue) -> Bool {

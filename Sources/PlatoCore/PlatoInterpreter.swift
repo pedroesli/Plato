@@ -10,14 +10,12 @@
 import Antlr4
 import Foundation
 
-open class PlatoInterpreter: PlatoBaseVisitor<Value> {
-    
-    public typealias PrintHandler = (_ printValue: PrintValue) -> Void
-    
+public class PlatoInterpreter: PlatoBaseVisitor<Value> {
+    public var configuration: PlatoConfiguration
     public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
     public var error: PlatoError?
-    public var config = PlatoConfiguration()
-    public var readLineContinuation: PlatoContinuation = PlatoContinuation()
+    public var handlers = PlatoHandlers()
+//    public var readLineContinuation: PlatoContinuation = PlatoContinuation()
     public private(set) var isExecuting = false {
         didSet {
             guard !isExecuting else { return }
@@ -26,15 +24,21 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     public private(set) var isHalting = false
     
-    internal let variables = Stack<VariableScope>()
-    internal let functions = Stack<FunctionScope>()
-    internal var returnValue: Value = .void
-    internal var canUseReturn = false
+    let variables = Stack<VariableScope>()
+    let functions = Stack<FunctionScope>()
+    var returnValue: Value = .void
+    var canUseReturn = false
     
     private var globalVariables = VariableScope(parent: nil)
     private var globalFunctions = FunctionScope(parent: nil)
     private var canUseBreakContinue = false
     private var executionHandler: (() -> Void)?
+
+    public init(configuration: PlatoConfiguration) {
+        self.configuration = configuration
+    }
+    
+    // MARK: Visitors
     
     open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
@@ -238,7 +242,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         while condition.asBool {
             // Check the max allowed loop count
-            if let maxLoop = config.loop.value {
+            if let maxLoop = configuration.loop.value {
                 guard maxLoopCount <= maxLoop else {
                     return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
                 }
@@ -317,7 +321,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
             
             // Check the max loop count allowed
-            if let maxLoop = config.loop.value {
+            if let maxLoop = configuration.loop.value {
                 guard maxLoopCount <= maxLoop else {
                     return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
                 }
@@ -383,7 +387,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 }
                 
                 // Check the max loop count allowed
-                if let maxLoop = config.loop.value {
+                if let maxLoop = configuration.loop.value {
                     guard maxLoopCount <= maxLoop else {
                         return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
                     }
@@ -413,7 +417,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 }
                 
                 // Check the max loop count allowed
-                if let maxLoop = config.loop.value {
+                if let maxLoop = configuration.loop.value {
                     guard maxLoopCount <= maxLoop else {
                         return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
                     }
@@ -441,7 +445,7 @@ open class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 }
                 
                 // Check the max loop count allowed
-                if let maxLoop = config.loop.value {
+                if let maxLoop = configuration.loop.value {
                     guard maxLoopCount <= maxLoop else {
                         return error("Max loop count has reached! Can only loop \(maxLoop) times.", at: ctx)
                     }
@@ -759,8 +763,8 @@ extension PlatoInterpreter {
     
     /// Use this method to handle how to print the values
     internal func handlePrint(_ printValue: PrintValue) {
-        if let userPrintHandler = self.config.printHandler {
-            userPrintHandler(printValue)
+        if let userPrintFunctionHandler = handlers.printFunctionHandler {
+            userPrintFunctionHandler(printValue)
             return
         }
         
@@ -804,24 +808,25 @@ extension PlatoInterpreter {
 // MARK: Read Line Handing
 extension PlatoInterpreter {
     private func readLineFunction(parameters: [CallParameter], ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
-        do {
-            switch config.readLine {
-            case .default:
-                return try ReadLineFunc(parameters: parameters).handle()
-            case .continuation:
-                readLineContinuation.wait()
-                switch readLineContinuation.result {
-                case .success(let value):
-                    return value
-                case .failure(let error):
-                    return self.error(String(describing: error), at: ctx)
-                case .none:
-                    fatalError("readLineContinuation result can't be nil")
-                }
-            }
-        } catch {
-            return self.error(error.localizedDescription, at: ctx)
-        }
+        return nil
+//        do {
+//            switch config.readLine {
+//            case .default:
+//                return try ReadLineFunc(parameters: parameters).handle()
+//            case .continuation:
+//                readLineContinuation.wait()
+//                switch readLineContinuation.result {
+//                case .success(let value):
+//                    return value
+//                case .failure(let error):
+//                    return self.error(String(describing: error), at: ctx)
+//                case .none:
+//                    fatalError("readLineContinuation result can't be nil")
+//                }
+//            }
+//        } catch {
+//            return self.error(error.localizedDescription, at: ctx)
+//        }
     }
 }
 

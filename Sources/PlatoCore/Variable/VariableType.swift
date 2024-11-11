@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 12/02/24.
 //
 
-public enum VariableType: String {
+public enum VariableType: String, Sendable {
     case any
     case bool
     case int

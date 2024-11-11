@@ -5,23 +5,16 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 08/04/24.
 //
 
-public struct PlatoConfiguration {
-    public typealias PrintHandler = (_ printValue: PrintValue) -> Void
-    
+public class PlatoConfiguration {
     /// Set how loops should run
-    public var loop: Looping = .indefinitely
-    public var readLine: ReadLine = .default
-    internal var printHandler: PrintHandler?
+    let loop: Looping
     
-    public init() { }
-    
-    public init(printHandler: PrintHandler?) {
-        self.printHandler = printHandler
-    }
-    
-    /// Set a handler to handle custom printing of values.
-    public mutating func setPrintHandler(_ handler: @escaping PrintHandler) {
-        self.printHandler = handler
+    /// Configure plato language.
+    ///
+    /// - Parameters:
+    ///   - loop: The amount of times a plato loop can occur.
+    public init(loop: Looping = .indefinitely) {
+        self.loop = loop
     }
 }
 
@@ -32,7 +25,7 @@ extension PlatoConfiguration {
         /// Limit the run loop until the specified value (inclusive).
         case max(Int)
         
-        internal var value: Int? {
+        var value: Int? {
             switch self {
             case .indefinitely:
                 return nil
@@ -42,10 +35,11 @@ extension PlatoConfiguration {
         }
     }
     
-    public enum ReadLine {
-        /// Use the default readLine() method to get user input.
-        case `default`
-        /// Use the continuation method to return a user input.
-        case continuation
-    }
+    // TODO: See if this should be used
+//    public enum ReadLine {
+//        /// Use the default readLine() method to get user input.
+//        case `default`
+//        /// Use the continuation method to return a user input.
+//        case continuation
+//    }
 }
