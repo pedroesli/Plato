@@ -6,7 +6,6 @@
 //
 
 import Plato
-import PlatoCore
 import Antlr4
 
 //class TestablePlato {

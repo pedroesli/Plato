@@ -1,4 +1,3 @@
-import PlatoCore
 import Antlr4
 import Foundation
 
@@ -27,7 +26,7 @@ public class Plato {
     }
     
     public func setPrintFunctionHandler(_ handler: ((_ printValue: PrintValue) -> Void)?) {
-        interpreter.handlers.printFunctionHandler = handler 
+        interpreter.handlers.printFunctionHandler = handler
     }
     
     /// Executes the provided Plato code asynchronously with an optional completion closure for when the code is done executing.

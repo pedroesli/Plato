@@ -6,7 +6,7 @@
 //
 
 
-@testable import PlatoCore
+@testable import Plato
 
 class TestablePlatoInterpreter: PlatoInterpreter {
     

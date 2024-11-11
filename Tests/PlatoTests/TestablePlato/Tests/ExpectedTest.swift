@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 19/03/24.
 //
 
-@testable import PlatoCore
+@testable import Plato
 
 struct ExpectedTest: TestingMethod {
     let value: Value
