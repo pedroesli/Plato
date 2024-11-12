@@ -8,8 +8,8 @@
 struct ReservedKeywordValidator {
     let keyword: String
     
-    func isValid() -> Bool {
-        return ReservedKeywords.allCases.first(where: { $0.getKeyword() == keyword }) == nil
+    func isReserved() -> Bool {
+        return ReservedKeywords(rawValue: keyword) != nil
     }
 }
 
