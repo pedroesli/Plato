@@ -11,18 +11,18 @@ import Antlr4
 import Foundation
 
 class PlatoInterpreter: PlatoBaseVisitor<Value> {
-    public var configuration: PlatoConfiguration
-    public var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
-    public var error: PlatoError?
-    public var handlers = PlatoHandlers()
+    var configuration: PlatoConfiguration
+    var nativeFunctionHandler: NativeFunctionHandling = DefaultNativeFunctionHandler()
+    var error: PlatoError?
+    var handlers = PlatoHandlers()
 //    public var readLineContinuation: PlatoContinuation = PlatoContinuation()
-    public private(set) var isExecuting = false {
+    private(set) var isExecuting = false {
         didSet {
             guard !isExecuting else { return }
             executionHandler?()
         }
     }
-    public private(set) var isHalting = false
+    private(set) var isHalting = false
     
     let variables = Stack<VariableScope>()
     let functions = Stack<FunctionScope>()
@@ -34,13 +34,13 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     private var canUseBreakContinue = false
     private var executionHandler: (() -> Void)?
 
-    public init(configuration: PlatoConfiguration) {
+    init(configuration: PlatoConfiguration) {
         self.configuration = configuration
     }
     
     // MARK: Visitors
     
-    open override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
+    override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
         variables.push(globalVariables)
         functions.push(globalFunctions)
@@ -53,7 +53,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     // MARK: Statements
     
-    open override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
+     override func visitStatements(_ ctx: PlatoParser.StatementsContext) -> Value? {
         var result: Value?
         for statement in ctx.statement() {
             guard !isHalting else { return .void }
@@ -68,7 +68,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return result
     }
     
-    open override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
+     override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
         guard !isHalting,
               let expression = ctx.expression(),
               let result = visit(expression),
@@ -80,21 +80,21 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return .void
     }
     
-    open override func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> Value? {
+     override func visitBreakStatement(_ ctx: PlatoParser.BreakStatementContext) -> Value? {
         guard canUseBreakContinue else {
             return error("The 'break' keyword is only allowed inside a loop", at: ctx)
         }
         return Value(command: .breakCommand)
     }
     
-    open override func visitContinueStatement(_ ctx: PlatoParser.ContinueStatementContext) -> Value? {
+     override func visitContinueStatement(_ ctx: PlatoParser.ContinueStatementContext) -> Value? {
         guard canUseBreakContinue else {
             return error("The 'continue' keyword is only allowed inside a loop", at: ctx)
         }
         return Value(command: .continueCommand)
     }
     
-    open override func visitReturnStatement(_ ctx: PlatoParser.ReturnStatementContext) -> Value? {
+     override func visitReturnStatement(_ ctx: PlatoParser.ReturnStatementContext) -> Value? {
         guard canUseReturn else {
             return error("The 'return' keyword is only allowed inside a function", at: ctx)
         }
@@ -106,7 +106,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return Value(command: .returnCommand)
     }
     
-    open override func visitVariableAssignmentStatement(_ ctx: PlatoParser.VariableAssignmentStatementContext) -> Value? {
+     override func visitVariableAssignmentStatement(_ ctx: PlatoParser.VariableAssignmentStatementContext) -> Value? {
         guard let value = visit(ctx.expression()!) else { return nil }
         let id = ctx.ID()!.getText()
 
@@ -127,7 +127,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return value
     }
     
-    open override func visitVariableTypeAssignmentStatement(_ ctx: PlatoParser.VariableTypeAssignmentStatementContext) -> Value? {
+     override func visitVariableTypeAssignmentStatement(_ ctx: PlatoParser.VariableTypeAssignmentStatementContext) -> Value? {
         guard let value = visit(ctx.expression()!) else { return nil }
         let id = ctx.ID()!.getText()
         
@@ -147,7 +147,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return value
     }
     
-    open override func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> Value? {
+     override func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
         guard let variable = variables.peek().retrieve(forKey: id) else {
@@ -187,7 +187,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitSelectionStatement(_ ctx: PlatoParser.SelectionStatementContext) -> Value? {
+     override func visitSelectionStatement(_ ctx: PlatoParser.SelectionStatementContext) -> Value? {
         guard let ifCondition = visit(ctx.expression()!) else { return nil }
         
         guard ifCondition.type.isNumber else {
@@ -210,7 +210,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return Value.void
     }
     
-    open override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
+     override func visitElseIfStatement(_ ctx: PlatoParser.ElseIfStatementContext) -> Value? {
         guard let ifCondition = visit(ctx.expression()!) else { return nil }
         
         guard ifCondition.type.isNumber else {
@@ -220,13 +220,13 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return ifOperation(ifCondition, statements: ctx.statements())
     }
     
-    open override func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> Value? {
+     override func visitElseStatement(_ ctx: PlatoParser.ElseStatementContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
         return visit(statements)
     }
     
     // MARK: Loops
-    open override func visitWhileStatement(_ ctx: PlatoParser.WhileStatementContext) -> Value? {
+     override func visitWhileStatement(_ ctx: PlatoParser.WhileStatementContext) -> Value? {
         guard var condition = visit(ctx.expression()!) else { return nil }
         
         guard condition.type.isNumber else {
@@ -281,7 +281,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return result
     }
     
-    open override func visitForInStatement(_ ctx: PlatoParser.ForInStatementContext) -> Value? {
+     override func visitForInStatement(_ ctx: PlatoParser.ForInStatementContext) -> Value? {
         guard let values = visit(ctx.expression()!) else { return nil }
         
         guard values.type == .array || values.type == .string else {
@@ -333,7 +333,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return result
     }
     
-    open override func visitForFromToByStatement(_ ctx: PlatoParser.ForFromToByStatementContext) -> Value? {
+     override func visitForFromToByStatement(_ ctx: PlatoParser.ForFromToByStatementContext) -> Value? {
         guard let from = visit(ctx.expression(0)!),
               let to = visit(ctx.expression(1)!),
               let by = visit(ctx.expression(2)!)
@@ -460,7 +460,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return result
     }
     
-    open override func visitFunctionDeclaration(_ ctx: PlatoParser.FunctionDeclarationContext) -> Value? {
+     override func visitFunctionDeclaration(_ ctx: PlatoParser.FunctionDeclarationContext) -> Value? {
         let name = ctx.ID()!.getText()
         var parameters: [Parameter] = []
         
@@ -486,14 +486,14 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     // MARK: Expressions
     
-    open override func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+     override func visitSubscriptExpression(_ ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
         guard let firstValue = visit(ctx.expression(0)!) else {
             return unexpectedError(at: ctx)
         }
         return getSubscriptValue(from: firstValue, ctx: ctx)
     }
     
-    open override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
+     override func visitExponentExpression(_ ctx: PlatoParser.ExponentExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation = ExponentOperation(left, right)
@@ -505,7 +505,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> Value? {
+     override func visitUnaryExpression(_ ctx: PlatoParser.UnaryExpressionContext) -> Value? {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
@@ -522,7 +522,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return value
     }
     
-    open override func visitNotExpression(_ ctx: PlatoParser.NotExpressionContext) -> Value? {
+     override func visitNotExpression(_ ctx: PlatoParser.NotExpressionContext) -> Value? {
         guard let expression = ctx.expression(),
               let value = visit(expression) else { return nil }
         
@@ -533,7 +533,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return Value(bool: !value.asBool)
     }
     
-    open override func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> Value? {
+     override func visitMulExpression(_ ctx: PlatoParser.MulExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: BaseOperation!
@@ -557,7 +557,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
+     override func visitAddExpression(_ ctx: PlatoParser.AddExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: BaseOperation = if ctx.op.getType() == PlatoParser.Tokens.MINUS {
@@ -573,7 +573,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitCompareExpression(_ ctx: PlatoParser.CompareExpressionContext) -> Value? {
+     override func visitCompareExpression(_ ctx: PlatoParser.CompareExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: BaseOperation!
@@ -597,7 +597,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> Value? {
+     override func visitEqualityExpression(_ ctx: PlatoParser.EqualityExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation: BaseOperation = if ctx.op.getType() == PlatoParser.Tokens.EQUAL {
@@ -613,7 +613,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
+     override func visitAndExpression(_ ctx: PlatoParser.AndExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation = AndOperation(left, right)
@@ -625,7 +625,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
+     override func visitOrExpression(_ ctx: PlatoParser.OrExpressionContext) -> Value? {
         guard let (left, right) = getExpressionValues(ctx) else { return nil }
         
         let operation = OrOperation(left, right)
@@ -637,7 +637,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
+     override func visitFunctionCallExpression(_ ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
         guard let functionCall = ctx.functionCall() else { return nil }
         let functionName = functionCall.ID()!.getText()
         var parameterList: [CallParameter] = []
@@ -685,12 +685,12 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         }
     }
     
-    open override func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> Value? {
+     override func visitParenthesesExpression(_ ctx: PlatoParser.ParenthesesExpressionContext) -> Value? {
         return visit(ctx.expression()!)
     }
     
     // MARK: Elements
-    open override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
+     override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
         guard let variable = variables.peek().retrieve(forKey: id) else {
@@ -700,31 +700,31 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         return variable.value
     }
     
-    open override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
+     override func visitIntElement(_ ctx: PlatoParser.IntElementContext) -> Value? {
         return Value(int: Int(ctx.INT()!.getText().replacingOccurrences(of: "_", with: ""))!)
     }
     
-    open override func visitDoubleElement(_ ctx: PlatoParser.DoubleElementContext) -> Value? {
+     override func visitDoubleElement(_ ctx: PlatoParser.DoubleElementContext) -> Value? {
         return Value(double: Double(ctx.DOUBLE()!.getText())!)
     }
     
-    open override func visitTrueElement(_ ctx: PlatoParser.TrueElementContext) -> Value? {
+     override func visitTrueElement(_ ctx: PlatoParser.TrueElementContext) -> Value? {
         return Value(bool: true)
     }
     
-    open override func visitFalseElement(_ ctx: PlatoParser.FalseElementContext) -> Value? {
+     override func visitFalseElement(_ ctx: PlatoParser.FalseElementContext) -> Value? {
         return Value(bool: false)
     }
     
-    open override func visitStringElement(_ ctx: PlatoParser.StringElementContext) -> Value? {
+     override func visitStringElement(_ ctx: PlatoParser.StringElementContext) -> Value? {
         return Value(string: String(ctx.STRING()!.getText().dropFirst().dropLast()))
     }
     
-    open override func visitArrayElement(_ ctx: PlatoParser.ArrayElementContext) -> Value? {
+     override func visitArrayElement(_ ctx: PlatoParser.ArrayElementContext) -> Value? {
         return visit(ctx.array()!)
     }
     
-    open override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
+     override func visitArray(_ ctx: PlatoParser.ArrayContext) -> Value? {
         let values = ArrayValue()
         guard let expressions = ctx.expressionList()?.expression() else { return Value(array: ArrayValue()) }
         for expression in expressions {
@@ -741,7 +741,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
 // MARK: Error Handling
 extension PlatoInterpreter {
     
-    public func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
+    func error(_ message: String, at ctx: ParserRuleContext) -> Value? {
         let line = ctx.getStart()?.getLine() ?? 0
         let column = ctx.getStart()?.getCharPositionInLine() ?? 0
         error = PlatoError(
@@ -753,7 +753,7 @@ extension PlatoInterpreter {
         return nil
     }
     
-    public func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> Value? {
+    func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> Value? {
         return error("Unexpected error! \(message ?? "")", at: ctx)
     }
 }
@@ -762,7 +762,7 @@ extension PlatoInterpreter {
 extension PlatoInterpreter {
     
     /// Use this method to handle how to print the values
-    internal func handlePrint(_ printValue: PrintValue) {
+    func handlePrint(_ printValue: PrintValue) {
         if let userPrintFunctionHandler = handlers.printFunctionHandler {
             userPrintFunctionHandler(printValue)
             return
@@ -771,7 +771,7 @@ extension PlatoInterpreter {
         DefaultPrintHandler(printValue: printValue).handle()
     }
     
-    internal func handleExpressionStatementPrint(line: Int, value: Value) {
+    func handleExpressionStatementPrint(line: Int, value: Value) {
         handlePrint(
             PrintValue(
                 line: line,
@@ -783,7 +783,7 @@ extension PlatoInterpreter {
         )
     }
     
-    private func printFunction(parameters: [CallParameter], ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
+    func printFunction(parameters: [CallParameter], ctx: PlatoParser.FunctionCallExpressionContext) -> Value? {
         do {
             var printFunc = PrintFunc(parameters: parameters)
             let formattedValue = try printFunc.getFormattedValue()
@@ -833,7 +833,7 @@ extension PlatoInterpreter {
 // MARK: Helper Methods
 extension PlatoInterpreter {
     
-    public func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
+    func getSubscriptValue(from value: Value, ctx: PlatoParser.SubscriptExpressionContext) -> Value? {
         var currentValue = value
         for index in 1..<ctx.expression().count{
             guard currentValue.type == .array else {
@@ -853,7 +853,7 @@ extension PlatoInterpreter {
         return currentValue
     }
     
-    public func minusUnaryValue(_ value: Value) -> Value? {
+    func minusUnaryValue(_ value: Value) -> Value? {
         switch value.type {
         case .bool, .int:
             return Value(int: -value.asInteger)
@@ -867,7 +867,7 @@ extension PlatoInterpreter {
     }
     
     /// Get the left and right expression
-    public func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
+    func getExpressionValues(_ ctx: PlatoParser.ExpressionContext) -> (Value, Value)? {
         guard let leftExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 0),
               let rightExp = ctx.getRuleContext(PlatoParser.ExpressionContext.self, 1),
               let left = visit(leftExp),
@@ -875,17 +875,17 @@ extension PlatoInterpreter {
         return (left, right)
     }
     
-    public func newScope() {
+    func newScope() {
         variables.push(VariableScope(parent: variables.peek()))
         functions.push(FunctionScope(parent: functions.peek()))
     }
     
-    public func popScope() {
+    func popScope() {
         variables.pop()
         functions.pop()
     }
     
-    public func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
+    func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
         if condition.asBool, let statements {
             let value: Value?
             newScope()
@@ -896,19 +896,19 @@ extension PlatoInterpreter {
         return nil
     }
     
-    public func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
+    func validateId(_ id: String, at ctx: ParserRuleContext) -> Value? {
         guard !ReservedKeywordValidator(keyword: id).isReserved() else {
             return error("Keyword '\(id)' cannot be used as an identifier", at: ctx)
         }
         return nil
     }
     
-    public func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
+    func highestValueType(_ left: ValueType, _ right: ValueType) -> ValueType {
         return left.isHigherOrder(than: right) ? left : right
     }
     
     /// Gets the variable type from a 'IdTypeStatement'. Returns nil if the type doesn't exist
-    public func getParameterType(_ idTypeStatement: PlatoParser.IdTypeStatementContext?) -> VariableType? {
+    func getParameterType(_ idTypeStatement: PlatoParser.IdTypeStatementContext?) -> VariableType? {
         guard let idTypeStatement else { return .any }
         
         switch idTypeStatement.ID()!.getText() {
@@ -934,7 +934,7 @@ extension PlatoInterpreter {
     }
     
     /// Halts the interpreter from executing and resets.
-    public func halt(_ completion: (() -> Void)? = nil) {
+    func halt(_ completion: (() -> Void)? = nil) {
         isHalting = true
         executionHandler = {
             self.reset()
@@ -943,7 +943,7 @@ extension PlatoInterpreter {
     }
     
     /// Use this method to reset the interpreter without the need to reconfigure it. (Resets the cache and errors)
-    public func reset() {
+    func reset() {
         error = nil
         returnValue = .void
         canUseReturn = false
@@ -954,7 +954,7 @@ extension PlatoInterpreter {
     }
     
     /// Clears the interpreters cache. (Use 'reset()' method if you want to reset the interpreter)
-    public func clearCache() {
+    func clearCache() {
         variables.clear()
         functions.clear()
         
