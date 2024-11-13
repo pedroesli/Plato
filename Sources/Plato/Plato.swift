@@ -14,14 +14,12 @@ import Foundation
 public class Plato {
     
     /// Configure Plato interpreter.
-    public var configuration: PlatoConfiguration {
-        interpreter.configuration
-    }
-    
+    public var configuration: PlatoConfiguration
     private let interpreter: PlatoInterpreter
     
     /// Initiate a new Plato executer.
     public init(configuration: PlatoConfiguration = PlatoConfiguration()) {
+        self.configuration = configuration
         self.interpreter = PlatoInterpreter(configuration: configuration)
     }
     
