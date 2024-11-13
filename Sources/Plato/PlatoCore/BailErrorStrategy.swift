@@ -7,20 +7,20 @@
 
 import Antlr4
 
-public class BailErrorStrategy: ANTLRErrorStrategy {
-    public func reset(_ recognizer: Antlr4.Parser) {
+class BailErrorStrategy: ANTLRErrorStrategy {
+    func reset(_ recognizer: Antlr4.Parser) {
         
     }
     
-    public func inErrorRecoveryMode(_ recognizer: Antlr4.Parser) -> Bool {
+    func inErrorRecoveryMode(_ recognizer: Antlr4.Parser) -> Bool {
         return false
     }
     
-    public func reportMatch(_ recognizer: Antlr4.Parser) {
+    func reportMatch(_ recognizer: Antlr4.Parser) {
         
     }
     
-    public func reportError(_ recognizer: Antlr4.Parser, _ e: Antlr4.RecognitionException) {
+    func reportError(_ recognizer: Antlr4.Parser, _ e: Antlr4.RecognitionException) {
         if let nvae = e as? NoViableAltException {
             reportNoViableAlternative(recognizer, nvae)
         }
@@ -40,7 +40,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     // in a generic RuntimeException so it is not caught by the
     // rule function catches.  Exception e is the "cause" of the
     // RuntimeException.
-    public func recover(_ recognizer: Parser, _ e: RecognitionException) throws {
+    func recover(_ recognizer: Parser, _ e: RecognitionException) throws {
         let message = e.message ?? "Bail Error"
         let line = e.getOffendingToken().getStartIndex()
         let column = e.getOffendingToken().getCharPositionInLine()
@@ -49,7 +49,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     
     // Make sure we don't attempt to recover inline; if the parser
     //  successfully recovers, it won't throw an exception.
-    public func recoverInline(_ recognizer: Parser) throws -> Token {
+    func recoverInline(_ recognizer: Parser) throws -> Token {
         let message = "Inline recover fail"
         let line = try recognizer.getCurrentToken().getLine()
         let column = try recognizer.getCurrentToken().getCharPositionInLine()
@@ -57,7 +57,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     }
     
     // Make sure we don't attempt to recover from problems in subrules.
-    public func sync(_ recognizer: Parser) throws {
+    func sync(_ recognizer: Parser) throws {
         
     }
     
@@ -70,7 +70,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     /// - parameter recognizer: the parser instance
     /// - parameter e: the recognition exception
     ///
-    open func reportNoViableAlternative(_ recognizer: Parser, _ e: NoViableAltException) {
+    func reportNoViableAlternative(_ recognizer: Parser, _ e: NoViableAltException) {
         let tokens = getTokenStream(recognizer)
         var input: String
         if e.getStartToken().getType() == CommonToken.EOF {
@@ -97,7 +97,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     /// - parameter recognizer: the parser instance
     /// - parameter e: the recognition exception
     ///
-    open func reportInputMismatch(_ recognizer: Parser, _ e: InputMismatchException) {
+    func reportInputMismatch(_ recognizer: Parser, _ e: InputMismatchException) {
         let tok = getTokenErrorDisplay(e.getOffendingToken())
         let expected = e.getExpectedTokens()?.toString(recognizer.getVocabulary()) ?? "<missing>"
         let msg = "mismatched input \(tok) expecting \(expected)"
@@ -113,7 +113,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     /// - parameter recognizer: the parser instance
     /// - parameter e: the recognition exception
     ///
-    open func reportFailedPredicate(_ recognizer: Parser, _ e: FailedPredicateException) {
+    func reportFailedPredicate(_ recognizer: Parser, _ e: FailedPredicateException) {
         let ruleName = recognizer.getRuleNames()[recognizer._ctx!.getRuleIndex()]
         let msg = "rule \(ruleName) \(e.message!)"
         recognizer.notifyErrorListeners(e.getOffendingToken(), msg, e)
@@ -139,11 +139,11 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     /// If you change what tokens must be created by the lexer,
     /// override this method to create the appropriate tokens.
     ///
-    open func getTokenStream(_ recognizer: Parser) -> TokenStream {
+    func getTokenStream(_ recognizer: Parser) -> TokenStream {
         return recognizer.getInputStream() as! TokenStream
     }
     
-    open func escapeWSAndQuote(_ s: String) -> String {
+    func escapeWSAndQuote(_ s: String) -> String {
         var s = s
         s = s.replacingOccurrences(of: "\n", with: "\\n")
         s = s.replacingOccurrences(of: "\r", with: "\\r")
@@ -160,7 +160,7 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
     /// your token objects because you don't have to go modify your lexer
     /// so that it creates a new Java type.
     ///
-    open func getTokenErrorDisplay(_ t: Token?) -> String {
+    func getTokenErrorDisplay(_ t: Token?) -> String {
         guard let t = t else {
             return "<no token>"
         }
@@ -175,11 +175,11 @@ public class BailErrorStrategy: ANTLRErrorStrategy {
         return escapeWSAndQuote(s!)
     }
     
-    open func getSymbolText(_ symbol: Token) -> String? {
+    func getSymbolText(_ symbol: Token) -> String? {
         return symbol.getText()
     }
     
-    open func getSymbolType(_ symbol: Token) -> Int {
+    func getSymbolType(_ symbol: Token) -> Int {
         return symbol.getType()
     }
 }

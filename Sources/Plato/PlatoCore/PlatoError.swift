@@ -1,15 +1,15 @@
 //
 //  RuntimeError.swift
-//  
+//
 //
 //  Created by Pedro Ésli Vieira do Nascimento on 26/01/24.
 //
 
-public struct PlatoError: Error, CustomStringConvertible {
-    public let message: String
-    public let badCode: String?
-    public let line: Int
-    public let column: Int
+struct PlatoError: Error, CustomStringConvertible {
+    let message: String
+    let badCode: String?
+    let line: Int
+    let column: Int
     
     init(message: String, badCode: String? = nil, line: Int, column: Int) {
         self.message = message
@@ -19,7 +19,7 @@ public struct PlatoError: Error, CustomStringConvertible {
     }
     
     /// Get the full description of the error
-    public var description: String {
+    var description: String {
         return "Runtime Error in line \(line):\(column): \(message)"
     }
 }
