@@ -10,6 +10,11 @@ class VariableScope {
     private var symbols: [String: Variable]
     private var parent: VariableScope?
     
+    init() {
+        self.symbols = [:]
+        self.parent = nil
+    }
+    
     init(parent: VariableScope?) {
         self.symbols = [:]
         self.parent = parent

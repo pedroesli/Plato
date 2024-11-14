@@ -29,8 +29,8 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     var returnValue: Value = .void
     var canUseReturn = false
     
-    private var globalVariables = VariableScope(parent: nil)
-    private var globalFunctions = FunctionScope(parent: nil)
+    private var globalVariables = VariableScope()
+    private var globalFunctions = FunctionScope()
     private var canUseBreakContinue = false
     private var executionHandler: (() -> Void)?
     

@@ -10,6 +10,11 @@ class FunctionScope {
     private var symbols: [String: FunctionPolymorphism]
     private var parent: FunctionScope?
     
+    init() {
+        self.symbols = [:]
+        self.parent = nil
+    }
+    
     init(parent: FunctionScope?) {
         self.symbols = [:]
         self.parent = parent
