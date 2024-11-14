@@ -37,6 +37,7 @@ class FunctionScope {
         return symbols.updateValue(value, forKey: key)
     }
     
+    // TODO: Remove throws keyword if not being used
     func retrieveFunction(name: String, parameters: [CallParameter]) throws -> Function? {
         // If doesn't exist search on parent
         guard let functionPoly = symbols[name] else {

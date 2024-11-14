@@ -27,16 +27,16 @@ class Function {
     func handle(callParameters: [CallParameter], interpreter: PlatoInterpreter) throws -> Value? {
         guard !interpreter.isHalting else { return nil }
         
-        interpreter.newScope()
+        interpreter.memory.newScope()
         interpreter.canUseReturn = true
         for (index, parameter) in parameters.enumerated() {
-            interpreter.variables.peek().createVariable(type: parameter.type, value: callParameters[index].value, forKey: parameter.id)
+            interpreter.memory.variables.peek().createVariable(type: parameter.type, value: callParameters[index].value, forKey: parameter.id)
         }
         if let statements = ctx.statements() {
             _ = interpreter.visit(statements)
         }
         interpreter.canUseReturn = false
-        interpreter.popScope()
+        interpreter.memory.popScope()
         
         return interpreter.returnValue
     }

@@ -18,4 +18,26 @@ class PlatoMemory {
         variables.push(globalVariables)
         functions.push(globalFunctions)
     }
+    
+    func newScope() {
+        variables.push(VariableScope(parent: variables.peek()))
+        functions.push(FunctionScope(parent: functions.peek()))
+    }
+    
+    func popScope() {
+        variables.pop()
+        functions.pop()
+    }
+    
+    /// Clears the interpreters cache. (Use 'reset()' method if you want to reset the interpreter)
+    func clearMemory() {
+        variables.clear()
+        functions.clear()
+        
+        globalVariables = VariableScope(parent: nil)
+        globalFunctions = FunctionScope(parent: nil)
+        
+        variables.push(globalVariables)
+        functions.push(globalFunctions)
+    }
 }

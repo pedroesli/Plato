@@ -24,13 +24,11 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     }
     private(set) var isHalting = false
     
-    let variables = Stack<VariableScope>()
-    let functions = Stack<FunctionScope>()
     var returnValue: Value = .void
     var canUseReturn = false
     
-    private var globalVariables = VariableScope()
-    private var globalFunctions = FunctionScope()
+    let memory = PlatoMemory()
+    
     private var canUseBreakContinue = false
     private var executionHandler: (() -> Void)?
     
@@ -42,9 +40,6 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     
     override func visitProgram(_ ctx: PlatoParser.ProgramContext) -> Value? {
         guard let statements = ctx.statements() else { return nil }
-        variables.push(globalVariables)
-        functions.push(globalFunctions)
-        
         isExecuting = true
         let result = visit(statements)
         isExecuting = false
@@ -111,7 +106,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         let id = ctx.ID()!.getText()
         
         // Check if already exists
-        if let variable = variables.peek().retrieve(forKey: id) {
+        if let variable = memory.variables.peek().retrieve(forKey: id) {
             guard variable.canAssign(value: value) else {
                 return error("Cannot assign value of type '\(value.type)' to type '\(variable.type)'", at: ctx)
             }
@@ -123,7 +118,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return idError
         }
         
-        variables.peek().createVariable(type: .any, value: value, forKey: id)
+        memory.variables.peek().createVariable(type: .any, value: value, forKey: id)
         return value
     }
     
@@ -143,14 +138,14 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
             return error("Cannot assign value of type '\(value.type)' to type '\(type)'", at: ctx)
         }
         
-        variables.peek().createVariable(type: type, value: value, forKey: id)
+        memory.variables.peek().createVariable(type: type, value: value, forKey: id)
         return value
     }
     
     override func visitOperationAssignmentStatement(_ ctx: PlatoParser.OperationAssignmentStatementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = variables.peek().retrieve(forKey: id) else {
+        guard let variable = memory.variables.peek().retrieve(forKey: id) else {
             return error("Assignment of type '\(ctx.op.getText()!)' cannot be applied on an empty value", at: ctx)
         }
         
@@ -256,10 +251,10 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 
-                // Create a new while scope
-                newScope()
+                // Create a new scope for while statement
+                memory.newScope()
                 result = visit(statements)
-                popScope()
+                memory.popScope()
                 
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand || result?.asCommand == .returnCommand {
@@ -304,12 +299,12 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
             
             // New for in scope
-            newScope()
-            variables.peek().createVariable(type: .any, value: value, forKey: id)
+            memory.newScope()
+            memory.variables.peek().createVariable(type: .any, value: value, forKey: id)
             if let statements = ctx.statements() {
                 result = visit(statements)
             }
-            popScope()
+            memory.popScope()
             
             if result?.type == .command {
                 if result?.asCommand == .breakCommand {
@@ -372,10 +367,10 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 }
                 
                 // New FromToBy Scope
-                newScope()
-                variables.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
+                memory.newScope()
+                memory.variables.peek().createVariable(type: .any, value: Value(int: index), forKey: id)
                 result = visit(statements)
-                popScope()
+                memory.popScope()
                 
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand {
@@ -402,10 +397,10 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
                     canUseBreakContinue = true
                 }
                 
-                newScope()
-                variables.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
+                memory.newScope()
+                memory.variables.peek().createVariable(type: .any, value: Value(float: index), forKey: id)
                 result = visit(statements)
-                popScope()
+                memory.popScope()
                 
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand {
@@ -431,10 +426,10 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
                 if !canUseBreakContinue {
                     canUseBreakContinue = true
                 }
-                newScope()
-                variables.peek().createVariable(type: .any, value: Value(double: index), forKey: id)
+                memory.newScope()
+                memory.variables.peek().createVariable(type: .any, value: Value(double: index), forKey: id)
                 result = visit(statements)
-                popScope()
+                memory.popScope()
                 if result?.type == .command {
                     if result?.asCommand == .breakCommand {
                         result = Value.void
@@ -479,7 +474,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
             }
         }
         
-        functions.peek().createFunction(name: name, parameters: parameters, ctx: ctx)
+        memory.functions.peek().createFunction(name: name, parameters: parameters, ctx: ctx)
         
         return Value.void
     }
@@ -661,7 +656,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
         
         // Handle user defined functions
         do {
-            if let function = try functions.peek().retrieveFunction(name: functionName, parameters: parameterList) {
+            if let function = try memory.functions.peek().retrieveFunction(name: functionName, parameters: parameterList) {
                 return try? function.handle(callParameters: parameterList, interpreter: self)
             }
         } catch {
@@ -693,7 +688,7 @@ class PlatoInterpreter: PlatoBaseVisitor<Value> {
     override func visitIdElement(_ ctx: PlatoParser.IdElementContext) -> Value? {
         let id = ctx.ID()!.getText()
         
-        guard let variable = variables.peek().retrieve(forKey: id) else {
+        guard let variable = memory.variables.peek().retrieve(forKey: id) else {
             return error("Cannot find '\(id)' in scope", at: ctx)
         }
         
@@ -875,22 +870,12 @@ extension PlatoInterpreter {
         return (left, right)
     }
     
-    func newScope() {
-        variables.push(VariableScope(parent: variables.peek()))
-        functions.push(FunctionScope(parent: functions.peek()))
-    }
-    
-    func popScope() {
-        variables.pop()
-        functions.pop()
-    }
-    
     func ifOperation(_ condition: Value, statements:  PlatoParser.StatementsContext?) -> Value? {
         if condition.asBool, let statements {
             let value: Value?
-            newScope()
+            memory.newScope()
             value = visit(statements)
-            popScope()
+            memory.popScope()
             return value
         }
         return nil
@@ -949,19 +934,5 @@ extension PlatoInterpreter {
         canUseReturn = false
         canUseBreakContinue = false
         isHalting = false
-        
-        clearCache()
-    }
-    
-    /// Clears the interpreters cache. (Use 'reset()' method if you want to reset the interpreter)
-    func clearCache() {
-        variables.clear()
-        functions.clear()
-        
-        globalVariables = VariableScope(parent: nil)
-        globalFunctions = FunctionScope(parent: nil)
-        
-        variables.push(globalVariables)
-        functions.push(globalFunctions)
     }
 }
