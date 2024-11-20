@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Value {
+public class Value: VisitorReturnable {
     public let type: ValueType
     private var value: Any
     

@@ -5,11 +5,11 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 26/01/24.
 //
 
-struct PlatoError: Error, CustomStringConvertible {
-    let message: String
-    let badCode: String?
-    let line: Int
-    let column: Int
+public struct PlatoError: Error, CustomStringConvertible, VisitorReturnable {
+    public let message: String
+    public let badCode: String?
+    public let line: Int
+    public let column: Int
     
     init(message: String, badCode: String? = nil, line: Int, column: Int) {
         self.message = message
@@ -19,7 +19,10 @@ struct PlatoError: Error, CustomStringConvertible {
     }
     
     /// Get the full description of the error
-    var description: String {
+    public var description: String {
+        if let badCode {
+            return "Runtime Error in line \(line):\(column): \(message). Bad code: \(badCode)" 
+        }
         return "Runtime Error in line \(line):\(column): \(message)"
     }
 }
