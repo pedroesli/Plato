@@ -5,7 +5,7 @@
 //  Created by Pedro Ésli Vieira do Nascimento on 26/01/24.
 //
 
-public struct PlatoError: Error, CustomStringConvertible, VisitorReturnable {
+public struct PlatoError: Error, CustomStringConvertible {
     public let message: String
     public let badCode: String?
     public let line: Int

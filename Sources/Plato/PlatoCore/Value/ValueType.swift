@@ -14,7 +14,6 @@ public enum ValueType: Int, Sendable {
     case string
     case array
     case void
-    case command
     
     public var isNumber: Bool {
         isInRange(of: .double)

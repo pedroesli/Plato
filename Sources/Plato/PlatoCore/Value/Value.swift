@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Value: VisitorReturnable {
+public class Value {
     public let type: ValueType
     private var value: Any
     
@@ -39,11 +39,6 @@ public class Value: VisitorReturnable {
     public init(array: ArrayValue) {
         self.type = .array
         self.value = array
-    }
-    
-    internal init(command: CommandType) {
-        self.type = .command
-        self.value = command
     }
     
     private init(type: ValueType, value: Any) {
@@ -115,10 +110,6 @@ public class Value: VisitorReturnable {
         }
         return value as! ArrayValue
     }
-    
-    internal var asCommand: CommandType {
-        return value as! CommandType
-    }
 }
 
 extension Value {
@@ -157,9 +148,6 @@ internal extension Value {
             return lhs.asArray == rhs.asArray
         case .void:
             return rhs.type == .void
-        case .command:
-            guard rhs.type == .command else { return false }
-            return lhs.asCommand == rhs.asCommand
         }
     }
 }
