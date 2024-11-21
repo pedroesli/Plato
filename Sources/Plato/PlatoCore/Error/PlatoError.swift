@@ -21,7 +21,7 @@ public struct PlatoError: Error, CustomStringConvertible, VisitorReturnable {
     /// Get the full description of the error
     public var description: String {
         if let badCode {
-            return "Runtime Error in line \(line):\(column): \(message). Bad code: \(badCode)" 
+            return "Runtime Error in line \(line):\(column): \(message). Bad code: \(badCode)"
         }
         return "Runtime Error in line \(line):\(column): \(message)"
     }
