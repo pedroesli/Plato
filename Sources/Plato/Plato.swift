@@ -23,8 +23,28 @@ public class Plato {
         self.interpreter = PlatoInterpreter(configuration: configuration)
     }
     
+    init(platoInterpreter: PlatoInterpreter) {
+        self.configuration = platoInterpreter.configuration
+        self.interpreter = platoInterpreter
+    }
+    
     public func setPrintFunctionHandler(_ handler: ((_ printValue: PrintValue) -> Void)?) {
-        interpreter.handlers.printFunctionHandler = handler
+        interpreter.standardOutput.printFunctionHandler = handler
+    }
+    
+    public func run(_ code: String) throws {
+        let input = ANTLRInputStream(code)
+        let lexer = PlatoLexer(input)
+        let tokens = CommonTokenStream(lexer)
+        let parser = try PlatoParser(tokens)
+        parser.setErrorHandler(BailErrorStrategy())
+        let tree = try parser.program()
+        
+        let result = self.interpreter.visit(tree)
+        
+        if case .error(let error) = result {
+            throw error
+        }
     }
     
     /// Executes the provided Plato code asynchronously with an optional completion closure for when the code is done executing.

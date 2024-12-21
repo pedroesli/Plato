@@ -57,6 +57,10 @@ public class ArrayValue: Sequence {
     }
 }
 
+extension ArrayValue {
+    nonisolated(unsafe) static let empty = ArrayValue()
+}
+
 extension ArrayValue: CustomStringConvertible {
     public var description: String {
         return String(describing: values)

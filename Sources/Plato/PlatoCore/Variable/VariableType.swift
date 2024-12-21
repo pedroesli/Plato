@@ -15,7 +15,7 @@ enum VariableType: String, Sendable {
     case string
     case array
     
-    var text: String {
+    func getText() -> String {
         self.rawValue
     }
     

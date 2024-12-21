@@ -41,7 +41,7 @@ public class Value {
         self.value = array
     }
     
-    private init(type: ValueType, value: Any) {
+    init(type: ValueType, value: Any) {
         self.type = type
         self.value = value
     }

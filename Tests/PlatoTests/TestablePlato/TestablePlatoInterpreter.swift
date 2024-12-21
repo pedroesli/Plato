@@ -12,21 +12,33 @@ class TestablePlatoInterpreter: PlatoInterpreter {
     
     var tests: [Int : TestingMethod] = [:]
     
-    override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> Value? {
-        guard let expression = ctx.expression(),
-              let result = visit(expression),
-              let line = ctx.start?.getLine(),
-              result.type.isInRange(of: .array)
-        else { return nil }
-        
-        if let test = tests[line] {
-            guard test.test(result) else {
-                return error(test.makeErrorMessage(result), at: ctx)
-            }
+    override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> ReturnResult? {
+        guard let expression = ctx.expression() else {
+            return .unexpectedError("Expression returned nil", at: ctx)
         }
         
-        handleExpressionStatementPrint(line: line, value: result)
+        let result = visit(expression)
         
-        return Value.void
+        switch result {
+        case .value(let value):
+            let line = ctx.getStart()?.getLine() ?? 0
+            
+            if let test = tests[line] {
+                guard test.test(value) else {
+                    return .error(test.makeErrorMessage(value), at: ctx)
+                }
+            }
+            
+            standardOutput.print(PrintValue(
+                line: line,
+                rawParameters: [CallParameter(value: value)],
+                formattedValue: value.asString,
+                terminator: "\n",
+                isFunction: false
+            ))
+            return .value(.void)
+        default:
+            return result
+        }
     }
 }

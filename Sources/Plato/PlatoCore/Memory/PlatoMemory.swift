@@ -19,12 +19,22 @@ class PlatoMemory {
         functions.push(globalFunctions)
     }
     
-    func newScope() {
+    /// Creates a new scope, executes the closure then pops the scope
+    func withMemoryScope<T>(_ execute: () -> T) -> T {
+        defer {
+            popScope() // Pop the memory scope when exiting the function
+        }
+        
+        newScope()
+        return execute()
+    }
+    
+    private func newScope() {
         variables.push(VariableScope(parent: variables.peek()))
         functions.push(FunctionScope(parent: functions.peek()))
     }
     
-    func popScope() {
+    private func popScope() {
         variables.pop()
         functions.pop()
     }
