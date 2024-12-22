@@ -12,12 +12,8 @@ class TestablePlatoInterpreter: PlatoInterpreter {
     
     var tests: [Int : TestingMethod] = [:]
     
-    override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> ReturnResult? {
-        guard let expression = ctx.expression() else {
-            return .unexpectedError("Expression returned nil", at: ctx)
-        }
-        
-        let result = visit(expression)
+    override func visitExpressionStatement(_ ctx: PlatoParser.ExpressionStatementContext) -> ReturnResult {
+        let result = visit(ctx.expression()!)!
         
         switch result {
         case .value(let value):
@@ -36,7 +32,7 @@ class TestablePlatoInterpreter: PlatoInterpreter {
                 terminator: "\n",
                 isFunction: false
             ))
-            return .value(.void)
+            return .void
         default:
             return result
         }

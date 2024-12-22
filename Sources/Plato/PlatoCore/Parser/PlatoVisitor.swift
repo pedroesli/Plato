@@ -8,7 +8,7 @@ import Antlr4
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-open class PlatoVisitor<T>: ParseTreeVisitor<T> {
+open class PlatoVisitor<T>: AbstractParseTreeVisitor<T> {
 	/**
 	 * Visit a parse tree produced by {@link PlatoParser#program}.
 	- Parameters:

@@ -22,4 +22,8 @@ extension ReturnResult {
     static func unexpectedError(_ message: String? = nil, at ctx: ParserRuleContext) -> ReturnResult {
         return .error(.unexpectedError(message, at: ctx))
     }
+    
+    static var void: ReturnResult {
+        .value(.void)
+    }
 }
